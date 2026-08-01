@@ -1,46 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import HalftonePortrait from './HalftonePortrait';
+import zakiPhoto from '../assets/zaki-photo.png';
 
-/**
- * Hero component featuring a state-driven typewriter effect.
- * Utilizes React hooks to manage side effects and local state updates.
- */
 export default function Hero() {
-  const [text, setText] = useState('');
-  const fullText = "Hi, I'm Zaki.";
-
-  // Mount lifecycle: Handles the asynchronous text generation
-  useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      setText(fullText.slice(0, i));
-      i++;
-      if (i > fullText.length) clearInterval(timer);
-    }, 100);
-    
-    // Clear interval on unmount to prevent state updates on destroyed components
-    return () => clearInterval(timer);
-  }, []);
-
   return (
-    <header className="min-h-screen flex flex-col justify-center items-start w-full max-w-6xl px-6">
-      <div className="inline-block px-4 py-2 rounded-full glass text-cyan-400 font-mono text-sm tracking-widest mb-6 uppercase">
-        Systems Online // Status: Optimal
+    <header id="top" className="w-full max-w-6xl mx-auto px-6 pt-14 pb-24 md:pt-20 md:pb-32">
+      <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-14 md:gap-12 items-center">
+        <div className="rise-in">
+          <p className="font-mono text-xs tracking-[0.25em] uppercase text-flame mb-6">
+            Vol. 01 — Toronto, Canada
+          </p>
+
+          <h1 className="font-display font-medium text-6xl sm:text-7xl lg:text-8xl leading-[1.02] text-ink mb-8">
+            Hi, I&rsquo;m{' '}
+            <span className="misprint">
+              Zaki.
+              <span className="misprint-ghost" aria-hidden="true">Zaki.</span>
+            </span>
+            <br />
+            I make data <span className="italic">legible</span> and software <span className="italic">real</span>.
+          </h1>
+
+          <p className="text-lg md:text-xl text-inkSoft leading-relaxed max-w-xl mb-10">
+            Data analytics student and full-stack engineer. I build the pipelines that turn raw
+            numbers into decisions, and the applications people actually use — from a fake stock
+            market for GitHub repos to a tool for shattering the DOM when it deserves it.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+            <a href="#projects" className="ink-link font-mono text-sm tracking-[0.1em] uppercase text-ink font-bold">
+              View the work &darr;
+            </a>
+            <a href="#contact" className="ink-link font-mono text-sm tracking-[0.1em] uppercase text-inkSoft">
+              Get in touch
+            </a>
+          </div>
+        </div>
+
+        <div className="relative rise-in" style={{ animationDelay: '0.15s' }}>
+          <div className="relative">
+            <HalftonePortrait src={zakiPhoto} />
+
+            <div className="absolute top-10 left-[8%]">
+              <span className="stamp inline-block font-mono text-[11px] tracking-[0.1em] uppercase bg-paperDim border rule px-2.5 py-1 whitespace-nowrap">
+                CS @ Sheridan College
+              </span>
+            </div>
+            <div className="absolute bottom-16 left-[2%]">
+              <span className="stamp inline-block font-mono text-[11px] tracking-[0.1em] uppercase bg-paperDim border rule px-2.5 py-1 whitespace-nowrap">
+                Builds: Web · Data · Mobile
+              </span>
+            </div>
+          </div>
+          <p className="font-mono text-[11px] tracking-[0.1em] uppercase text-inkFaint mt-3">
+            Fig. 1 — halftone plate, live. move your cursor over it.
+          </p>
+        </div>
       </div>
-      
-      <h1 className="text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-tight">
-        <span className="block text-2xl md:text-4xl text-cyan-400 font-mono mb-4 h-10">
-          {text}<span className="blinker">_</span>
-        </span>
-        Data Analyst. <br/>
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-600">
-          Full-Stack Engineer.
-        </span>
-      </h1>
-      
-      <p className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed mb-10">
-        I synthesize raw data into actionable insights and build robust software architectures. 
-        Oh, and occasionally, I build tools that let users shatter the DOM.
-      </p>
     </header>
   );
 }

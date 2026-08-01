@@ -7,18 +7,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        bgSpace: '#030305',      // True deep dark background
-        surface: '#0d0d12',      // Slightly lighter for cards
-        surfaceGlow: '#1a1a24',  // Hover states
-        violet: '#8b5cf6',       // Primary accent
-        blueAccent: '#3b82f6',   // Secondary accent
-        textMain: '#f8fafc',     // Crisp white text
-        textMuted: '#94a3b8',    // Sleek gray for descriptions
+        paper: '#0D0B08',      // near-black ground — the "stock" background
+        paperDim: '#1B1712',   // raised panel, one step lighter
+        ink: '#F5F0E4',        // warm off-white, primary text & dot ink
+        inkSoft: '#BFB8A4',    // muted light, secondary text
+        inkFaint: '#8C866F',   // faint, tertiary/labels
+        flame: '#FF5A33',      // vivid flame — primary spot color
+        cobalt: '#F0A93A',     // amber — secondary spot color
+        line: 'rgba(245,240,228,0.16)',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Cal Sans', 'Inter', 'sans-serif'], // Great for bold headers
-        mono: ['Fira Code', 'monospace'],
+        display: ['"Fraunces"', 'ui-serif', 'Georgia', 'serif'],
+        sans: ['"Archivo"', 'system-ui', 'sans-serif'],
+        mono: ['"Space Mono"', 'ui-monospace', 'monospace'],
       },
     },
   },

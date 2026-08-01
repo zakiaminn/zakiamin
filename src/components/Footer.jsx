@@ -1,33 +1,34 @@
 import React from 'react';
 
-/**
- * Footer component utilizing semantic HTML5 tags.
- * Includes security best practices for external anchors (rel="noreferrer").
- */
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-white/10 mt-20 glass bg-black/50 z-10 relative">
-      <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center">
-        <div className="mb-6 md:mb-0 text-center md:text-left">
-          <h3 className="text-2xl font-bold text-white mb-2 text-glow">Zaki Amin</h3>
-          <p className="text-gray-400 font-mono text-sm">Data Analyst & Full-Stack Engineer</p>
+    <footer id="contact" className="w-full border-t rule mt-8 scroll-mt-24">
+      <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row md:items-end justify-between gap-10">
+        <div>
+          <span className="font-mono text-xs tracking-[0.15em] uppercase text-flame">Get in touch</span>
+          <h2 className="font-display text-3xl md:text-4xl text-ink mt-3 max-w-md">
+            Open to opportunities, collaborations, and arguments about database schema design.
+          </h2>
         </div>
-        
-        <div className="flex space-x-6">
-          <a href="https://github.com/zakiaminn" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors">
+
+        <div className="flex flex-col gap-3 items-start md:items-end">
+          <a href="mailto:zakiaminn@gmail.com" className="ink-link font-mono text-sm text-ink font-bold">
+            zakiaminn@gmail.com
+          </a>
+          <a href="https://github.com/zakiaminn" target="_blank" rel="noreferrer" className="ink-link font-mono text-sm text-inkSoft">
             GitHub
           </a>
-          <a href="https://www.linkedin.com/in/zakiamin/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-purple-400 transition-colors">
+          <a href="https://www.linkedin.com/in/zakiamin/" target="_blank" rel="noreferrer" className="ink-link font-mono text-sm text-inkSoft">
             LinkedIn
-          </a>
-          <a href="mailto:zakiaminn@gmail.com" className="text-gray-400 hover:text-white transition-colors">
-            Email
           </a>
         </div>
       </div>
-      
-      <div className="text-center py-4 border-t border-white/5 text-xs font-mono text-gray-600">
-        &copy; {new Date().getFullYear()} Zaki Amin. All rights reserved. System executing normally.
+
+      <div className="border-t rule">
+        <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between gap-2 font-mono text-[11px] tracking-[0.05em] uppercase text-inkFaint">
+          <span>&copy; {new Date().getFullYear()} Zaki Amin</span>
+          <span>Set in Fraunces, Archivo &amp; Space Mono</span>
+        </div>
       </div>
     </footer>
   );

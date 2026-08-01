@@ -1,77 +1,115 @@
-/* 
- * Global Stylesheet 
- * Implements Tailwind CSS directives alongside custom hardware-accelerated animations 
- * and glassmorphism UI utilities. 
- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background-color: #050505;
-  color: #f8fafc;
+  background-color: #0D0B08;
+  color: #F5F0E4;
   overflow-x: hidden;
   margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Archivo', system-ui, sans-serif;
+}
+
+::selection {
+  background: #FF5A33;
+  color: #0D0B08;
 }
 
 @layer utilities {
-  .glass {
-    background: rgba(20, 20, 20, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  
-  .glass-hover:hover {
-    background: rgba(40, 40, 40, 0.6);
-    border: 1px solid rgba(0, 240, 255, 0.4);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
-  }
-
-  .text-glow {
-    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+  /* Grain — a subtle fractal-noise texture over the whole page */
+  .grain::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    opacity: 0.35;
   }
 
-  /* 3D Transform Utilities for Card Flip */
-  .perspective-1000 {
-    perspective: 1000px;
+  .rule {
+    border-color: rgba(245, 240, 228, 0.16);
   }
-  .transform-style-3d {
-    transform-style: preserve-3d;
+
+  /* Halftone dot-grid pattern, reused on card headers / dividers */
+  .dot-pattern {
+    background-image: radial-gradient(currentColor 1px, transparent 1.4px);
+    background-size: 7px 7px;
   }
-  .backface-hidden {
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+
+  /* Ink underline that draws on hover, instead of a glow */
+  .ink-link {
+    position: relative;
+    text-decoration: none;
   }
-  .rotate-y-180 {
-    transform: rotateY(180deg);
+  .ink-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(.65,0,.35,1);
+  }
+  .ink-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Rubber-stamp label: fixed slight rotation, like a hand-stamped tag */
+  .stamp {
+    transform: rotate(-1.5deg);
+  }
+  .stamp:nth-child(3n) {
+    transform: rotate(1deg);
+  }
+  .stamp:nth-child(3n+1) {
+    transform: rotate(-0.75deg);
   }
 }
 
-/* 
- * DOMolition Shatter Simulation 
- * Uses a cubic-bezier timing function to create a chaotic, non-linear shake effect.
- * Hardware acceleration is leveraged by animating only the 'transform' property, keeping composite layer repaints low.
+/*
+ * Misprint — a two-color registration-shift effect for headlines.
+ * The base layer sits in ink; a second, offset layer in the spot color
+ * peeks out on hover, mimicking a riso print that's slightly out of register.
  */
+.misprint {
+  position: relative;
+  display: inline-block;
+}
+.misprint .misprint-ghost {
+  position: absolute;
+  inset: 0;
+  color: #FF5A33;
+  opacity: 0;
+  transform: translate(0, 0);
+  transition: transform 0.3s cubic-bezier(.65,0,.35,1), opacity 0.3s ease;
+  pointer-events: none;
+}
+.misprint:hover .misprint-ghost {
+  opacity: 0.85;
+  transform: translate(3px, 2px);
+}
+
+/* A brief, contained shake — a nod to DOMolition's whole reason for existing. */
 .shatter-fx:hover {
-  animation: shatter 0.3s cubic-bezier(.36,.07,.19,.97) infinite alternate;
+  animation: shatter 0.28s cubic-bezier(.36,.07,.19,.97) 3;
 }
-
 @keyframes shatter {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  20% { transform: translate(-2px, -2px) rotate(-1deg); }
-  40% { transform: translate(-3px, 0px) rotate(1deg); }
-  60% { transform: translate(3px, 2px) rotate(0deg); }
-  80% { transform: translate(1px, -1px) rotate(1deg); }
-  100% { transform: translate(-1px, 2px) rotate(-1deg); }
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-1.5px, 1px) rotate(-0.4deg); }
+  50% { transform: translate(1.5px, -1px) rotate(0.4deg); }
+  75% { transform: translate(-1px, -1.5px) rotate(-0.3deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 }
 
-/* 
- * Terminal Blinker
- * Uses a discrete step-end animation function to create a harsh boolean toggle (visible/hidden)
- * mimicking a command-line interface cursor.
- */
 .blinker {
   animation: blink 1s step-end infinite;
 }
@@ -79,16 +117,24 @@ body {
   50% { opacity: 0; }
 }
 
-/* 
- * Data Stream Timeline
- * Animates the background-position of a linear gradient to simulate a continuous downward data flow.
- */
-.data-stream {
-  background: linear-gradient(to bottom, transparent 0%, #00f0ff 40%, #a855f7 60%, transparent 100%);
-  background-size: 100% 200%;
-  animation: stream-flow 3s linear infinite;
+/* Ticker tape — a nod to TRX being, literally, a stock exchange. */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 26s linear infinite;
 }
-@keyframes stream-flow {
-  0% { background-position: 0% -100%; }
-  100% { background-position: 0% 100%; }
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise-in {
+  animation: riseIn 0.7s cubic-bezier(.16,1,.3,1) both;
 }
