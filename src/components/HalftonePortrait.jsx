@@ -10,8 +10,13 @@ const INFLUENCE = 95;         // px radius of mouse influence
  * Renders a photo as a grid of glowing dots on dark ground, poster-style:
  * highlights print as large dots, shadows fall away to bare black. Dots
  * near the cursor swell and shift toward the accent color, like ink lifting.
+ *
+ * The render loop is demand-driven: frames are only scheduled while the
+ * cursor is actually over the plate and the plate is on screen. At rest it
+ * costs nothing. Under `prefers-reduced-motion` the plate renders once and
+ * stays still.
  */
-export default function HalftonePortrait({ src, className = '' }) {
+export default function HalftonePortrait({ src, className = '', label = 'Portrait' }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const toneRef = useRef(null); // Float32Array of normalized darkness, COLS*ROWS
@@ -20,6 +25,13 @@ export default function HalftonePortrait({ src, className = '' }) {
   const frameRef = useRef(null);
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let reduced = motionQuery.matches;
+    let onScreen = true;
+
     const img = new Image();
     img.src = src;
     img.onload = () => {
@@ -69,12 +81,11 @@ export default function HalftonePortrait({ src, className = '' }) {
         tone[i] = alpha[i] > 0.05 ? (FLOOR + (1 - FLOOR) * norm) * alpha[i] : 0;
       }
       toneRef.current = tone;
-      draw();
+      request();
     };
 
     const draw = () => {
       const canvas = canvasRef.current;
-      const container = containerRef.current;
       const tone = toneRef.current;
       if (!canvas || !container || !tone) return;
 
@@ -94,7 +105,8 @@ export default function HalftonePortrait({ src, className = '' }) {
 
       const mouse = mouseRef.current;
       const sm = smoothedRef.current;
-      if (mouse.active) {
+      const interactive = mouse.active && !reduced;
+      if (interactive) {
         sm.x += (mouse.x - sm.x) * 0.18;
         sm.y += (mouse.y - sm.y) * 0.18;
       }
@@ -111,7 +123,7 @@ export default function HalftonePortrait({ src, className = '' }) {
           let boost = 0;
           let colorT = 0;
           let liftX = 0, liftY = 0;
-          if (mouse.active) {
+          if (interactive) {
             const dx = cx - sm.x;
             const dy = cy - sm.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
@@ -139,38 +151,73 @@ export default function HalftonePortrait({ src, className = '' }) {
       }
     };
 
+    // Self-sustaining only while the cursor is engaged and the plate is
+    // visible; otherwise each call renders exactly one frame and stops.
     const loop = () => {
+      frameRef.current = null;
       draw();
-      frameRef.current = requestAnimationFrame(loop);
+      if (mouseRef.current.active && onScreen && !reduced) {
+        frameRef.current = requestAnimationFrame(loop);
+      }
+    };
+    const request = () => {
+      if (frameRef.current == null) frameRef.current = requestAnimationFrame(loop);
     };
 
     const handleMove = (e) => {
-      const rect = containerRef.current.getBoundingClientRect();
+      if (reduced) return;
+      const rect = container.getBoundingClientRect();
       mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top, active: true };
+      request();
     };
     const handleLeave = () => {
       mouseRef.current.active = false;
       smoothedRef.current = { x: -9999, y: -9999 };
+      request(); // one final frame settles the dots back to rest
     };
-    const handleResize = () => draw();
+    const handleResize = () => request();
+    const handleMotionChange = () => {
+      reduced = motionQuery.matches;
+      if (reduced) mouseRef.current.active = false;
+      request();
+    };
 
-    const container = containerRef.current;
+    // Stop rendering entirely once the plate scrolls out of view.
+    let observer;
+    if (typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          onScreen = entry.isIntersecting;
+          if (onScreen) request();
+        },
+        { threshold: 0 }
+      );
+      observer.observe(container);
+    }
+
     container.addEventListener('mousemove', handleMove);
     container.addEventListener('mouseleave', handleLeave);
     window.addEventListener('resize', handleResize);
-    frameRef.current = requestAnimationFrame(loop);
+    motionQuery.addEventListener('change', handleMotionChange);
+    request();
 
     return () => {
-      cancelAnimationFrame(frameRef.current);
+      if (frameRef.current != null) cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+      img.onload = null;
+      observer?.disconnect();
       container.removeEventListener('mousemove', handleMove);
       container.removeEventListener('mouseleave', handleLeave);
       window.removeEventListener('resize', handleResize);
+      motionQuery.removeEventListener('change', handleMotionChange);
     };
   }, [src]);
 
   return (
     <div
       ref={containerRef}
+      role="img"
+      aria-label={label}
       className={`relative aspect-[3/4] w-full ${className}`}
     >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />

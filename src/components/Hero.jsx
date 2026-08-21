@@ -11,7 +11,7 @@ export default function Hero() {
             Vol. 01 — Toronto, Canada
           </p>
 
-          <h1 className="font-display font-medium text-6xl sm:text-7xl lg:text-8xl leading-[1.02] text-ink mb-8">
+          <h1 className="font-display font-medium text-6xl sm:text-7xl lg:text-8xl leading-[1.02] text-ink mb-8 balance">
             Hi, I&rsquo;m{' '}
             <span className="misprint">
               Zaki.
@@ -29,10 +29,10 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-            <a href="#projects" className="ink-link font-mono text-sm tracking-[0.1em] uppercase text-ink font-bold">
+            <a href="#projects" className="ink-link font-mono text-sm tracking-[0.1em] uppercase text-ink font-bold inline-flex items-center min-h-[44px]">
               View the work &darr;
             </a>
-            <a href="#contact" className="ink-link font-mono text-sm tracking-[0.1em] uppercase text-inkSoft">
+            <a href="#contact" className="ink-link font-mono text-sm tracking-[0.1em] uppercase text-inkSoft inline-flex items-center min-h-[44px]">
               Get in touch
             </a>
           </div>
@@ -40,7 +40,7 @@ export default function Hero() {
 
         <div className="relative rise-in" style={{ animationDelay: '0.15s' }}>
           <div className="relative">
-            <HalftonePortrait src={zakiPhoto} />
+            <HalftonePortrait src={zakiPhoto} label="Halftone portrait of Zaki Amin, printed as a grid of dots" />
 
             <div className="absolute top-10 left-[8%]">
               <span className="stamp inline-block font-mono text-[11px] tracking-[0.1em] uppercase bg-paperDim border rule px-2.5 py-1 whitespace-nowrap">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const LINKS = [
   { label: 'About', href: '#about' },
@@ -26,48 +26,111 @@ function Mark() {
   );
 }
 
+/**
+ * Tracks which section is currently in the reading position (just under
+ * the sticky bar) so the nav can mark it. Falls back silently to no
+ * active section if IntersectionObserver isn't available.
+ */
+function useActiveSection() {
+  const [active, setActive] = useState('');
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    const sections = LINKS
+      .map((l) => document.getElementById(l.href.slice(1)))
+      .filter(Boolean);
+    if (!sections.length) return;
+
+    const visible = new Map();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.set(entry.target.id, entry.intersectionRatio);
+          else visible.delete(entry.target.id);
+        }
+        // The section occupying the most of the reading band wins.
+        let best = '';
+        let bestRatio = 0;
+        for (const [id, ratio] of visible) {
+          if (ratio > bestRatio) {
+            best = id;
+            bestRatio = ratio;
+          }
+        }
+        setActive(best);
+      },
+      // Reading band: below the 64px sticky bar, above the bottom third.
+      { rootMargin: '-72px 0px -55% 0px', threshold: [0.01, 0.25, 0.5, 0.75] }
+    );
+
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
+  return active;
+}
+
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const active = useActiveSection();
 
   return (
     <header className="sticky top-0 z-40 w-full border-b rule bg-paper/92 backdrop-blur-[2px]">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="#top" className="flex items-center gap-2.5 text-ink">
+        <a href="#top" className="flex items-center gap-2.5 text-ink py-2">
           <Mark />
           <span className="font-mono text-sm tracking-[0.2em] uppercase font-bold">Zaki Amin</span>
         </a>
-        <nav className="hidden sm:flex items-center gap-8">
-          {LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="ink-link font-mono text-xs tracking-[0.15em] uppercase text-inkSoft hover:text-ink transition-colors"
-            >
-              {link.label}
-            </a>
-          ))}
+
+        <nav aria-label="Sections" className="hidden sm:flex items-center gap-8">
+          {LINKS.map((link) => {
+            const isActive = active === link.href.slice(1);
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? 'true' : undefined}
+                className={`ink-link font-mono text-xs tracking-[0.15em] uppercase py-2 transition-colors ${
+                  isActive ? 'text-flame' : 'text-inkSoft hover:text-ink'
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </nav>
+
         <button
+          type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label="Toggle menu"
-          className="sm:hidden font-mono text-xs tracking-[0.15em] uppercase text-ink border rule px-3 py-1.5"
+          aria-controls="mobile-nav"
+          className="sm:hidden font-mono text-xs tracking-[0.15em] uppercase text-ink border rule
+                     min-h-[44px] min-w-[44px] px-3.5"
         >
           {open ? 'Close' : 'Menu'}
         </button>
       </div>
+
       {open && (
-        <nav className="sm:hidden border-t rule px-6 py-4 flex flex-col gap-4 bg-paper">
-          {LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="font-mono text-sm tracking-[0.1em] uppercase text-inkSoft"
-            >
-              {link.label}
-            </a>
-          ))}
+        <nav id="mobile-nav" aria-label="Sections" className="sm:hidden border-t rule px-6 py-2 flex flex-col bg-paper">
+          {LINKS.map((link) => {
+            const isActive = active === link.href.slice(1);
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                aria-current={isActive ? 'true' : undefined}
+                className={`font-mono text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] ${
+                  isActive ? 'text-flame' : 'text-inkSoft'
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </nav>
       )}
     </header>

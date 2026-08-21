@@ -19,6 +19,9 @@ const trxProject = {
   github: 'https://github.com/zakiaminn/TheRepoExchange',
   live: 'https://therepo.exchange',
   demoVideo: '/TRX-demo.mp4',
+  demoSize: [2032, 1192],
+  pullQuote:
+    "The API worked locally and died in prod with two completely different errors — Supabase’s direct DB hostname is IPv6-only, and Render can’t route IPv6 at all.",
 };
 
 const batinProject = {
@@ -40,6 +43,7 @@ const batinProject = {
   ],
   tech: ['Python', 'FastAPI', 'TimescaleDB', 'PostgreSQL', 'Redis', 'pandas / NumPy / SciPy', 'Next.js', 'Docker'],
   github: 'https://github.com/zakiaminn/Batin',
+  pullQuote: 'TRX is the finished storefront; Batin is the engine room.',
 };
 
 export const featuredProjects = [trxProject, batinProject];
@@ -55,6 +59,7 @@ export const projects = [
     shatter: true,
     github: 'https://github.com/zakiaminn/DOMolition',
     demoGif: '/DOMolitionDemo.gif',
+    demoSize: [800, 519],
   },
   {
     title: 'AegisGrid',
@@ -66,6 +71,7 @@ export const projects = [
     shatter: false,
     github: 'https://github.com/zakiaminn/AegisGrid',
     demoGif: '/AegisGridDemo.gif',
+    demoSize: [1754, 1018],
   },
   {
     title: 'FrankenSorter',
@@ -77,5 +83,6 @@ export const projects = [
     shatter: false,
     github: 'https://github.com/zakiaminn/FrankenSorter',
     demoGif: '/ssdemo.png',
+    demoSize: [751, 798],
   },
 ];

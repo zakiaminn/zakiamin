@@ -34,7 +34,7 @@ export default function Experience() {
           >
             <span className="font-mono text-sm text-flame md:pt-1">{item.year}</span>
             <div>
-              <h3 className="font-display text-xl md:text-2xl text-ink mb-2">{item.role}</h3>
+              <h3 className="font-display text-xl md:text-2xl text-ink mb-2 balance">{item.role}</h3>
               <p className="text-inkSoft leading-relaxed max-w-2xl">{item.detail}</p>
             </div>
           </div>
