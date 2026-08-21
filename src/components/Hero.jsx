@@ -23,8 +23,9 @@ export default function Hero() {
 
           <p className="text-lg md:text-xl text-inkSoft leading-relaxed max-w-xl mb-10">
             Data analytics student and full-stack engineer. I build the pipelines that turn raw
-            numbers into decisions, and the applications people actually use — from a fake stock
-            market for GitHub repos to a tool for shattering the DOM when it deserves it.
+            numbers into decisions — real-time options order flow, a fake stock market for GitHub
+            repos — and the applications people actually use, down to a tool for shattering the
+            DOM when it deserves it.
           </p>
 
           <div className="flex flex-wrap items-center gap-x-8 gap-y-4">

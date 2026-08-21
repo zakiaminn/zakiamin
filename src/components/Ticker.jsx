@@ -2,6 +2,7 @@ import React from 'react';
 
 const ITEMS = [
   'Built a real-time trading engine with row-locked transactions',
+  'Classify options trade direction off bid/ask, not a coin flip',
   'Migrated production infra to $0/month after a host died mid-launch',
   'Patched 27 flagged vulnerabilities across 3 ecosystems to zero',
   'Live now at therepo.exchange',

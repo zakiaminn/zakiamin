@@ -7,15 +7,15 @@ const GROUPS = [
   },
   {
     label: 'Frameworks & Runtimes',
-    items: ['React', 'Next.js', 'Node / Express', '.NET'],
+    items: ['React', 'Next.js', 'Node / Express', 'FastAPI', '.NET'],
   },
   {
     label: 'Data & Infrastructure',
-    items: ['SQL', 'PostgreSQL', 'Supabase', 'Data Analytics'],
+    items: ['SQL', 'PostgreSQL', 'TimescaleDB', 'Redis', 'Supabase', 'Data Analytics'],
   },
   {
     label: 'Tools & Platforms',
-    items: ['Git', 'Xcode', 'Android Studio', 'Vercel / Render'],
+    items: ['Git', 'Docker', 'Xcode', 'Android Studio', 'Vercel / Render'],
   },
 ];
 

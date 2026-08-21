@@ -1,4 +1,4 @@
-export const featuredProject = {
+const trxProject = {
   title: 'The Repo Exchange',
   tagline: 'A Stock Exchange for GitHub Repos',
   description:
@@ -20,6 +20,29 @@ export const featuredProject = {
   live: 'https://therepo.exchange',
   demoVideo: '/TRX-demo.mp4',
 };
+
+const batinProject = {
+  title: 'Batin',
+  tagline: 'An Options Order-Flow Analytics Engine',
+  description:
+    "Batin streams live options trades into TimescaleDB and turns them into a signal: the Batin Index. Every trade gets classified as buy- or sell-side off where it printed relative to the bid/ask spread, weighted by delta exposure, and split into institutional vs. retail flow — all served through a FastAPI engine and a Next.js terminal.",
+  longform: [
+    "Batin is the more analytically serious of the two trading projects. A streaming listener and a historical backfill job both feed the same TimescaleDB hypertables — options ticks and dark-pool block prints — so the data model doesn't care whether a row arrived live or got backfilled a year later. TimescaleDB over plain Postgres specifically because time-series queries over millions of ticks (scan by ticker + strike + expiration + time) need the hypertable partitioning to stay fast.",
+    "The actual math is the part I care about: `computeTradeDirection` doesn't just assume a call buy is bullish — it looks at whether the trade printed at the bid, at the ask, or inside the spread, and falls back to a naive call/put heuristic only when there's no usable quote. That direction then weights `computeDex`, a delta-exposure calculation (contract size × 100 × |delta| × underlying price), which gets split into institutional flow (premium ≥ $500k) versus retail (size ≤ 10 contracts) to produce a net conviction score per ticker — the Batin Index itself.",
+    "Everything runs as six coordinated pieces under one `docker-compose up`: TimescaleDB, Redis for caching hot queries, a FastAPI engine (`batinApp`) exposing the index and order-ticket endpoints, the streaming listener, the backfill script, and a Next.js terminal with real auth, a dashboard, per-ticker pages, and a paper-trading order ticket that writes to its own table.",
+    "It's not deployed publicly yet — it's still a local dev-mode project — which is honestly the point: this is the one I built to actually understand the math of order flow, not to ship a polished product. TRX is the finished storefront; Batin is the engine room.",
+  ],
+  stats: [
+    { value: '2', label: 'TimescaleDB hypertables' },
+    { value: 'Bid/Ask', label: 'Trade-direction classification' },
+    { value: '$500k', label: 'Institutional premium threshold' },
+    { value: '6', label: 'Services under one Docker Compose' },
+  ],
+  tech: ['Python', 'FastAPI', 'TimescaleDB', 'PostgreSQL', 'Redis', 'pandas / NumPy / SciPy', 'Next.js', 'Docker'],
+  github: 'https://github.com/zakiaminn/Batin',
+};
+
+export const featuredProjects = [trxProject, batinProject];
 
 export const projects = [
   {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { projects, featuredProject } from '../data/projects';
+import { projects, featuredProjects } from '../data/projects';
 
 function FeaturedProject({ project }) {
   const [expanded, setExpanded] = useState(false);
@@ -149,7 +149,9 @@ export default function Projects() {
         <h2 className="font-display text-3xl md:text-4xl text-ink">Selected Work</h2>
       </div>
 
-      <FeaturedProject project={featuredProject} />
+      {featuredProjects.map((project) => (
+        <FeaturedProject key={project.title} project={project} />
+      ))}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {projects.map((project, idx) => (
