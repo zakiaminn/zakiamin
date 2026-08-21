@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.css';
+import ScrollProgress from './components/ScrollProgress';
 import Nav from './components/Nav';
 import Ticker from './components/Ticker';
 import Hero from './components/Hero';
@@ -17,6 +18,7 @@ export default function App() {
       >
         Skip to content
       </a>
+      <ScrollProgress />
       <Nav />
       <Ticker />
       <main id="main">

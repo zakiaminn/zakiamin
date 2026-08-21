@@ -21,7 +21,22 @@ export default {
         sans: ['"Archivo"', 'system-ui', 'sans-serif'],
         mono: ['"Space Mono"', 'ui-monospace', 'monospace'],
       },
+      // Required by the shadcn Accordion primitive.
+      keyframes: {
+        'accordion-down': {
+          from: { height: '0' },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0' },
+        },
+      },
+      animation: {
+        'accordion-down': 'accordion-down 0.22s cubic-bezier(.16,1,.3,1)',
+        'accordion-up': 'accordion-up 0.18s cubic-bezier(.16,1,.3,1)',
+      },
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-animate')],
 }
