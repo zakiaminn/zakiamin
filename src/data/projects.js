@@ -55,7 +55,6 @@ export const projects = [
     description:
       "An NPM package for one specific feeling: when an app is being unbearable and you just want to watch it break. Click a button and the interface shatters — real DOM nodes, real CSS physics, not a video. Built it because error states are boring and rage-quitting deserved better tooling.",
     tech: ['JavaScript', 'DOM API', 'CSS Physics', 'NPM'],
-    color: '#FF5A33',
     shatter: true,
     github: 'https://github.com/zakiaminn/DOMolition',
     demoGif: '/DOMolitionDemo.gif',
@@ -67,7 +66,6 @@ export const projects = [
     description:
       "A grid-based pathfinding sandbox — drop walls and obstacles, watch A* find the shortest route around them in real time, step by step. I built it to actually understand the algorithm, not just cite it in an interview.",
     tech: ['JavaScript', 'Algorithms', 'HTML5 Canvas', 'Game Dev'],
-    color: '#F0A93A',
     shatter: false,
     github: 'https://github.com/zakiaminn/AegisGrid',
     demoGif: '/AegisGridDemo.gif',
@@ -79,7 +77,6 @@ export const projects = [
     description:
       "Started as a Python script to stop my Downloads folder from becoming a crime scene. Turned into a local AI app that runs Ollama on-device to read files and route them where they actually belong — no cloud, no API key, just a GUI on top of a model doing the sorting I refused to do by hand.",
     tech: ['Python', 'Ollama AI', 'Automation', 'Software Design'],
-    color: '#C97B2E',
     shatter: false,
     github: 'https://github.com/zakiaminn/FrankenSorter',
     demoGif: '/ssdemo.png',

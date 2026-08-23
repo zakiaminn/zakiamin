@@ -2,14 +2,31 @@ import React, { useEffect, useRef } from 'react';
 
 const COLS = 44;
 const ROWS = 59; // matches the 3:4 portrait crop
-const INK = [245, 240, 228];  // warm cream — the base dot ink
-const FLAME = [255, 90, 51];  // vivid flame — cursor-proximity color
 const INFLUENCE = 95;         // px radius of mouse influence
 
+// Fallbacks if a CSS variable can't be read: light-theme ink + accent.
+const INK_FALLBACK = [22, 22, 14];
+const ACCENT_FALLBACK = [111, 122, 0];
+
+function hexToRgb(hex) {
+  const m = hex.trim().replace('#', '');
+  if (m.length === 6) {
+    return [parseInt(m.slice(0, 2), 16), parseInt(m.slice(2, 4), 16), parseInt(m.slice(4, 6), 16)];
+  }
+  if (m.length === 3) {
+    return [parseInt(m[0] + m[0], 16), parseInt(m[1] + m[1], 16), parseInt(m[2] + m[2], 16)];
+  }
+  return null;
+}
+
 /**
- * Renders a photo as a grid of glowing dots on dark ground, poster-style:
- * highlights print as large dots, shadows fall away to bare black. Dots
+ * Renders a photo as a grid of dots printed in the theme's ink, poster-style:
+ * highlights print as large dots, shadows fall away to the bare page. Dots
  * near the cursor swell and shift toward the accent color, like ink lifting.
+ *
+ * Dot colors come from the live palette (`--ink` for the plate, `--brand-ink`
+ * for the cursor pull), so the plate re-inks itself when the theme flips —
+ * dark ink on chalk, cream ink on near-black.
  *
  * The render loop is demand-driven: frames are only scheduled while the
  * cursor is actually over the plate and the plate is on screen. At rest it
@@ -23,6 +40,8 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
   const smoothedRef = useRef({ x: -9999, y: -9999 });
   const frameRef = useRef(null);
+  const inkRef = useRef(INK_FALLBACK);
+  const accentRef = useRef(ACCENT_FALLBACK);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -31,6 +50,14 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     let reduced = motionQuery.matches;
     let onScreen = true;
+
+    // Pull the current plate + accent ink from the cascade.
+    const readPalette = () => {
+      const styles = getComputedStyle(container);
+      inkRef.current = hexToRgb(styles.getPropertyValue('--ink')) || INK_FALLBACK;
+      accentRef.current = hexToRgb(styles.getPropertyValue('--brand-ink')) || ACCENT_FALLBACK;
+    };
+    readPalette();
 
     const img = new Image();
     img.src = src;
@@ -139,9 +166,11 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
           }
 
           const radius = Math.min(maxRadius, maxRadius * (weight * 0.92 + 0.08) * (1 + boost * 0.65));
-          const r = Math.round(INK[0] + (FLAME[0] - INK[0]) * colorT);
-          const g = Math.round(INK[1] + (FLAME[1] - INK[1]) * colorT);
-          const b = Math.round(INK[2] + (FLAME[2] - INK[2]) * colorT);
+          const ink = inkRef.current;
+          const accent = accentRef.current;
+          const r = Math.round(ink[0] + (accent[0] - ink[0]) * colorT);
+          const g = Math.round(ink[1] + (accent[1] - ink[1]) * colorT);
+          const b = Math.round(ink[2] + (accent[2] - ink[2]) * colorT);
 
           ctx.beginPath();
           ctx.arc(cx + liftX, cy + liftY, radius, 0, Math.PI * 2);
@@ -181,6 +210,11 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
       if (reduced) mouseRef.current.active = false;
       request();
     };
+    // Re-ink and repaint when the theme flips.
+    const handleThemeChange = () => {
+      readPalette();
+      request();
+    };
 
     // Stop rendering entirely once the plate scrolls out of view.
     let observer;
@@ -198,6 +232,7 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
     container.addEventListener('mousemove', handleMove);
     container.addEventListener('mouseleave', handleLeave);
     window.addEventListener('resize', handleResize);
+    window.addEventListener('themechange', handleThemeChange);
     motionQuery.addEventListener('change', handleMotionChange);
     request();
 
@@ -209,6 +244,7 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
       container.removeEventListener('mousemove', handleMove);
       container.removeEventListener('mouseleave', handleLeave);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('themechange', handleThemeChange);
       motionQuery.removeEventListener('change', handleMotionChange);
     };
   }, [src]);

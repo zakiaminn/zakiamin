@@ -13,10 +13,10 @@ function Run({ hidden }) {
     <>
       {ITEMS.map((item, idx) => (
         <span key={idx} className="flex items-center whitespace-nowrap" aria-hidden={hidden || undefined}>
-          <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-inkSoft px-6">
+          <span className="font-martian text-[11px] tracking-[0.08em] uppercase text-ink-2 px-6">
             {item}
           </span>
-          <span className="text-flame text-xs">&#9670;</span>
+          <span className="text-brand-ink text-xs">&#9670;</span>
         </span>
       ))}
     </>
@@ -27,7 +27,7 @@ export default function Ticker() {
   const [paused, setPaused] = useState(false);
 
   return (
-    <div className="relative w-full border-b rule bg-paperDim">
+    <div className="relative w-full border-b rule bg-surface">
       {/*
         The track holds two identical runs so the -50% translate loops
         seamlessly. Only the first run is exposed to assistive tech —
@@ -50,7 +50,7 @@ export default function Ticker() {
         onClick={() => setPaused((v) => !v)}
         aria-pressed={paused}
         className="absolute right-0 top-0 h-full min-w-[44px] px-3 flex items-center justify-center
-                   bg-paperDim border-l rule text-inkFaint hover:text-ink transition-colors"
+                   bg-surface border-l rule text-ink-3 hover:text-ink transition-colors"
       >
         <span className="sr-only">{paused ? 'Resume the ticker' : 'Pause the ticker'}</span>
         <svg viewBox="0 0 12 12" className="w-2.5 h-2.5" fill="currentColor" aria-hidden="true">

@@ -16,8 +16,8 @@ function StatRow({ stats }) {
         <div key={stat.label}>
           <dt className="sr-only">{stat.label}</dt>
           <dd>
-            <span className="block font-display text-2xl md:text-3xl text-flame tnum">{stat.value}</span>
-            <span className="block font-mono text-[11px] tracking-[0.08em] uppercase text-inkFaint mt-1 balance">
+            <span className="block font-martian font-medium text-2xl md:text-[1.75rem] tracking-[-0.035em] text-brand-ink tnum">{stat.value}</span>
+            <span className="block font-martian text-[11px] tracking-[0.08em] uppercase text-ink-3 mt-1.5 balance">
               {stat.label}
             </span>
           </dd>
@@ -31,7 +31,7 @@ function TechList({ tech, title }) {
   return (
     <ul className="flex flex-wrap gap-2" aria-label={`${title} tech stack`}>
       {tech.map((t) => (
-        <li key={t} className="font-mono text-xs border rule px-2.5 py-1.5 text-inkSoft">{t}</li>
+        <li key={t} className="font-martian text-xs border rule px-2.5 py-1.5 text-ink-2">{t}</li>
       ))}
     </ul>
   );
@@ -45,7 +45,7 @@ function ExternalLinks({ project }) {
           href={project.live}
           target="_blank"
           rel="noreferrer"
-          className="ink-link font-mono text-xs tracking-[0.1em] uppercase text-ink font-bold inline-flex items-center min-h-[44px]"
+          className="ink-link font-martian text-xs tracking-[0.1em] uppercase text-brand-ink font-semibold inline-flex items-center min-h-[44px]"
         >
           Visit the live site ↗
           <span className="sr-only"> (opens in a new tab)</span>
@@ -56,7 +56,7 @@ function ExternalLinks({ project }) {
           href={project.github}
           target="_blank"
           rel="noreferrer"
-          className="ink-link font-mono text-xs tracking-[0.1em] uppercase text-inkSoft inline-flex items-center min-h-[44px]"
+          className="ink-link font-martian text-xs tracking-[0.1em] uppercase text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
         >
           Read the source
           <span className="sr-only"> for {project.title} (opens in a new tab)</span>
@@ -86,7 +86,7 @@ export default function CaseStudy({ project, trigger }) {
       width={mw}
       height={mh}
       aria-label={`Screen recording: ${project.title} demo`}
-      className="w-full h-auto border rule bg-paperDim"
+      className="w-full h-auto border rule bg-surface-2"
     />
   ) : project.demoGif ? (
     <img
@@ -96,7 +96,7 @@ export default function CaseStudy({ project, trigger }) {
       height={mh}
       loading="lazy"
       decoding="async"
-      className="w-full h-auto border rule bg-paperDim"
+      className="w-full h-auto border rule bg-surface-2"
     />
   ) : null;
 
@@ -105,7 +105,7 @@ export default function CaseStudy({ project, trigger }) {
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <span className="font-mono text-xs tracking-[0.15em] uppercase text-flame">
+          <span className="font-martian text-xs tracking-[0.14em] uppercase text-brand-ink">
             {hasLongform ? 'Case Study' : 'Project'}
           </span>
           <DialogTitle className="mt-2 pr-14">{project.title}</DialogTitle>
@@ -122,26 +122,26 @@ export default function CaseStudy({ project, trigger }) {
               </TabsList>
 
               <TabsContent value="overview" className="space-y-8">
-                <p className="text-inkSoft leading-relaxed">{project.description}</p>
+                <p className="text-ink-2 leading-relaxed">{project.description}</p>
                 {project.stats && <StatRow stats={project.stats} />}
                 {media}
                 <ExternalLinks project={project} />
               </TabsContent>
 
               <TabsContent value="log">
-                <p className="text-inkSoft leading-relaxed dropcap">{lede}</p>
+                <p className="text-ink-2 leading-relaxed dropcap">{lede}</p>
                 {project.pullQuote && (
                   <blockquote className="pull-quote my-9">{project.pullQuote}</blockquote>
                 )}
                 <div className="space-y-5">
                   {rest.map((para, idx) => (
-                    <p key={idx} className="text-inkSoft leading-relaxed">{para}</p>
+                    <p key={idx} className="text-ink-2 leading-relaxed">{para}</p>
                   ))}
                 </div>
               </TabsContent>
 
               <TabsContent value="stack" className="space-y-8">
-                <p className="font-mono text-xs tracking-[0.1em] uppercase text-inkFaint">
+                <p className="font-martian text-xs tracking-[0.14em] uppercase text-ink-3">
                   Everything this build runs on
                 </p>
                 <TechList tech={project.tech} title={project.title} />
@@ -150,7 +150,7 @@ export default function CaseStudy({ project, trigger }) {
             </Tabs>
           ) : (
             <div className="space-y-8">
-              <p className="text-inkSoft leading-relaxed">{project.description}</p>
+              <p className="text-ink-2 leading-relaxed">{project.description}</p>
               {media}
               <TechList tech={project.tech} title={project.title} />
               <ExternalLinks project={project} />

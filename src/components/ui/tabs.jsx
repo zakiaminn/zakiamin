@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 /**
  * Tabs as running heads, not pills: mono small-caps sitting on a hairline,
- * the active one carrying a flame rule beneath it. Radix handles roving
+ * the active one carrying a brand rule beneath it. Radix handles roving
  * focus and arrow-key navigation.
  */
 const Tabs = TabsPrimitive.Root;
@@ -24,9 +24,9 @@ const TabsTrigger = React.forwardRef(({ className, ...props }, ref) => (
     ref={ref}
     className={cn(
       'relative -mb-px inline-flex items-center min-h-[44px] whitespace-nowrap',
-      'font-mono text-xs tracking-[0.14em] uppercase transition-colors',
-      'border-b-2 border-transparent text-inkFaint hover:text-inkSoft',
-      'data-[state=active]:border-flame data-[state=active]:text-ink',
+      'font-martian text-xs tracking-[0.14em] uppercase transition-colors',
+      'border-b-2 border-transparent text-ink-3 hover:text-ink-2',
+      'data-[state=active]:border-brand data-[state=active]:text-ink',
       className
     )}
     {...props}

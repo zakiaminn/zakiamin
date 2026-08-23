@@ -1,25 +1,47 @@
+import tailwindcssAnimate from 'tailwindcss-animate'
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Dark mode is driven by a `.dark` class on <html> (set before paint in
+  // index.html, toggled by ThemeToggle). Colors flow from CSS variables that
+  // flip on that class, so most components need no `dark:` variants at all.
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
+      // House brand kit — "Sulfur on Chalk". One accent (chartreuse) that
+      // marks the interface; a warm-neutral spine; green/red reserved for data.
+      // Every value resolves to a CSS variable defined in index.css.
       colors: {
-        paper: '#0D0B08',      // near-black ground — the "stock" background
-        paperDim: '#1B1712',   // raised panel, one step lighter
-        ink: '#F5F0E4',        // warm off-white, primary text & dot ink
-        inkSoft: '#BFB8A4',    // muted light, secondary text
-        inkFaint: '#8C866F',   // faint, tertiary/labels
-        flame: '#FF5A33',      // vivid flame — primary spot color
-        cobalt: '#F0A93A',     // amber — secondary spot color
-        line: 'rgba(245,240,228,0.16)',
+        bg: 'var(--bg)',
+        surface: 'var(--surface)',
+        'surface-2': 'var(--surface-2)',
+        ink: 'var(--ink)',
+        'ink-2': 'var(--ink-2)',
+        'ink-3': 'var(--ink-3)',
+        rule: 'var(--rule)',
+        'rule-2': 'var(--rule-2)',
+        // The accent splits three ways: `brand` is the fill, `brand-ink` is
+        // contrast-safe accent text/links/icons, `brand-fg` sits on a fill.
+        brand: 'var(--brand)',
+        'brand-ink': 'var(--brand-ink)',
+        'brand-fg': 'var(--brand-fg)',
+        'brand-wash': 'var(--brand-wash)',
+        pos: 'var(--pos)',
+        neg: 'var(--neg)',
+        focus: 'var(--focus)',
       },
       fontFamily: {
-        display: ['"Fraunces"', 'ui-serif', 'Georgia', 'serif'],
-        sans: ['"Archivo"', 'system-ui', 'sans-serif'],
-        mono: ['"Space Mono"', 'ui-monospace', 'monospace'],
+        // Bricolage reads, Martian counts. Anything a human reads is Bricolage;
+        // anything the machine emits (numbers, labels, the wordmark) is Martian.
+        bricolage: ['"Bricolage Grotesque"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        martian: ['"Martian Mono"', 'ui-monospace', '"SF Mono"', 'Menlo', 'monospace'],
+        // Defaults point at the same two families so stray utilities stay on-brand.
+        sans: ['"Bricolage Grotesque"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        mono: ['"Martian Mono"', 'ui-monospace', '"SF Mono"', 'Menlo', 'monospace'],
       },
       // Required by the shadcn Accordion primitive.
       keyframes: {
@@ -38,5 +60,5 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [tailwindcssAnimate],
 }

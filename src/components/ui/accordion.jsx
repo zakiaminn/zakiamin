@@ -4,7 +4,7 @@ import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { cn } from '@/lib/utils';
 
 /**
- * Accordion in the timeline's own idiom — hairline rules, a flame plus
+ * Accordion in the timeline's own idiom — hairline rules, an accent plus
  * that rotates into a minus. Radix manages expanded state and ARIA.
  */
 const Accordion = AccordionPrimitive.Root;
@@ -28,7 +28,7 @@ const AccordionTrigger = React.forwardRef(({ className, children, ...props }, re
       {children}
       <span
         className="mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center border rule
-                   text-flame transition-transform duration-200 group-data-[state=open]:rotate-45"
+                   text-brand-ink transition-transform duration-200 group-data-[state=open]:rotate-45"
         aria-hidden="true"
       >
         <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none"

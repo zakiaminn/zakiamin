@@ -11,10 +11,10 @@ import Footer from './components/Footer';
 
 export default function App() {
   return (
-    <div className="grain relative min-h-screen bg-paper text-ink font-sans">
+    <div className="grain relative min-h-screen bg-bg text-ink font-bricolage">
       <a
         href="#main"
-        className="skip-link font-mono text-xs tracking-[0.15em] uppercase bg-paper text-ink border rule px-4 py-3"
+        className="skip-link font-martian text-xs tracking-[0.15em] uppercase bg-bg text-ink border rule px-4 py-3"
       >
         Skip to content
       </a>

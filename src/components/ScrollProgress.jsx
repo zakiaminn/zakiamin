@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 /**
- * A hairline of flame across the very top, tracking read position — the
+ * A hairline of the accent across the very top, tracking read position — the
  * page is long, and a reader deep in a case study should be able to see
  * how much is left.
  *
@@ -44,7 +44,7 @@ export default function ScrollProgress() {
       ref={ref}
       aria-hidden="true"
       style={{ transform: 'scaleX(0)' }}
-      className="fixed top-0 left-0 right-0 z-50 h-[2px] origin-left bg-flame will-change-transform"
+      className="fixed top-0 left-0 right-0 z-50 h-[2px] origin-left bg-brand-ink will-change-transform"
     />
   );
 }

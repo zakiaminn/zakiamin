@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-  <rect width="48" height="48" fill="#F3EEE1"/>
-  <g fill="#19160F">
+  <rect width="48" height="48" fill="#FAFAF9"/>
+  <g fill="#16160E">
     <circle cx="8" cy="8" r="1.6"/>
     <circle cx="18" cy="8" r="2.3"/>
     <circle cx="28" cy="8" r="3.1"/>
@@ -11,8 +11,8 @@
     <circle cx="8" cy="28" r="3.1"/>
     <circle cx="18" cy="28" r="3.8"/>
   </g>
-  <circle cx="38" cy="38" r="4.6" fill="#D8431F"/>
-  <circle cx="28" cy="28" r="4.4" fill="#19160F"/>
-  <circle cx="8" cy="38" r="3.8" fill="#19160F"/>
-  <circle cx="18" cy="38" r="4.2" fill="#19160F"/>
+  <circle cx="38" cy="38" r="4.6" fill="#6F7A00"/>
+  <circle cx="28" cy="28" r="4.4" fill="#16160E"/>
+  <circle cx="8" cy="38" r="3.8" fill="#16160E"/>
+  <circle cx="18" cy="38" r="4.2" fill="#16160E"/>
 </svg>

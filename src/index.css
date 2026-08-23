@@ -2,25 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   HOUSE BRAND KIT — "Sulfur on Chalk"
+   Light is the default; dark is the override. Fonts are the
+   permanent trademark (Bricolage reads, Martian counts); the
+   chartreuse "Sulfur" is the current house accent.
+   ============================================================ */
+:root {
+  --bg: #FAFAF9;   --surface: #F1F1EE;   --surface-2: #E9E9E5;
+  --ink: #16160E;  --ink-2: #565448;     --ink-3: #78766A;
+  --rule: #E5E5E1; --rule-2: #D4D4CF;
+  --brand: #DCEC3A; --brand-ink: #6F7A00; --brand-fg: #16160E; --brand-wash: #EFF0CE;
+  --pos: #2E7D4F;  --neg: #B33A3A;       --focus: #8A9600;
+}
+
+/* Explicit dark class (set before paint in index.html, toggled by the UI). */
+.dark {
+  --bg: #0E0E0A;   --surface: #17170F;   --surface-2: #212118;
+  --ink: #EDEDE0;  --ink-2: #9C9A86;     --ink-3: #86846F;
+  --rule: #29291C; --rule-2: #3A3A29;
+  --brand: #DCEC3A; --brand-ink: #DCEC3A; --brand-fg: #14140A; --brand-wash: #23260F;
+  --pos: #55B37E;  --neg: #E8635E;       --focus: #DCEC3A;
+}
+
+/* Fallback for when JS never runs and no class is present: follow the OS. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --bg: #0E0E0A;   --surface: #17170F;   --surface-2: #212118;
+    --ink: #EDEDE0;  --ink-2: #9C9A86;     --ink-3: #86846F;
+    --rule: #29291C; --rule-2: #3A3A29;
+    --brand: #DCEC3A; --brand-ink: #DCEC3A; --brand-fg: #14140A; --brand-wash: #23260F;
+    --pos: #55B37E;  --neg: #E8635E;       --focus: #DCEC3A;
+  }
+}
+
 html {
   scroll-behavior: smooth;
+  font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
-  background-color: #0D0B08;
-  color: #F5F0E4;
+  background-color: var(--bg);
+  color: var(--ink);
   overflow-x: hidden;
   margin: 0;
-  font-family: 'Archivo', system-ui, sans-serif;
+  font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  /* Repaint the ground when the theme flips, so the switch reads as instant. */
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+/* Selection is a brand fill with dark text on it. */
 ::selection {
-  background: #FF5A33;
-  color: #0D0B08;
+  background: var(--brand);
+  color: var(--brand-fg);
 }
 
 @layer utilities {
-  /* Grain — a subtle fractal-noise texture over the whole page */
+  /* Grain — a subtle fractal-noise texture over the whole page. */
   .grain::before {
     content: '';
     position: fixed;
@@ -28,21 +66,27 @@ body {
     z-index: 1;
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+    opacity: 0.055;
+  }
+  /* Noise reads darker on paper, so lean on screen-blend in the dark. */
+  .dark .grain::before {
     mix-blend-mode: overlay;
-    opacity: 0.35;
+    opacity: 0.22;
   }
 
+  /* Hairline dividers/borders take the rule token. */
   .rule {
-    border-color: rgba(245, 240, 228, 0.16);
+    border-color: var(--rule);
   }
 
-  /* Halftone dot-grid pattern, reused on card headers / dividers */
+  /* Halftone dot-grid pattern, reused on card headers / dividers. */
   .dot-pattern {
     background-image: radial-gradient(currentColor 1px, transparent 1.4px);
     background-size: 7px 7px;
   }
 
-  /* Ink underline that draws on hover, instead of a glow */
+  /* Accent underline that draws on hover, instead of a glow. */
   .ink-link {
     position: relative;
     text-decoration: none;
@@ -63,7 +107,7 @@ body {
     transform: scaleX(1);
   }
 
-  /* Rubber-stamp label: fixed slight rotation, like a hand-stamped tag */
+  /* Rubber-stamp label: fixed slight rotation, like a hand-stamped tag. */
   .stamp {
     transform: rotate(-1.5deg);
   }
@@ -76,8 +120,21 @@ body {
 }
 
 /*
+ * The one signature flourish — the accent underline ("swipe").
+ * A chunky chartreuse band swiped under one phrase in the hero headline.
+ */
+.swipe {
+  background-image: linear-gradient(var(--brand), var(--brand));
+  background-repeat: no-repeat;
+  background-position: 0 92%;      /* sit low, overlapping the baseline */
+  background-size: 100% 0.24em;    /* band thickness */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;     /* so it survives line wraps */
+}
+
+/*
  * Misprint — a two-color registration-shift effect for headlines.
- * The base layer sits in ink; a second, offset layer in the spot color
+ * The base layer sits in ink; a second, offset layer in the accent
  * peeks out on hover, mimicking a riso print that's slightly out of register.
  */
 .misprint {
@@ -87,14 +144,14 @@ body {
 .misprint .misprint-ghost {
   position: absolute;
   inset: 0;
-  color: #FF5A33;
+  color: var(--brand-ink);
   opacity: 0;
   transform: translate(0, 0);
   transition: transform 0.3s cubic-bezier(.65,0,.35,1), opacity 0.3s ease;
   pointer-events: none;
 }
 .misprint:hover .misprint-ghost {
-  opacity: 0.85;
+  opacity: 0.9;
   transform: translate(3px, 2px);
 }
 
@@ -144,7 +201,7 @@ body {
    :where() keeps specificity at 0 so components can override.
    ============================================================ */
 :where(a, button, [tabindex], video, summary):focus-visible {
-  outline: 2px solid #FF5A33;
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
   border-radius: 1px;
 }
@@ -182,24 +239,23 @@ body {
 /* Drop cap for the opening paragraph of a build log. */
 .dropcap::first-letter {
   float: left;
-  font-family: 'Fraunces', ui-serif, Georgia, serif;
-  font-weight: 500;
+  font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 800;
   font-size: 3.3em;
-  line-height: 0.8;
-  padding-right: 0.085em;
-  margin-top: 0.055em;
-  color: #FF5A33;
+  line-height: 0.72;
+  padding-right: 0.09em;
+  margin-top: 0.06em;
+  color: var(--brand-ink);
 }
 
-/* Pull quote — a line worth setting larger, in the ink of the spot color. */
+/* Pull quote — a line worth setting larger, marked by a brand rule. */
 .pull-quote {
-  font-family: 'Fraunces', ui-serif, Georgia, serif;
-  font-style: italic;
-  font-weight: 400;
+  font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 500;
   font-size: clamp(1.2rem, 2.1vw, 1.55rem);
   line-height: 1.35;
-  color: #F5F0E4;
-  border-left: 2px solid #FF5A33;
+  color: var(--ink);
+  border-left: 3px solid var(--brand);
   padding-left: 1.25rem;
   max-inline-size: 34ch;
   text-wrap: pretty;
