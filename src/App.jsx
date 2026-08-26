@@ -2,7 +2,6 @@ import React from 'react';
 import './index.css';
 import ScrollProgress from './components/ScrollProgress';
 import Nav from './components/Nav';
-import Ticker from './components/Ticker';
 import Hero from './components/Hero';
 import About from './components/About';
 import Experience from './components/Experience';
@@ -20,7 +19,6 @@ export default function App() {
       </a>
       <ScrollProgress />
       <Nav />
-      <Ticker />
       <main id="main">
         <Hero />
         <About />

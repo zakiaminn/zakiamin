@@ -1,4 +1,6 @@
 import React from 'react';
+import Resume from './Resume';
+import { profile } from '@/data/profile';
 
 export default function Footer() {
   return (
@@ -7,18 +9,28 @@ export default function Footer() {
         <div>
           <span className="font-martian text-xs tracking-[0.14em] uppercase text-brand-ink">Get in touch</span>
           <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink mt-3 max-w-md balance">
-            Open to opportunities, collaborations, and arguments about database schema design.
+            Looking for a {profile.seeking} — and always open to collaborations and arguments about database schema design.
           </h2>
         </div>
 
         <div className="flex flex-col gap-3 items-start md:items-end">
-          <a href="mailto:zakiaminn@gmail.com" className="ink-link font-martian text-sm text-ink font-semibold inline-flex items-center min-h-[44px]">
-            zakiaminn@gmail.com
+          <a href={`mailto:${profile.email}`} className="ink-link font-martian text-sm text-ink font-semibold inline-flex items-center min-h-[44px]">
+            {profile.email}
           </a>
-          <a href="https://github.com/zakiaminn" target="_blank" rel="noreferrer" className="ink-link font-martian text-sm text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]">
+          <Resume
+            trigger={
+              <button
+                type="button"
+                className="ink-link font-martian text-sm text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
+              >
+                Résumé
+              </button>
+            }
+          />
+          <a href={profile.github} target="_blank" rel="noreferrer" className="ink-link font-martian text-sm text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]">
             GitHub<span className="sr-only"> profile (opens in a new tab)</span>
           </a>
-          <a href="https://www.linkedin.com/in/zakiamin/" target="_blank" rel="noreferrer" className="ink-link font-martian text-sm text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]">
+          <a href={profile.linkedin} target="_blank" rel="noreferrer" className="ink-link font-martian text-sm text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]">
             LinkedIn<span className="sr-only"> profile (opens in a new tab)</span>
           </a>
         </div>

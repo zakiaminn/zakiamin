@@ -1,23 +1,5 @@
 import React from 'react';
-
-const GROUPS = [
-  {
-    label: 'Languages',
-    items: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C', 'C++', 'C#'],
-  },
-  {
-    label: 'Frameworks & Runtimes',
-    items: ['React', 'Next.js', 'Node / Express', 'FastAPI', '.NET'],
-  },
-  {
-    label: 'Data & Infrastructure',
-    items: ['SQL', 'PostgreSQL', 'TimescaleDB', 'Redis', 'Supabase', 'Data Analytics'],
-  },
-  {
-    label: 'Tools & Platforms',
-    items: ['Git', 'Docker', 'Xcode', 'Android Studio', 'Vercel / Render'],
-  },
-];
+import { skillGroups as GROUPS } from '@/data/profile';
 
 export default function About() {
   return (

@@ -5,27 +5,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-
-const TIMELINE = [
-  {
-    id: 'sheridan',
-    year: '2024 — Present',
-    role: 'Computer Science Student, Sheridan College',
-    detail: 'Specializing in Data Analytics — data pipelines, database management, and scalable software architecture. Currently building telemetry and analytics engines outside of coursework, not just for it.',
-  },
-  {
-    id: 'freelance',
-    year: '2022 — 2024',
-    role: 'Freelance Web Developer',
-    detail: 'Designed and built custom web applications for clients, including a real estate platform with dynamic listing logic, custom React components, and interface polish clients actually noticed.',
-  },
-  {
-    id: 'calgary',
-    year: '2021 — 2023',
-    role: 'Undergraduate Studies, University of Calgary',
-    detail: 'Foundational computer science coursework — the algorithms and software design fundamentals everything since has built on.',
-  },
-];
+import { timeline as TIMELINE } from '@/data/profile';
 
 export default function Experience() {
   return (

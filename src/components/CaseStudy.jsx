@@ -62,6 +62,13 @@ function ExternalLinks({ project }) {
           <span className="sr-only"> for {project.title} (opens in a new tab)</span>
         </a>
       )}
+      {/* Pre-launch builds have no public repo or site yet — say so plainly
+          rather than leaving a dead link a recruiter would click into a 404. */}
+      {project.comingSoon && !project.live && !project.github && (
+        <span className="font-martian text-xs tracking-[0.1em] uppercase text-ink-3 inline-flex items-center min-h-[44px]">
+          Source &amp; live demo open at launch
+        </span>
+      )}
     </div>
   );
 }
@@ -98,6 +105,17 @@ export default function CaseStudy({ project, trigger }) {
       decoding="async"
       className="w-full h-auto border rule bg-surface-2"
     />
+  ) : project.demoComingSoon ? (
+    // Placeholder that reads as intentional, not missing — swapped for the
+    // real recording once the demo is ready.
+    <div className="border rule bg-surface-2 w-full aspect-video flex flex-col items-center justify-center gap-2 px-6 text-center">
+      <span className="font-martian text-[11px] tracking-[0.14em] uppercase text-brand-ink">
+        Demo coming soon
+      </span>
+      <span className="font-martian text-[11px] tracking-[0.08em] uppercase text-ink-3">
+        A live walkthrough lands with the public launch
+      </span>
+    </div>
   ) : null;
 
   return (

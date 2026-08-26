@@ -20,7 +20,7 @@ function FeaturedProject({ project }) {
             <h3 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink mt-2 balance">{project.title}</h3>
             <p className="font-martian text-sm text-ink-2 mt-1">{project.tagline}</p>
           </div>
-          {project.live && (
+          {project.live ? (
             <a
               href={project.live}
               target="_blank"
@@ -30,7 +30,13 @@ function FeaturedProject({ project }) {
               Visit ↗
               <span className="sr-only"> {project.title} (opens in a new tab)</span>
             </a>
-          )}
+          ) : project.status ? (
+            // A brand-washed pill in place of the live link, so a pre-launch
+            // build reads as "on the way", not "missing".
+            <span className="font-martian text-[11px] tracking-[0.12em] uppercase text-brand-ink font-semibold bg-brand-wash border border-rule px-3 py-1.5">
+              {project.status}
+            </span>
+          ) : null}
         </div>
 
         <p className="text-ink-2 leading-relaxed max-w-3xl mb-10">{project.description}</p>

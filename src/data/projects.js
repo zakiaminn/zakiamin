@@ -1,48 +1,55 @@
+// Project copy is functionality-first: the top-line description leads with what
+// each build actually does and the hardest mechanism inside it. The war stories
+// — dead hosts, IPv6, rate limits — live in `longform` (the Build Log), not the
+// headline. Voice: confident, a little edge, kept honest against the real code.
+
 const trxProject = {
   title: 'The Repo Exchange',
-  tagline: 'A Stock Exchange for GitHub Repos',
+  tagline: 'A Trading Terminal for GitHub Repos',
   description:
-    "TRX is a fake stock market where the tradable assets are GitHub repos — price is just star count \xf7 100, and you trade with $100k of fake money. Under the hood it's three separate services (a Next.js frontend, a Node/Express trading engine, a Python scraper) all talking to one Postgres database, with real trading safeguards: row-locked transactions, slippage protection, a full audit log.",
+    "A real-time trading terminal where the tradable assets are GitHub repos, priced live off their stars, forks, and open issues. Three deployed services — a Next.js terminal, a Node/Express order engine, and a 24/7 Python data engine — share one Postgres ledger. Postgres Row-Level Security lets the client read a user's own portfolio directly, and a caching layer pins the database to a single query every five seconds no matter how many terminals are polling.",
   longform: [
-    "TRX turns GitHub into a stock market. Every repo is a “stock,” its price is just star count \xf7 100, and you trade it with $100k of starting capital. A Python worker polls GitHub every hour, finds trending repos, and backfills 30 days of synthetic price history so new listings don't show up with an empty chart. It's three services — a Next.js trading terminal, a Node/Express engine that actually executes trades, and that Python scraper — sharing one Postgres database, no ORM, just SQL I wrote by hand.",
-    "The trading engine isn't a toy despite the premise: buys and sells run inside row-locked Postgres transactions so two requests can't race each other, there's slippage protection against stale prices, weighted-average cost basis tracking, and an append-only log of every trade. I also added a confirmation step before trades fire — turns out shipping a “buy” button with zero confirmation is a bad idea even when the money's fake.",
-    "Then my host's free trial expired mid-production and the API just went dark. Fixing it meant rebuilding the whole stack on $0/month infra, and along the way I chased a bug where the API worked locally and died in prod with two completely different errors — turned out Supabase's direct DB hostname is IPv6-only, and Render can't route IPv6 at all. Swapped both services to Supabase's connection pooler and it's been stable since.",
-    "Before making the repo public I went back through the entire git history — not just current files — checking for leaked keys, patched all 27 flagged dependency vulnerabilities across three different ecosystems without breaking anything, then did a full design pass: new color system, a logo, reusable components, mobile nav, after running my own audit and finding a page that was literally rendering two nav bars stacked on each other.",
+    "TRX turns GitHub into a market: every repo is a tradable asset, its price derived from live metrics, and you trade it with $100k of simulated capital. A Python worker runs 24/7 — it hunts trending repos, ingests their stars, forks, and open issues, computes a synthetic price, and backfills historical points so a new listing never loads with an empty chart. The real constraint was GitHub's API rate limits, so the worker runs on exponential backoff and paced polling and never gets timed out.",
+    "The terminal is thirsty: it polls for live prices every five seconds to feel alive, and that nearly took the database down on its own. I put an IP rate-limiter and an in-memory cache in front of the Express API, which decouples the number of connected clients from the number of database queries — a hundred terminals still resolve to one query per five-second tick. I'd rather not get a denial-of-wallet invoice from my own frontend.",
+    "Access control leans on the database, not trust. Auth is passwordless — Supabase magic links delivered over Resend — and Postgres Row-Level Security means a user physically cannot query another user's portfolio or transaction log, even straight from the client. The Express backend is kept for the heavy lifting: order routing and market data.",
+    "Then the infrastructure earned its stripes. My original host's free trial expired mid-production and the API went dark; rebuilding it surfaced a bug where the API worked locally and 500'd in prod with two different errors — Supabase's direct database hostname is IPv6-only and Render couldn't route IPv6 at all. I moved both services to Railway on Supabase's connection pooler, and while the hood was open, audited the entire git history for leaked keys and patched all 27 flagged dependency vulnerabilities to zero across three ecosystems. Next up: moving trade validation fully server-side with a hard slippage tolerance — client state is a lie, and nobody should be able to edit a JSON payload to buy React for zero dollars.",
   ],
   stats: [
-    { value: '3', label: 'Services, 1 DB' },
-    { value: '27 → 0', label: 'Vulnerabilities patched' },
-    { value: '$0/mo', label: 'Hosting cost' },
-    { value: 'IPv6', label: 'Bug root-caused across 2 hosts' },
+    { value: '3', label: 'Services, one Postgres ledger' },
+    { value: '24/7', label: 'Rate-limit-aware data engine' },
+    { value: 'RLS', label: 'Row-level security per user' },
+    { value: '5s', label: 'Cache-guarded live pricing' },
   ],
-  tech: ['Next.js', 'React', 'Node / Express', 'Python', 'PostgreSQL', 'Supabase', 'Vercel', 'Render'],
+  tech: ['Next.js', 'Node / Express', 'Python', 'PostgreSQL', 'Supabase', 'Vercel', 'Railway'],
   github: 'https://github.com/zakiaminn/TheRepoExchange',
   live: 'https://therepo.exchange',
   demoVideo: '/TRX-demo.mp4',
   demoSize: [2032, 1192],
   pullQuote:
-    "The API worked locally and died in prod with two completely different errors — Supabase’s direct DB hostname is IPv6-only, and Render can’t route IPv6 at all.",
+    "The API worked locally and died in prod with two different errors — Supabase's direct DB hostname is IPv6-only, and Render couldn't route IPv6 at all.",
 };
 
 const batinProject = {
   title: 'Batin',
   tagline: 'An Options Order-Flow Analytics Engine',
+  status: 'Launching soon',
+  comingSoon: true,
+  demoComingSoon: true,
   description:
-    "Batin streams live options trades into TimescaleDB and turns them into a signal: the Batin Index. Every trade gets classified as buy- or sell-side off where it printed relative to the bid/ask spread, weighted by delta exposure, and split into institutional vs. retail flow — all served through a FastAPI engine and a Next.js terminal.",
+    "Batin reads options order flow and distills it into one conviction signal: the Batin Index. Every trade is classified buy- or sell-side by where it printed against the bid/ask spread — not the naive assumption that a call buy is bullish — then weighted by delta exposure and split into institutional versus retail flow. Live ticks and historical backfill land in the same TimescaleDB hypertables, so a query never cares whether a row arrived a second ago or a year ago.",
   longform: [
-    "Batin is the more analytically serious of the two trading projects. A streaming listener and a historical backfill job both feed the same TimescaleDB hypertables — options ticks and dark-pool block prints — so the data model doesn't care whether a row arrived live or got backfilled a year later. TimescaleDB over plain Postgres specifically because time-series queries over millions of ticks (scan by ticker + strike + expiration + time) need the hypertable partitioning to stay fast.",
-    "The actual math is the part I care about: `computeTradeDirection` doesn't just assume a call buy is bullish — it looks at whether the trade printed at the bid, at the ask, or inside the spread, and falls back to a naive call/put heuristic only when there's no usable quote. That direction then weights `computeDex`, a delta-exposure calculation (contract size × 100 × |delta| × underlying price), which gets split into institutional flow (premium ≥ $500k) versus retail (size ≤ 10 contracts) to produce a net conviction score per ticker — the Batin Index itself.",
-    "Everything runs as six coordinated pieces under one `docker-compose up`: TimescaleDB, Redis for caching hot queries, a FastAPI engine (`batinApp`) exposing the index and order-ticket endpoints, the streaming listener, the backfill script, and a Next.js terminal with real auth, a dashboard, per-ticker pages, and a paper-trading order ticket that writes to its own table.",
-    "It's not deployed publicly yet — it's still a local dev-mode project — which is honestly the point: this is the one I built to actually understand the math of order flow, not to ship a polished product. TRX is the finished storefront; Batin is the engine room.",
+    "Batin is the analytically serious one, and the math is the point. `computeTradeDirection` looks at whether a trade printed at the bid, at the ask, or inside the spread to decide direction, and only falls back to a call/put heuristic when there's no usable quote. That direction weights `computeDex` — a delta-exposure figure (contract size × 100 × |delta| × underlying) — which is then split into institutional flow (premium ≥ $500k) and retail (size ≤ 10 contracts) to produce a net conviction score per ticker: the Index itself.",
+    "The storage model is deliberate. A streaming listener and a historical backfill job feed the same TimescaleDB hypertables — options ticks and dark-pool block prints — so the pipeline is agnostic to how a row arrived. TimescaleDB over vanilla Postgres specifically for the hypertable partitioning: scans across millions of ticks by ticker, strike, expiration, and time stay fast.",
+    "It runs as six coordinated services under a single `docker-compose up`: TimescaleDB, Redis for hot-query caching, a FastAPI engine exposing the index and order-ticket endpoints, the streaming listener, the backfill job, and a Next.js terminal with auth, a dashboard, per-ticker pages, and a paper-trading order ticket that writes to its own table.",
+    "It's headed for a public deployment now, with a live demo landing shortly. Up to this point it's run in dev on purpose — so the effort went into getting the order-flow math right rather than the packaging. If TRX is the finished storefront, Batin is the engine room.",
   ],
   stats: [
     { value: '2', label: 'TimescaleDB hypertables' },
-    { value: 'Bid/Ask', label: 'Trade-direction classification' },
-    { value: '$500k', label: 'Institutional premium threshold' },
-    { value: '6', label: 'Services under one Docker Compose' },
+    { value: 'Bid/Ask', label: 'Spread-relative classification' },
+    { value: '$500k', label: 'Institutional flow threshold' },
+    { value: '6', label: 'Services, one Docker Compose' },
   ],
   tech: ['Python', 'FastAPI', 'TimescaleDB', 'PostgreSQL', 'Redis', 'pandas / NumPy / SciPy', 'Next.js', 'Docker'],
-  github: 'https://github.com/zakiaminn/Batin',
   pullQuote: 'TRX is the finished storefront; Batin is the engine room.',
 };
 
@@ -53,8 +60,8 @@ export const projects = [
     title: 'DOMolition',
     tagline: 'A UI You’re Allowed to Break',
     description:
-      "An NPM package for one specific feeling: when an app is being unbearable and you just want to watch it break. Click a button and the interface shatters — real DOM nodes, real CSS physics, not a video. Built it because error states are boring and rage-quitting deserved better tooling.",
-    tech: ['JavaScript', 'DOM API', 'CSS Physics', 'NPM'],
+      "A published npm package that turns any React component into a rigid-body physics simulation. It captures the live element to a bitmap — computed styles and all — subdivides that image into shards (a clean grid, or Voronoi tessellation via d3-delaunay), and hands each shard to matter-js as a body with real mass, friction, and restitution. A canvas loop paints the pieces as they fall and tears itself down once everything comes to rest. Because sometimes centering a div deserves consequences.",
+    tech: ['React', 'TypeScript', 'matter-js', 'd3-delaunay', 'Canvas', 'npm'],
     shatter: true,
     github: 'https://github.com/zakiaminn/DOMolition',
     demoGif: '/DOMolitionDemo.gif',
@@ -62,10 +69,10 @@ export const projects = [
   },
   {
     title: 'AegisGrid',
-    tagline: 'Watch A* Think',
+    tagline: 'A Tower Defense Engine That Fights Back',
     description:
-      "A grid-based pathfinding sandbox — drop walls and obstacles, watch A* find the shortest route around them in real time, step by step. I built it to actually understand the algorithm, not just cite it in an interview.",
-    tech: ['JavaScript', 'Algorithms', 'HTML5 Canvas', 'Game Dev'],
+      "A wave-based tower-defense engine written from scratch in Java and LibGDX. Enemies pathfind with a custom A* that recomputes the instant you place or sell a wall — and if you try to cheese it by boxing in the core, they switch to a breach route and destroy your barricades to carve a new one. Towers acquire the nearest target by Euclidean distance, lead it with vector-homing projectiles, and rotate to face it with atan2. No engine doing the thinking — just OOP, a PREP/DEFEND state machine, and the algorithms underneath.",
+    tech: ['Java', 'LibGDX', 'A* Pathfinding', '2D Vector Math', 'OOP'],
     shatter: false,
     github: 'https://github.com/zakiaminn/AegisGrid',
     demoGif: '/AegisGridDemo.gif',
@@ -75,8 +82,8 @@ export const projects = [
     title: 'FrankenSorter',
     tagline: 'A Local AI That Cleans Up After You',
     description:
-      "Started as a Python script to stop my Downloads folder from becoming a crime scene. Turned into a local AI app that runs Ollama on-device to read files and route them where they actually belong — no cloud, no API key, just a GUI on top of a model doing the sorting I refused to do by hand.",
-    tech: ['Python', 'Ollama AI', 'Automation', 'Software Design'],
+      "A privacy-first desktop app that files your mess for you — no cloud, no API key. It runs Llama 3.2 locally through Ollama but leads with deterministic Regex: known patterns like course codes are intercepted and routed instantly, and only genuine edge cases fall through to the model. A multi-format ETL layer pulls text from PDF, Word, PowerPoint, and Excel, and the model's output is regex-stripped down to strict JSON so a chatty LLM can't fumble a file operation. Threaded, so the UI never freezes while it thinks.",
+    tech: ['Python', 'Ollama / Llama 3.2', 'CustomTkinter', 'Regex + ETL', 'Threading'],
     shatter: false,
     github: 'https://github.com/zakiaminn/FrankenSorter',
     demoGif: '/ssdemo.png',
