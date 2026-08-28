@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { profile, skillGroups, timeline } from '@/data/profile';
 import { featuredProjects, projects } from '@/data/projects';
+import posthog from '@/lib/posthog';
 
 const education = timeline.filter((t) => t.kind === 'education');
 const experience = timeline.filter((t) => t.kind === 'experience');
@@ -44,15 +44,41 @@ function Entry({ year, heading, detail }) {
 }
 
 /**
- * The résumé, presented in-page rather than handed over as a download — a
- * recruiter reads it here, on the same hairline grid as the rest of the site.
- * Everything is sourced from the shared profile data and the project list, so
- * it can't drift from what's on the page.
+ * The resume, presented in-page rather than handed over as a download. It is a
+ * single controlled dialog, mounted once at the app root and opened by the URL
+ * hash `#resume`, so recruiters can deep-link and share it and every "Resume"
+ * control on the page is just a link to that hash. Content is sourced from the
+ * shared profile data and the project list, so it can't drift from the page.
  */
-export default function Resume({ trigger }) {
+export default function Resume() {
+  const [open, setOpen] = useState(
+    () => typeof window !== 'undefined' && window.location.hash === '#resume'
+  );
+
+  // The hash is the source of truth: back/forward, a pasted #resume link, and
+  // the on-page "Resume" anchors all flow through here.
+  useEffect(() => {
+    const sync = () => setOpen(window.location.hash === '#resume');
+    window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, []);
+
+  useEffect(() => {
+    if (open) posthog.capture('resume_viewed');
+  }, [open]);
+
+  const handleOpenChange = (next) => {
+    // Closing clears the hash without stacking a history entry.
+    if (!next && window.location.hash === '#resume') {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    } else if (next && window.location.hash !== '#resume') {
+      history.replaceState(null, '', '#resume');
+    }
+    setOpen(next);
+  };
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <span className="font-martian text-xs tracking-[0.14em] uppercase text-brand-ink">
@@ -60,7 +86,7 @@ export default function Resume({ trigger }) {
           </span>
           <DialogTitle className="mt-2 pr-14">{profile.name}</DialogTitle>
           <DialogDescription>
-            {profile.role} · {profile.location} · Seeking {profile.seeking}
+            {profile.role} · {profile.location}. Seeking {profile.seeking}.
           </DialogDescription>
         </DialogHeader>
 
@@ -117,7 +143,7 @@ export default function Resume({ trigger }) {
                     </span>
                   </h4>
                   <p className="font-martian text-[11px] tracking-[0.04em] text-ink-3 mt-1.5">
-                    {p.tech.join(' · ')}
+                    {p.tech.join(', ')}
                   </p>
                 </div>
               </div>

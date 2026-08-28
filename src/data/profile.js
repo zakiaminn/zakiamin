@@ -38,15 +38,15 @@ export const timeline = [
   {
     id: 'sheridan',
     kind: 'education',
-    year: '2024 — Present',
+    year: '2024 - Present',
     role: 'Computer Science, Sheridan College',
     detail:
-      'Specializing in Data Analytics — data pipelines, database management, and scalable software architecture. Building telemetry and analytics engines outside of coursework, not just for it.',
+      'Specializing in Data Analytics: data pipelines, database management, and scalable software architecture. Building telemetry and analytics engines outside of coursework, not just for it.',
   },
   {
     id: 'freelance',
     kind: 'experience',
-    year: '2022 — 2024',
+    year: '2022 - 2024',
     role: 'Freelance Web Developer',
     detail:
       'Designed and shipped custom web applications for clients, including a real estate platform with dynamic listing logic, bespoke React components, and interface polish clients actually noticed.',
@@ -54,9 +54,9 @@ export const timeline = [
   {
     id: 'calgary',
     kind: 'education',
-    year: '2021 — 2023',
+    year: '2021 - 2023',
     role: 'Computer Science, University of Calgary',
     detail:
-      'Foundational computer science coursework — the algorithms and software-design fundamentals everything since has built on.',
+      'Foundational computer science coursework: the algorithms and software-design fundamentals everything since has built on.',
   },
 ];

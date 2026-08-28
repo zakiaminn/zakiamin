@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import posthog from '@/lib/posthog';
 
 /**
  * Light/dark switch. The initial class is set before paint in index.html, so
@@ -30,7 +31,7 @@ export default function ThemeToggle({ className = '' }) {
   return (
     <button
       type="button"
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      onClick={() => { const next = isDark ? 'light' : 'dark'; setTheme(next); posthog.capture('theme_toggled', { theme: next }); }}
       aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
       title={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
       className={

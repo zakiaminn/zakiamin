@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import posthog from '@/lib/posthog';
 
 function StatRow({ stats }) {
   return (
@@ -45,6 +46,7 @@ function ExternalLinks({ project }) {
           href={project.live}
           target="_blank"
           rel="noreferrer"
+          onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'live' })}
           className="ink-link font-martian text-xs tracking-[0.1em] uppercase text-brand-ink font-semibold inline-flex items-center min-h-[44px]"
         >
           Visit the live site ↗
@@ -56,6 +58,7 @@ function ExternalLinks({ project }) {
           href={project.github}
           target="_blank"
           rel="noreferrer"
+          onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'github' })}
           className="ink-link font-martian text-xs tracking-[0.1em] uppercase text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
         >
           Read the source
@@ -119,7 +122,7 @@ export default function CaseStudy({ project, trigger }) {
   ) : null;
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={(open) => { if (open) posthog.capture('case_study_opened', { project_title: project.title, has_longform: hasLongform }); }}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -132,7 +135,10 @@ export default function CaseStudy({ project, trigger }) {
 
         <div className="px-7 pb-9 md:px-10">
           {hasLongform ? (
-            <Tabs defaultValue="overview">
+            <Tabs
+              defaultValue="overview"
+              onValueChange={(tab) => posthog.capture('case_study_tab_changed', { project_title: project.title, tab_name: tab })}
+            >
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="log">Build Log</TabsTrigger>

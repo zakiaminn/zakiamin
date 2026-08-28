@@ -6,17 +6,29 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { timeline as TIMELINE } from '@/data/profile';
+import posthog from '@/lib/posthog';
 
 export default function Experience() {
   return (
     <section id="experience" className="w-full max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-24">
-      <div className="flex items-baseline gap-4 mb-12 md:mb-16">
-        <span className="font-martian text-sm text-brand-ink">&sect; 02</span>
-        <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink">Experience &amp; Education</h2>
-      </div>
+      <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink mb-12 md:mb-16">Experience &amp; Education</h2>
 
       {/* Most recent entry opens by default, so the section never reads as empty. */}
-      <Accordion type="single" collapsible defaultValue="sheridan" className="border-t rule">
+      <Accordion
+        type="single"
+        collapsible
+        defaultValue="sheridan"
+        className="border-t rule"
+        onValueChange={(value) => {
+          if (value) {
+            const item = TIMELINE.find((t) => t.id === value);
+            posthog.capture('experience_item_expanded', {
+              entry_id: value,
+              entry_kind: item?.kind ?? 'unknown',
+            });
+          }
+        }}
+      >
         {TIMELINE.map((item) => (
           <AccordionItem key={item.id} value={item.id}>
             <AccordionTrigger>

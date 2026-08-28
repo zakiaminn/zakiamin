@@ -4,12 +4,9 @@ import { skillGroups as GROUPS } from '@/data/profile';
 export default function About() {
   return (
     <section id="about" className="w-full max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-24">
-      <div className="flex items-baseline gap-4 mb-4">
-        <span className="font-martian text-sm text-brand-ink">&sect; 01</span>
-        <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink">Working Materials</h2>
-      </div>
+      <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink mb-4">Working Materials</h2>
       <p className="text-ink-2 max-w-xl mb-12 md:mb-16">
-        The tools I actually reach for, grouped honestly — not a keyword dump for a search bot.
+        The tools I actually reach for, grouped honestly. Not a keyword dump for a search bot.
       </p>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 border-t rule pt-10">

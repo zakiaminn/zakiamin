@@ -1,6 +1,7 @@
 import React from 'react';
 import { projects, featuredProjects } from '@/data/projects';
 import CaseStudy from '@/components/CaseStudy';
+import posthog from '@/lib/posthog';
 
 // Ghost control that fills with the accent on hover — the brand showing up
 // on interaction rather than sitting there glowing.
@@ -16,8 +17,7 @@ function FeaturedProject({ project }) {
       <div className="p-7 md:p-12">
         <div className="flex flex-wrap items-baseline justify-between gap-4 mb-6">
           <div>
-            <span className="font-martian text-xs tracking-[0.14em] uppercase text-brand-ink">Featured Build</span>
-            <h3 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink mt-2 balance">{project.title}</h3>
+            <h3 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink balance">{project.title}</h3>
             <p className="font-martian text-sm text-ink-2 mt-1">{project.tagline}</p>
           </div>
           {project.live ? (
@@ -25,6 +25,7 @@ function FeaturedProject({ project }) {
               href={project.live}
               target="_blank"
               rel="noreferrer"
+              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
               className="ink-link font-martian text-xs tracking-[0.1em] uppercase text-brand-ink font-semibold inline-flex items-center min-h-[44px]"
             >
               Visit ↗
@@ -95,6 +96,7 @@ function ProjectCard({ project }) {
             href={project.github}
             target="_blank"
             rel="noreferrer"
+            onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'card' })}
             className="ink-link font-martian text-xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
           >
             Source<span className="sr-only"> for {project.title} (opens in a new tab)</span>
@@ -119,12 +121,9 @@ function ProjectCard({ project }) {
 export default function Projects() {
   return (
     <section id="projects" className="w-full max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-24">
-      <div className="flex items-baseline gap-4 mb-4">
-        <span className="font-martian text-sm text-brand-ink">&sect; 03</span>
-        <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink">Selected Work</h2>
-      </div>
+      <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink mb-4">Selected Work</h2>
       <p className="text-ink-2 max-w-xl mb-12 md:mb-16">
-        Two flagship builds and three smaller ones. Open any of them for the full write-up —
+        Two flagship builds and three smaller ones. Open any of them for the full write-up:
         what it does, how it was built, and what broke along the way.
       </p>
 

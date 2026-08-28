@@ -7,6 +7,7 @@ import About from './components/About';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Footer from './components/Footer';
+import Resume from './components/Resume';
 
 export default function App() {
   return (
@@ -26,6 +27,8 @@ export default function App() {
         <Projects />
       </main>
       <Footer />
+      {/* One resume dialog for the whole page, opened by the #resume hash. */}
+      <Resume />
     </div>
   );
 }

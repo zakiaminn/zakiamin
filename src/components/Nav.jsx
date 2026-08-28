@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ThemeToggle from './ThemeToggle';
+import posthog from '@/lib/posthog';
 
 const LINKS = [
   { label: 'About', href: '#about' },
@@ -105,6 +106,15 @@ export default function Nav() {
             })}
           </nav>
 
+          {/* Not a page section, so it lives outside the section nav: a deep
+              link to the resume dialog (#resume), shareable on its own. */}
+          <a
+            href="#resume"
+            className="hidden sm:inline-flex items-center ink-link font-martian text-xs tracking-[0.15em] uppercase py-2 text-ink-2 hover:text-ink transition-colors"
+          >
+            Résumé
+          </a>
+
           <ThemeToggle />
 
           <button
@@ -128,7 +138,7 @@ export default function Nav() {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={() => setOpen(false)}
+                onClick={() => { setOpen(false); posthog.capture('nav_link_clicked', { section: link.href.slice(1) }); }}
                 aria-current={isActive ? 'true' : undefined}
                 className={`font-martian text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] ${
                   isActive ? 'text-brand-ink' : 'text-ink-2'
@@ -138,6 +148,13 @@ export default function Nav() {
               </a>
             );
           })}
+          <a
+            href="#resume"
+            onClick={() => { setOpen(false); posthog.capture('resume_link_clicked', { source: 'mobile-nav' }); }}
+            className="font-martian text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] text-ink-2"
+          >
+            Résumé
+          </a>
         </nav>
       )}
     </header>
