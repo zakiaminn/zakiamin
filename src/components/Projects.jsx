@@ -34,7 +34,7 @@ function FeaturedProject({ project }) {
           ) : project.status ? (
             // A brand-washed pill in place of the live link, so a pre-launch
             // build reads as "on the way", not "missing".
-            <span className="font-martian text-[11px] tracking-[0.12em] uppercase text-brand-ink font-semibold bg-brand-wash border border-rule px-3 py-1.5">
+            <span className="font-martian text-[11px] tracking-[0.12em] uppercase text-ink font-semibold bg-brand-wash border border-rule px-3 py-1.5">
               {project.status}
             </span>
           ) : null}
@@ -82,7 +82,7 @@ function ProjectCard({ project }) {
       <div className="dot-pattern h-1.5 text-brand-ink" aria-hidden="true" />
       <div className="p-7 flex flex-col flex-grow">
         <h3 className="font-bricolage font-bold text-2xl tracking-[-0.02em] text-ink mb-1.5 balance">{project.title}</h3>
-        <p className="font-martian text-xs text-brand-ink mb-5">{project.tagline}</p>
+        <p className="font-martian text-xs text-ink-2 mb-5">{project.tagline}</p>
         <p className="text-ink-2 text-sm leading-relaxed mb-6 flex-grow">{project.description}</p>
 
         <ul className="flex flex-wrap gap-1.5 mb-6" aria-label={`${project.title} tech stack`}>

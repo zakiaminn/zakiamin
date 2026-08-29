@@ -112,7 +112,7 @@ export default function CaseStudy({ project, trigger }) {
     // Placeholder that reads as intentional, not missing — swapped for the
     // real recording once the demo is ready.
     <div className="border rule bg-surface-2 w-full aspect-video flex flex-col items-center justify-center gap-2 px-6 text-center">
-      <span className="font-martian text-[11px] tracking-[0.14em] uppercase text-brand-ink">
+      <span className="font-martian text-[11px] tracking-[0.14em] uppercase text-ink-2">
         Demo coming soon
       </span>
       <span className="font-martian text-[11px] tracking-[0.08em] uppercase text-ink-3">

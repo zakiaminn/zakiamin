@@ -6,7 +6,7 @@ import zakiPhoto from '../assets/zaki-photo.png';
 export default function Hero() {
   return (
     <header id="top" className="w-full max-w-6xl mx-auto px-6 pt-14 pb-24 md:pt-20 md:pb-32">
-      <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-14 md:gap-12 items-center">
+      <div className="grid md:grid-cols-[1.05fr_0.95fr] gap-14 md:gap-12 items-start">
         <div className="rise-in">
           <p className="font-martian text-xs tracking-[0.14em] uppercase text-brand-ink mb-6">
             Seeking {profile.seeking} · {profile.location}

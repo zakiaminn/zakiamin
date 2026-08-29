@@ -106,17 +106,6 @@ body {
   .ink-link:hover::after {
     transform: scaleX(1);
   }
-
-  /* Rubber-stamp label: fixed slight rotation, like a hand-stamped tag. */
-  .stamp {
-    transform: rotate(-1.5deg);
-  }
-  .stamp:nth-child(3n) {
-    transform: rotate(1deg);
-  }
-  .stamp:nth-child(3n+1) {
-    transform: rotate(-0.75deg);
-  }
 }
 
 /*
@@ -132,29 +121,6 @@ body {
   box-decoration-break: clone;     /* so it survives line wraps */
 }
 
-/*
- * Misprint — a two-color registration-shift effect for headlines.
- * The base layer sits in ink; a second, offset layer in the accent
- * peeks out on hover, mimicking a riso print that's slightly out of register.
- */
-.misprint {
-  position: relative;
-  display: inline-block;
-}
-.misprint .misprint-ghost {
-  position: absolute;
-  inset: 0;
-  color: var(--brand-ink);
-  opacity: 0;
-  transform: translate(0, 0);
-  transition: transform 0.3s cubic-bezier(.65,0,.35,1), opacity 0.3s ease;
-  pointer-events: none;
-}
-.misprint:hover .misprint-ghost {
-  opacity: 0.9;
-  transform: translate(3px, 2px);
-}
-
 /* A brief, contained shake — a nod to DOMolition's whole reason for existing. */
 .shatter-fx:hover {
   animation: shatter 0.28s cubic-bezier(.36,.07,.19,.97) 3;
@@ -165,13 +131,6 @@ body {
   50% { transform: translate(1.5px, -1px) rotate(0.4deg); }
   75% { transform: translate(-1px, -1.5px) rotate(-0.3deg); }
   100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-.blinker {
-  animation: blink 1s step-end infinite;
-}
-@keyframes blink {
-  50% { opacity: 0; }
 }
 
 /* Ticker tape — a nod to TRX being, literally, a stock exchange. */
@@ -255,7 +214,7 @@ body {
   font-size: clamp(1.2rem, 2.1vw, 1.55rem);
   line-height: 1.35;
   color: var(--ink);
-  border-left: 3px solid var(--brand);
+  border-left: 1px solid var(--rule-2);
   padding-left: 1.25rem;
   max-inline-size: 34ch;
   text-wrap: pretty;
@@ -291,15 +250,7 @@ body {
     opacity: 1 !important;
     transform: none !important;
   }
-  .blinker {
-    animation: none !important;
-    opacity: 1 !important;
-  }
   .shatter-fx:hover {
     animation: none !important;
-  }
-  .misprint:hover .misprint-ghost {
-    opacity: 0 !important;
-    transform: none !important;
   }
 }
