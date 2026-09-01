@@ -8,7 +8,7 @@ export const profile = {
   location: 'Toronto, Canada',
   // What a recruiter most needs to know, up front.
   seeking: 'Summer 2027 Co-op',
-  email: 'zakiaminn@gmail.com',
+  email: 'zakiiaminn@gmail.com',
   github: 'https://github.com/zakiaminn',
   linkedin: 'https://www.linkedin.com/in/zakiamin/',
 };
