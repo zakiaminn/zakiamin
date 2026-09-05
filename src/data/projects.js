@@ -25,7 +25,7 @@ const trxProject = {
   github: 'https://github.com/zakiaminn/TheRepoExchange',
   live: 'https://therepo.exchange',
   demoVideo: '/TRX-demo.mp4',
-  demoSize: [2032, 1192],
+  demoSize: [2030, 1190],
   pullQuote:
     "The API worked locally and died in prod with two different errors: Supabase's direct DB hostname is IPv6-only, and Render couldn't route IPv6 at all.",
 };
