@@ -48,6 +48,7 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
     if (!container) return;
 
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const schemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
     let reduced = motionQuery.matches;
     let onScreen = true;
 
@@ -210,8 +211,8 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
       if (reduced) mouseRef.current.active = false;
       request();
     };
-    // Re-ink and repaint when the theme flips.
-    const handleThemeChange = () => {
+    // Re-ink and repaint when the device's color scheme flips.
+    const handleSchemeChange = () => {
       readPalette();
       request();
     };
@@ -232,7 +233,7 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
     container.addEventListener('mousemove', handleMove);
     container.addEventListener('mouseleave', handleLeave);
     window.addEventListener('resize', handleResize);
-    window.addEventListener('themechange', handleThemeChange);
+    schemeQuery.addEventListener('change', handleSchemeChange);
     motionQuery.addEventListener('change', handleMotionChange);
     request();
 
@@ -244,7 +245,7 @@ export default function HalftonePortrait({ src, className = '', label = 'Portrai
       container.removeEventListener('mousemove', handleMove);
       container.removeEventListener('mouseleave', handleLeave);
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('themechange', handleThemeChange);
+      schemeQuery.removeEventListener('change', handleSchemeChange);
       motionQuery.removeEventListener('change', handleMotionChange);
     };
   }, [src]);

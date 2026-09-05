@@ -9,6 +9,7 @@
    chartreuse "Sulfur" is the current house accent.
    ============================================================ */
 :root {
+  color-scheme: light;
   --bg: #FAFAF9;   --surface: #F1F1EE;   --surface-2: #E9E9E5;
   --ink: #16160E;  --ink-2: #565448;     --ink-3: #78766A;
   --rule: #E5E5E1; --rule-2: #D4D4CF;
@@ -16,18 +17,11 @@
   --pos: #2E7D4F;  --neg: #B33A3A;       --focus: #8A9600;
 }
 
-/* Explicit dark class (set before paint in index.html, toggled by the UI). */
-.dark {
-  --bg: #0E0E0A;   --surface: #17170F;   --surface-2: #212118;
-  --ink: #EDEDE0;  --ink-2: #9C9A86;     --ink-3: #86846F;
-  --rule: #29291C; --rule-2: #3A3A29;
-  --brand: #DCEC3A; --brand-ink: #DCEC3A; --brand-fg: #14140A; --brand-wash: #23260F;
-  --pos: #55B37E;  --neg: #E8635E;       --focus: #DCEC3A;
-}
-
-/* Fallback for when JS never runs and no class is present: follow the OS. */
+/* Dark mode follows the device's prefers-color-scheme setting; there is no
+   in-page toggle. Chalk (above) is the light default; these are the overrides. */
 @media (prefers-color-scheme: dark) {
-  :root:not(.light) {
+  :root {
+    color-scheme: dark;
     --bg: #0E0E0A;   --surface: #17170F;   --surface-2: #212118;
     --ink: #EDEDE0;  --ink-2: #9C9A86;     --ink-3: #86846F;
     --rule: #29291C; --rule-2: #3A3A29;
@@ -70,9 +64,11 @@ body {
     opacity: 0.055;
   }
   /* Noise reads darker on paper, so lean on screen-blend in the dark. */
-  .dark .grain::before {
-    mix-blend-mode: overlay;
-    opacity: 0.22;
+  @media (prefers-color-scheme: dark) {
+    .grain::before {
+      mix-blend-mode: overlay;
+      opacity: 0.22;
+    }
   }
 
   /* Hairline dividers/borders take the rule token. */
@@ -162,7 +158,6 @@ body {
 :where(a, button, [tabindex], video, summary):focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 3px;
-  border-radius: 1px;
 }
 
 /* Skip link: parked off-canvas until a keyboard reaches it. */

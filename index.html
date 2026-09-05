@@ -52,21 +52,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Martian+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <script>
-      // Set the theme class before first paint so there's no flash of the
-      // wrong palette. Saved choice wins; otherwise follow the OS setting.
-      (function () {
-        try {
-          var saved = localStorage.getItem('theme');
-          var dark = saved
-            ? saved === 'dark'
-            : window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var el = document.documentElement;
-          el.classList.toggle('dark', dark);
-          el.classList.toggle('light', !dark);
-        } catch (e) {}
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>

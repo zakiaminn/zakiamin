@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import ThemeToggle from './ThemeToggle';
 import posthog from '@/lib/posthog';
 
 const LINKS = [
@@ -114,8 +113,6 @@ export default function Nav() {
           >
             Résumé
           </a>
-
-          <ThemeToggle />
 
           <button
             type="button"

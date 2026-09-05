@@ -2,10 +2,10 @@ import tailwindcssAnimate from 'tailwindcss-animate'
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  // Dark mode is driven by a `.dark` class on <html> (set before paint in
-  // index.html, toggled by ThemeToggle). Colors flow from CSS variables that
-  // flip on that class, so most components need no `dark:` variants at all.
-  darkMode: 'class',
+  // Dark mode follows the device's prefers-color-scheme setting (no in-page
+  // toggle). Colors flow from CSS variables that flip under the dark media
+  // query, so most components need no `dark:` variants at all.
+  darkMode: 'media',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
