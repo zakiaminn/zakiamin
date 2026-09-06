@@ -51,12 +51,4 @@ export const timeline = [
     detail:
       'Designed and shipped custom web applications for clients, including a real estate platform with dynamic listing logic, bespoke React components, and interface polish clients actually noticed.',
   },
-  {
-    id: 'calgary',
-    kind: 'education',
-    year: '2021 - 2023',
-    role: 'Computer Science, University of Calgary',
-    detail:
-      'Foundational computer science coursework: the algorithms and software-design fundamentals everything since has built on.',
-  },
 ];
