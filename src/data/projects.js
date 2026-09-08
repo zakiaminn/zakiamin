@@ -87,6 +87,7 @@ export const projects = [
     tech: ['Python', 'Ollama / Qwen2.5 7B', 'CustomTkinter', 'Regex + ETL', 'JSON Schema'],
     shatter: false,
     github: 'https://github.com/zakiaminn/FrankenSorter',
+    live: 'https://zakiaminn.github.io/FrankenSorter/',
     demoVideo: '/FrankenSorter-demo.mp4',
     demoSize: [2030, 1190],
   },
