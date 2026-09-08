@@ -83,11 +83,11 @@ export const projects = [
     title: 'FrankenSorter',
     tagline: 'A Local AI That Cleans Up After You',
     description:
-      "A privacy-first desktop app that files your mess for you, with no cloud and no API key. It runs Llama 3.2 locally through Ollama but leads with deterministic Regex: known patterns like course codes are intercepted and routed instantly, and only genuine edge cases fall through to the model. A multi-format ETL layer pulls text from PDF, Word, PowerPoint, and Excel, and the model's output is regex-stripped down to strict JSON so a chatty LLM can't fumble a file operation. Threaded, so the UI never freezes while it thinks.",
+      "A privacy-first desktop app that reads your files and sorts them for you, running entirely on-device with no cloud and no API key. The core is a two-tier router: deterministic Regex catches known patterns like course codes and routes them instantly, so the local Llama 3.2 model is only ever called for the genuinely ambiguous files, which keeps it fast and free. A multi-format ETL layer pulls text from PDF, Word, PowerPoint, and Excel with defensive parsing for malformed documents, and the model's output is regex-stripped to strict JSON so a stochastic LLM can never fumble a filesystem operation. Inference and heavy I/O run off the main thread, so the interface stays responsive while it works.",
     tech: ['Python', 'Ollama / Llama 3.2', 'CustomTkinter', 'Regex + ETL', 'Threading'],
     shatter: false,
     github: 'https://github.com/zakiaminn/FrankenSorter',
-    demoGif: '/ssdemo.png',
-    demoSize: [751, 798],
+    demoVideo: '/FrankenSorter-demo.mp4',
+    demoSize: [2030, 1190],
   },
 ];
