@@ -83,8 +83,8 @@ export const projects = [
     title: 'FrankenSorter',
     tagline: 'A Local AI That Cleans Up After You',
     description:
-      "A privacy-first desktop app that reads your files and sorts them for you, running entirely on-device with no cloud and no API key. The core is a two-tier router: deterministic Regex catches known patterns like course codes and routes them instantly, so the local Llama 3.2 model is only ever called for the genuinely ambiguous files, which keeps it fast and free. A multi-format ETL layer pulls text from PDF, Word, PowerPoint, and Excel with defensive parsing for malformed documents, and the model's output is regex-stripped to strict JSON so a stochastic LLM can never fumble a filesystem operation. Inference and heavy I/O run off the main thread, so the interface stays responsive while it works.",
-    tech: ['Python', 'Ollama / Llama 3.2', 'CustomTkinter', 'Regex + ETL', 'Threading'],
+      "A privacy-first desktop app that reads your files and sorts them for you, running entirely on-device with no cloud and no API key. The core is a two-tier router: deterministic Regex catches known patterns like course codes and routes them instantly, so a local Qwen2.5 7B model is only ever called for the genuinely ambiguous files, which keeps it fast and free. A multi-format ETL layer pulls text from PDF, Word, PowerPoint, and Excel with defensive parsing for malformed documents, and the model runs under a JSON schema with its category constrained to an enum at temperature zero, so routing is deterministic and it physically cannot invent a folder that doesn't exist. Inference and heavy I/O run off the main thread, so the interface stays responsive while it works.",
+    tech: ['Python', 'Ollama / Qwen2.5 7B', 'CustomTkinter', 'Regex + ETL', 'JSON Schema'],
     shatter: false,
     github: 'https://github.com/zakiaminn/FrankenSorter',
     demoVideo: '/FrankenSorter-demo.mp4',
