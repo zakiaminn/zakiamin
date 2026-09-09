@@ -12,7 +12,7 @@ export default function About() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 border-t rule pt-10">
         {GROUPS.map((group) => (
           <div key={group.label}>
-            <h3 className="font-martian text-xs tracking-[0.14em] uppercase text-ink-3 mb-4">
+            <h3 className="font-bricolage text-xs font-semibold tracking-[0.1em] uppercase text-ink-3 mb-4">
               {group.label}
             </h3>
             <ul className="space-y-2.5">

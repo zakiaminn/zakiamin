@@ -35,13 +35,12 @@ export default {
         focus: 'var(--focus)',
       },
       fontFamily: {
-        // Bricolage reads, Martian counts. Anything a human reads is Bricolage;
-        // anything the machine emits (numbers, labels, the wordmark) is Martian.
+        // Bricolage reads, Spline counts. Everything read AND every label/wordmark
+        // is Bricolage; the mono is kept strictly to the figures (font-mono + tnum).
         bricolage: ['"Bricolage Grotesque"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
-        martian: ['"Martian Mono"', 'ui-monospace', '"SF Mono"', 'Menlo', 'monospace'],
-        // Defaults point at the same two families so stray utilities stay on-brand.
+        // Default sans stays Bricolage so stray utilities stay on-brand.
         sans: ['"Bricolage Grotesque"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
-        mono: ['"Martian Mono"', 'ui-monospace', '"SF Mono"', 'Menlo', 'monospace'],
+        mono: ['"Spline Sans Mono"', 'ui-monospace', '"SF Mono"', 'Menlo', 'monospace'],
       },
       // Required by the shadcn Accordion primitive.
       keyframes: {

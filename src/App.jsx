@@ -14,7 +14,7 @@ export default function App() {
     <div className="grain relative min-h-screen bg-bg text-ink font-bricolage">
       <a
         href="#main"
-        className="skip-link font-martian text-xs tracking-[0.15em] uppercase bg-bg text-ink border rule px-4 py-3"
+        className="skip-link font-bricolage text-xs font-medium tracking-[0.1em] uppercase bg-bg text-ink border rule px-4 py-3"
       >
         Skip to content
       </a>

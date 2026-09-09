@@ -33,7 +33,7 @@ export default function Experience() {
           <AccordionItem key={item.id} value={item.id}>
             <AccordionTrigger>
               <div className="grid md:grid-cols-[220px_1fr] gap-2 md:gap-10 flex-1">
-                <span className="font-martian text-sm text-brand-ink md:pt-1 tnum">{item.year}</span>
+                <span className="font-mono text-sm text-brand-ink md:pt-1 tnum">{item.year}</span>
                 {/* Radix's AccordionHeader already renders the h3 — this is just its text. */}
                 <span className="block font-bricolage font-semibold text-xl md:text-2xl tracking-[-0.01em] text-ink balance">{item.role}</span>
               </div>

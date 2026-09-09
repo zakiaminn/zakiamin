@@ -83,7 +83,7 @@ export default function Nav() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#top" className="flex items-center gap-2.5 text-ink py-2">
           <Mark />
-          <span className="font-martian text-sm tracking-[0.2em] uppercase font-semibold">Zaki Amin</span>
+          <span className="font-bricolage text-base tracking-[0.06em] uppercase font-bold">Zaki Amin</span>
         </a>
 
         <div className="flex items-center gap-6 sm:gap-8">
@@ -95,7 +95,7 @@ export default function Nav() {
                   key={link.href}
                   href={link.href}
                   aria-current={isActive ? 'true' : undefined}
-                  className={`ink-link font-martian text-xs tracking-[0.15em] uppercase py-2 transition-colors ${
+                  className={`ink-link font-bricolage text-xs font-medium tracking-[0.1em] uppercase py-2 transition-colors ${
                     isActive ? 'text-brand-ink' : 'text-ink-2 hover:text-ink'
                   }`}
                 >
@@ -109,7 +109,7 @@ export default function Nav() {
               link to the resume dialog (#resume), shareable on its own. */}
           <a
             href="#resume"
-            className="hidden sm:inline-flex items-center ink-link font-martian text-xs tracking-[0.15em] uppercase py-2 text-ink-2 hover:text-ink transition-colors"
+            className="hidden sm:inline-flex items-center ink-link font-bricolage text-xs font-medium tracking-[0.1em] uppercase py-2 text-ink-2 hover:text-ink transition-colors"
           >
             Résumé
           </a>
@@ -119,7 +119,7 @@ export default function Nav() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-nav"
-            className="sm:hidden font-martian text-xs tracking-[0.15em] uppercase text-ink border rule
+            className="sm:hidden font-bricolage text-xs font-medium tracking-[0.1em] uppercase text-ink border rule
                        min-h-[44px] min-w-[44px] px-3.5"
           >
             {open ? 'Close' : 'Menu'}
@@ -137,7 +137,7 @@ export default function Nav() {
                 href={link.href}
                 onClick={() => { setOpen(false); posthog.capture('nav_link_clicked', { section: link.href.slice(1) }); }}
                 aria-current={isActive ? 'true' : undefined}
-                className={`font-martian text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] ${
+                className={`font-bricolage text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] ${
                   isActive ? 'text-brand-ink' : 'text-ink-2'
                 }`}
               >
@@ -148,7 +148,7 @@ export default function Nav() {
           <a
             href="#resume"
             onClick={() => { setOpen(false); posthog.capture('resume_link_clicked', { source: 'mobile-nav' }); }}
-            className="font-martian text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] text-ink-2"
+            className="font-bricolage text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] text-ink-2"
           >
             Résumé
           </a>

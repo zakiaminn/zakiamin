@@ -6,7 +6,7 @@ import posthog from '@/lib/posthog';
 // Ghost control that fills with the accent on hover — the brand showing up
 // on interaction rather than sitting there glowing.
 const OPEN_BUTTON =
-  'font-martian text-xs tracking-[0.1em] uppercase text-ink font-semibold border rule ' +
+  'font-bricolage text-xs tracking-[0.1em] uppercase text-ink font-semibold border rule ' +
   'px-4 min-h-[44px] inline-flex items-center transition-colors ' +
   'hover:bg-brand hover:text-brand-fg hover:border-brand';
 
@@ -18,7 +18,7 @@ function FeaturedProject({ project }) {
         <div className="flex flex-wrap items-baseline justify-between gap-4 mb-6">
           <div>
             <h3 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink balance">{project.title}</h3>
-            <p className="font-martian text-sm text-ink-2 mt-1">{project.tagline}</p>
+            <p className="font-bricolage text-sm text-ink-2 mt-1">{project.tagline}</p>
           </div>
           {project.live ? (
             <a
@@ -26,7 +26,7 @@ function FeaturedProject({ project }) {
               target="_blank"
               rel="noreferrer"
               onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
-              className="ink-link font-martian text-xs tracking-[0.1em] uppercase text-brand-ink font-semibold inline-flex items-center min-h-[44px]"
+              className="ink-link font-bricolage text-xs tracking-[0.1em] uppercase text-brand-ink font-semibold inline-flex items-center min-h-[44px]"
             >
               Visit ↗
               <span className="sr-only"> {project.title} (opens in a new tab)</span>
@@ -34,7 +34,7 @@ function FeaturedProject({ project }) {
           ) : project.status ? (
             // A brand-washed pill in place of the live link, so a pre-launch
             // build reads as "on the way", not "missing".
-            <span className="font-martian text-[11px] tracking-[0.12em] uppercase text-ink font-semibold bg-brand-wash border border-rule px-3 py-1.5">
+            <span className="font-bricolage text-[11px] tracking-[0.12em] uppercase text-ink font-semibold bg-brand-wash border border-rule px-3 py-1.5">
               {project.status}
             </span>
           ) : null}
@@ -47,8 +47,8 @@ function FeaturedProject({ project }) {
             <div key={stat.label}>
               <dt className="sr-only">{stat.label}</dt>
               <dd>
-                <span className="block font-martian font-medium text-2xl md:text-[1.75rem] tracking-[-0.035em] text-brand-ink tnum">{stat.value}</span>
-                <span className="block font-martian text-[11px] tracking-[0.08em] uppercase text-ink-3 mt-1.5 balance">
+                <span className="block font-mono font-medium text-2xl md:text-[1.75rem] tracking-[-0.02em] text-brand-ink tnum">{stat.value}</span>
+                <span className="block font-bricolage font-semibold text-[11px] tracking-[0.08em] uppercase text-ink-3 mt-1.5 balance">
                   {stat.label}
                 </span>
               </dd>
@@ -68,7 +68,7 @@ function FeaturedProject({ project }) {
 
         <ul className="flex flex-wrap gap-2 mt-10" aria-label={`${project.title} tech stack`}>
           {project.tech.map((t) => (
-            <li key={t} className="font-martian text-xs border rule px-2.5 py-1 text-ink-2">{t}</li>
+            <li key={t} className="font-bricolage text-xs border rule px-2.5 py-1 text-ink-2">{t}</li>
           ))}
         </ul>
       </div>
@@ -82,12 +82,12 @@ function ProjectCard({ project }) {
       <div className="dot-pattern h-1.5 text-brand-ink" aria-hidden="true" />
       <div className="p-7 flex flex-col flex-grow">
         <h3 className="font-bricolage font-bold text-2xl tracking-[-0.02em] text-ink mb-1.5 balance">{project.title}</h3>
-        <p className="font-martian text-xs text-ink-2 mb-5">{project.tagline}</p>
+        <p className="font-bricolage text-xs text-ink-2 mb-5">{project.tagline}</p>
         <p className="text-ink-2 text-sm leading-relaxed mb-6 flex-grow">{project.description}</p>
 
         <ul className="flex flex-wrap gap-1.5 mb-6" aria-label={`${project.title} tech stack`}>
           {project.tech.map((t) => (
-            <li key={t} className="font-martian text-[11px] border rule px-2 py-1 text-ink-3">{t}</li>
+            <li key={t} className="font-bricolage text-[11px] border rule px-2 py-1 text-ink-3">{t}</li>
           ))}
         </ul>
 
@@ -97,7 +97,7 @@ function ProjectCard({ project }) {
             target="_blank"
             rel="noreferrer"
             onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'card' })}
-            className="ink-link font-martian text-xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
+            className="ink-link font-bricolage text-xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
           >
             Source<span className="sr-only"> for {project.title} (opens in a new tab)</span>
           </a>
@@ -106,7 +106,7 @@ function ProjectCard({ project }) {
             trigger={
               <button
                 type="button"
-                className="font-martian text-xs uppercase tracking-[0.08em] text-ink font-semibold border rule px-3 min-h-[44px] transition-colors hover:bg-brand hover:text-brand-fg hover:border-brand"
+                className="font-bricolage text-xs uppercase tracking-[0.08em] text-ink font-semibold border rule px-3 min-h-[44px] transition-colors hover:bg-brand hover:text-brand-fg hover:border-brand"
               >
                 View<span className="sr-only"> {project.title}</span>
               </button>

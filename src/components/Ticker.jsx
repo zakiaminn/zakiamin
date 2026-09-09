@@ -13,7 +13,7 @@ function Run({ hidden }) {
     <>
       {ITEMS.map((item, idx) => (
         <span key={idx} className="flex items-center whitespace-nowrap" aria-hidden={hidden || undefined}>
-          <span className="font-martian text-[11px] tracking-[0.08em] uppercase text-ink-2 px-6">
+          <span className="font-bricolage text-[11px] tracking-[0.08em] uppercase text-ink-2 px-6">
             {item}
           </span>
           <span className="text-brand-ink text-xs">&#9670;</span>

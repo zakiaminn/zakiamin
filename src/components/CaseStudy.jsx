@@ -17,8 +17,8 @@ function StatRow({ stats }) {
         <div key={stat.label}>
           <dt className="sr-only">{stat.label}</dt>
           <dd>
-            <span className="block font-martian font-medium text-2xl md:text-[1.75rem] tracking-[-0.035em] text-brand-ink tnum">{stat.value}</span>
-            <span className="block font-martian text-[11px] tracking-[0.08em] uppercase text-ink-3 mt-1.5 balance">
+            <span className="block font-mono font-medium text-2xl md:text-[1.75rem] tracking-[-0.02em] text-brand-ink tnum">{stat.value}</span>
+            <span className="block font-bricolage font-semibold text-[11px] tracking-[0.08em] uppercase text-ink-3 mt-1.5 balance">
               {stat.label}
             </span>
           </dd>
@@ -32,7 +32,7 @@ function TechList({ tech, title }) {
   return (
     <ul className="flex flex-wrap gap-2" aria-label={`${title} tech stack`}>
       {tech.map((t) => (
-        <li key={t} className="font-martian text-xs border rule px-2.5 py-1.5 text-ink-2">{t}</li>
+        <li key={t} className="font-bricolage text-xs border rule px-2.5 py-1.5 text-ink-2">{t}</li>
       ))}
     </ul>
   );
@@ -47,7 +47,7 @@ function ExternalLinks({ project }) {
           target="_blank"
           rel="noreferrer"
           onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'live' })}
-          className="ink-link font-martian text-xs tracking-[0.1em] uppercase text-brand-ink font-semibold inline-flex items-center min-h-[44px]"
+          className="ink-link font-bricolage text-xs tracking-[0.1em] uppercase text-brand-ink font-semibold inline-flex items-center min-h-[44px]"
         >
           Visit the live site ↗
           <span className="sr-only"> (opens in a new tab)</span>
@@ -59,7 +59,7 @@ function ExternalLinks({ project }) {
           target="_blank"
           rel="noreferrer"
           onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'github' })}
-          className="ink-link font-martian text-xs tracking-[0.1em] uppercase text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
+          className="ink-link font-bricolage text-xs tracking-[0.1em] uppercase text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
         >
           Read the source
           <span className="sr-only"> for {project.title} (opens in a new tab)</span>
@@ -68,7 +68,7 @@ function ExternalLinks({ project }) {
       {/* Pre-launch builds have no public repo or site yet — say so plainly
           rather than leaving a dead link a recruiter would click into a 404. */}
       {project.comingSoon && !project.live && !project.github && (
-        <span className="font-martian text-xs tracking-[0.1em] uppercase text-ink-3 inline-flex items-center min-h-[44px]">
+        <span className="font-bricolage text-xs tracking-[0.1em] uppercase text-ink-3 inline-flex items-center min-h-[44px]">
           Source &amp; live demo open at launch
         </span>
       )}
@@ -112,10 +112,10 @@ export default function CaseStudy({ project, trigger }) {
     // Placeholder that reads as intentional, not missing — swapped for the
     // real recording once the demo is ready.
     <div className="border rule bg-surface-2 w-full aspect-video flex flex-col items-center justify-center gap-2 px-6 text-center">
-      <span className="font-martian text-[11px] tracking-[0.14em] uppercase text-ink-2">
+      <span className="font-bricolage text-[11px] font-semibold tracking-[0.1em] uppercase text-ink-2">
         Demo coming soon
       </span>
-      <span className="font-martian text-[11px] tracking-[0.08em] uppercase text-ink-3">
+      <span className="font-bricolage font-semibold text-[11px] tracking-[0.08em] uppercase text-ink-3">
         A live walkthrough lands with the public launch
       </span>
     </div>
@@ -126,7 +126,7 @@ export default function CaseStudy({ project, trigger }) {
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <span className="font-martian text-xs tracking-[0.14em] uppercase text-brand-ink">
+          <span className="font-bricolage text-xs font-semibold tracking-[0.1em] uppercase text-brand-ink">
             {hasLongform ? 'Case Study' : 'Project'}
           </span>
           <DialogTitle className="mt-2 pr-14">{project.title}</DialogTitle>
@@ -165,7 +165,7 @@ export default function CaseStudy({ project, trigger }) {
               </TabsContent>
 
               <TabsContent value="stack" className="space-y-8">
-                <p className="font-martian text-xs tracking-[0.14em] uppercase text-ink-3">
+                <p className="font-bricolage text-xs font-semibold tracking-[0.1em] uppercase text-ink-3">
                   Everything this build runs on
                 </p>
                 <TechList tech={project.tech} title={project.title} />
