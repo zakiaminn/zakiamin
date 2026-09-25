@@ -1,18 +1,21 @@
-import tailwindcssAnimate from 'tailwindcss-animate'
-
 /** @type {import('tailwindcss').Config} */
 export default {
   // Dark mode follows the device's prefers-color-scheme setting (no in-page
   // toggle). Colors flow from CSS variables that flip under the dark media
   // query, so most components need no `dark:` variants at all.
   darkMode: 'media',
+  // `hover:` only applies on real pointers, so a tap on a phone never leaves
+  // a control stuck in its hover state.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
-      // House brand kit — "Sulfur on Chalk". One accent (chartreuse) that
+      // House brand kit: "Sulfur on Chalk". One accent (chartreuse) that
       // marks the interface; a warm-neutral spine; green/red reserved for data.
       // Every value resolves to a CSS variable defined in index.css.
       colors: {
@@ -25,7 +28,7 @@ export default {
         rule: 'var(--rule)',
         'rule-2': 'var(--rule-2)',
         // The accent splits three ways: `brand` is the fill, `brand-ink` is
-        // contrast-safe accent text/links/icons, `brand-fg` sits on a fill.
+        // legible accent text and thin graphics, `brand-fg` sits on a fill.
         brand: 'var(--brand)',
         'brand-ink': 'var(--brand-ink)',
         'brand-fg': 'var(--brand-fg)',
@@ -35,29 +38,14 @@ export default {
         focus: 'var(--focus)',
       },
       fontFamily: {
-        // Bricolage reads, Spline counts. Everything read AND every label/wordmark
-        // is Bricolage; the mono is kept strictly to the figures (font-mono + tnum).
+        // Bricolage reads, Spline counts. Everything read, every label, every
+        // button and the wordmark is Bricolage; the mono is kept to the numbers.
         bricolage: ['"Bricolage Grotesque"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
         // Default sans stays Bricolage so stray utilities stay on-brand.
         sans: ['"Bricolage Grotesque"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
         mono: ['"Spline Sans Mono"', 'ui-monospace', '"SF Mono"', 'Menlo', 'monospace'],
       },
-      // Required by the shadcn Accordion primitive.
-      keyframes: {
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' },
-        },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' },
-        },
-      },
-      animation: {
-        'accordion-down': 'accordion-down 0.22s cubic-bezier(.16,1,.3,1)',
-        'accordion-up': 'accordion-up 0.18s cubic-bezier(.16,1,.3,1)',
-      },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [],
 }

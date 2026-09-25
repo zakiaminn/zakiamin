@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ============================================================
-   HOUSE BRAND KIT — "Sulfur on Chalk"
+   HOUSE BRAND KIT: "Sulfur on Chalk"
    Light is the default; dark is the override. Fonts are the
    permanent trademark (Bricolage reads, Spline counts); the
    chartreuse "Sulfur" is the current house accent.
@@ -11,14 +11,23 @@
 :root {
   color-scheme: light;
   --bg: #FAFAF9;   --surface: #F1F1EE;   --surface-2: #E9E9E5;
-  --ink: #16160E;  --ink-2: #565448;     --ink-3: #78766A;
+  --ink: #16160E;  --ink-2: #565448;     --ink-3: #6E6C60;
   --rule: #E5E5E1; --rule-2: #D4D4CF;
   --brand: #DCEC3A; --brand-ink: #6F7A00; --brand-fg: #16160E; --brand-wash: #EFF0CE;
   --pos: #2E7D4F;  --neg: #B33A3A;       --focus: #8A9600;
+  --scrim: rgba(12, 12, 8, 0.42);
+
+  /* Motion. --ease for almost everything, --ease-move for things that
+     travel across the screen, --ease-drawer for sheets. Never ease-in. */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur: 240ms;
+  --dur-fast: 140ms;
 }
 
 /* Dark mode follows the device's prefers-color-scheme setting; there is no
-   in-page toggle. Chalk (above) is the light default; these are the overrides. */
+   in-page toggle. */
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
@@ -27,12 +36,32 @@
     --rule: #29291C; --rule-2: #3A3A29;
     --brand: #DCEC3A; --brand-ink: #DCEC3A; --brand-fg: #14140A; --brand-wash: #23260F;
     --pos: #55B37E;  --neg: #E8635E;       --focus: #DCEC3A;
+    --scrim: rgba(0, 0, 0, 0.62);
   }
+}
+
+/* Night: a dark surface inside a light page. Re-points the tokens, so every
+   component inside it works without extra styles. */
+.night {
+  --bg: #0B0B08;  --surface: #15150F;  --surface-2: #1F1F17;
+  --ink: #EDEDE0; --ink-2: #A3A18D;    --ink-3: #8A8873;
+  --rule: #26261B; --rule-2: #3A3A2B;
+  --brand-ink: #DCEC3A; --brand-fg: #14140A; --brand-wash: #23260F; --focus: #DCEC3A;
+  color-scheme: dark;
+  background: var(--bg);
+  color: var(--ink);
+}
+@media (prefers-color-scheme: dark) {
+  .night { --bg: #13130E; --surface: #1B1B14; --surface-2: #24241B; }
 }
 
 html {
   scroll-behavior: smooth;
+  /* Anchor jumps land below the 64px sticky bar instead of under it. */
+  scroll-padding-top: 4rem;
   font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -41,8 +70,6 @@ body {
   overflow-x: hidden;
   margin: 0;
   font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
-  /* Repaint the ground when the theme flips, so the switch reads as instant. */
-  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* Selection is a brand fill with dark text on it. */
@@ -51,114 +78,218 @@ body {
   color: var(--brand-fg);
 }
 
-@layer utilities {
-  /* Grain — a subtle fractal-noise texture over the whole page. */
-  .grain::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
-    mix-blend-mode: multiply;
-    opacity: 0.055;
-  }
-  /* Noise reads darker on paper, so lean on screen-blend in the dark. */
-  @media (prefers-color-scheme: dark) {
-    .grain::before {
-      mix-blend-mode: overlay;
-      opacity: 0.22;
-    }
-  }
-
-  /* Hairline dividers/borders take the rule token. */
-  .rule {
-    border-color: var(--rule);
-  }
-
-  /* Halftone dot-grid pattern, reused on card headers / dividers. */
-  .dot-pattern {
-    background-image: radial-gradient(currentColor 1px, transparent 1.4px);
-    background-size: 7px 7px;
-  }
-
-  /* Accent underline that draws on hover, instead of a glow. */
-  .ink-link {
-    position: relative;
-    text-decoration: none;
-  }
-  .ink-link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 1.5px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s cubic-bezier(.65,0,.35,1);
-  }
-  .ink-link:hover::after {
-    transform: scaleX(1);
-  }
+/* Focus: the house ring. :where() keeps specificity at 0. */
+:where(a, button, [tabindex], video, summary):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
-/*
- * The one signature flourish — the accent underline ("swipe").
- * A chunky chartreuse band swiped under one phrase in the hero headline.
- */
-.swipe {
-  background-image: linear-gradient(var(--brand), var(--brand));
-  background-repeat: no-repeat;
-  background-position: 0 92%;      /* sit low, overlapping the baseline */
-  background-size: 100% 0.24em;    /* band thickness */
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;     /* so it survives line wraps */
+@layer components {
+/* ============================================================
+   TYPE PRIMITIVES
+   ============================================================ */
+
+/* Labels are the only uppercase text: 11px, semibold, tracked. Never bigger. */
+.label {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
-/* A brief, contained shake — a nod to DOMolition's whole reason for existing. */
-.shatter-fx:hover {
-  animation: shatter 0.28s cubic-bezier(.36,.07,.19,.97) 3;
-}
-@keyframes shatter {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(-1.5px, 1px) rotate(-0.4deg); }
-  50% { transform: translate(1.5px, -1px) rotate(0.4deg); }
-  75% { transform: translate(-1px, -1.5px) rotate(-0.3deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
+/* Numbers: Spline, tabular, slightly tight. */
+.num {
+  font-family: "Spline Sans Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
-/* Ticker tape — a nod to TRX being, literally, a stock exchange. */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 26s linear infinite;
+.balance { text-wrap: balance; }
+.pretty { text-wrap: pretty; }
+
+/* ============================================================
+   HOVER: one colour, the Sulfur underline. The text keeps its own
+   colour; a thick Sulfur stroke fades in under the words.
+   ============================================================ */
+.sig {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: max(2px, 0.14em);
+  text-underline-offset: 0.14em;
+  text-decoration-skip-ink: none;
+  transition: text-decoration-color 200ms var(--ease);
 }
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.sig:focus-visible,
+.sig[aria-current] { text-decoration-color: var(--brand); }
+
+/* Body links: a quiet hairline at rest that turns Sulfur on hover. */
+.link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule-2);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur-fast) var(--ease);
 }
 
-@keyframes riseIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.rise-in {
-  animation: riseIn 0.7s cubic-bezier(.16,1,.3,1) both;
+@media (hover: hover) and (pointer: fine) {
+  .sig:hover,
+  .group:hover .sig { text-decoration-color: var(--brand); }
+  .link:hover { text-decoration-color: var(--brand); text-decoration-thickness: 2px; }
 }
 
 /* ============================================================
-   FOCUS — a registration mark, not a browser default ring.
-   :where() keeps specificity at 0 so components can override.
+   BUTTONS: round means pressable. Fill carries the hierarchy;
+   no outlines; sentence-case labels.
    ============================================================ */
-:where(a, button, [tabindex], video, summary):focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 3px;
+.btn {
+  --btn-fill: color-mix(in srgb, var(--ink) 7%, transparent);
+  --btn-fill-hover: color-mix(in srgb, var(--ink) 12%, transparent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--btn-fill);
+  color: var(--ink);
+  font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: background-color 300ms var(--ease), color 300ms var(--ease),
+              transform var(--dur-fast) var(--ease);
 }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn:active:not(:disabled) { transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover:not(:disabled) { background: var(--btn-fill-hover); }
+}
+
+.btn-primary {
+  --btn-fill: var(--brand);
+  --btn-fill-hover: color-mix(in srgb, var(--brand) 80%, #ffffff);
+  color: var(--brand-fg);
+}
+
+/* A secondary that sits over moving content (a video, a scrolling dialog)
+   needs to be opaque, so the tint is mixed against the page instead. */
+.btn-solid {
+  --btn-fill: color-mix(in srgb, var(--ink) 9%, var(--bg));
+  --btn-fill-hover: color-mix(in srgb, var(--ink) 15%, var(--bg));
+}
+
+.btn-sm   { height: 2.25rem; padding: 0 1rem; font-size: 0.8125rem; }
+.btn-lg   { height: 3.5rem;  padding: 0 1.75rem; font-size: 0.9375rem; }
+.btn-icon { width: 2.75rem; padding: 0; }
+.btn-sm.btn-icon { width: 2.25rem; }
+
+/* ============================================================
+   THE SWIPE: the one signature flourish, under one hero phrase.
+   ============================================================ */
+.swipe {
+  background-image: linear-gradient(var(--brand), var(--brand));
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 100% 0.24em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+@keyframes swipe-in { from { background-size: 0% 0.24em; } }
+.swipe-in { animation: swipe-in 640ms var(--ease) 360ms both; }
+}
+
+/* ============================================================
+   ENTRANCES: a 4px rise plus fade.
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(4px); }
+}
+@keyframes fade {
+  from { opacity: 0; }
+}
+.rise { animation: rise var(--dur) var(--ease) both; }
+
+/* Menus grow from the thing that opened them: here, the bar above. */
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
+}
+.menu-in { animation: menu-in 150ms var(--ease) both; }
+
+/* ============================================================
+   DIALOG: a centred modal on desktop, a bottom sheet on phones.
+   Exits are faster than entrances.
+   ============================================================ */
+.dialog-scrim { background: var(--scrim); }
+.dialog-scrim[data-state='open']   { animation: fade 200ms var(--ease); }
+.dialog-scrim[data-state='closed'] { animation: fade 150ms var(--ease) reverse both; }
+
+.dialog-panel {
+  position: fixed;
+  z-index: 50;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+}
+
+@media (min-width: 640px) {
+  .dialog-panel {
+    left: 50%;
+    top: 50%;
+    width: calc(100vw - 2rem);
+    max-width: 48rem;
+    max-height: 88vh;
+    transform: translate(-50%, -50%);
+  }
+  .dialog-panel[data-state='open']   { animation: dialog-in var(--dur) var(--ease); }
+  .dialog-panel[data-state='closed'] { animation: dialog-out 150ms var(--ease) both; }
+}
+@keyframes dialog-in {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.97); }
+}
+@keyframes dialog-out {
+  to { opacity: 0; transform: translate(-50%, -50%) scale(0.97); }
+}
+
+@media (max-width: 639.98px) {
+  .dialog-panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 92dvh;
+    border-width: 1px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .dialog-panel[data-state='open']   { animation: sheet-in 280ms var(--ease-drawer); }
+  .dialog-panel[data-state='closed'] { animation: sheet-out 200ms var(--ease) both; }
+}
+@keyframes sheet-in  { from { transform: translateY(100%); } }
+@keyframes sheet-out { to   { transform: translateY(100%); } }
+
+/* ============================================================
+   SEGMENTED CONTROL: the selected state is a Sulfur pill that
+   slides. A clipped copy of the row, in the active colours.
+   ============================================================ */
+.seg-active {
+  transition: clip-path 220ms var(--ease-move);
+}
+.seg-active[data-instant] { transition: none; }
+
+/* DOMolition rubble: fades out instead of vanishing mid-air. */
+.debris-host canvas { transition: opacity var(--dur) var(--ease); }
+.debris-host[data-debris='hidden'] canvas { opacity: 0; }
 
 /* Skip link: parked off-canvas until a keyboard reaches it. */
 .skip-link {
@@ -167,85 +298,21 @@ body {
   left: 0.75rem;
   z-index: 60;
   transform: translateY(-200%);
-  transition: transform 0.18s cubic-bezier(.16,1,.3,1);
 }
-.skip-link:focus-visible {
-  transform: translateY(0);
-}
-
-/* ============================================================
-   EDITORIAL PRIMITIVES
-   Drop caps, pull quotes, balanced headings — the print-craft
-   details the layout was already reaching for.
-   ============================================================ */
-
-/* Balanced headline wrapping. Progressive: natural wrap is the fallback. */
-.balance {
-  text-wrap: balance;
-}
-
-/* Tabular figures so stat rows align on the decimal, like a ledger. */
-.tnum {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
-}
-
-/* Drop cap for the opening paragraph of a build log. */
-.dropcap::first-letter {
-  float: left;
-  font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
-  font-weight: 800;
-  font-size: 3.3em;
-  line-height: 0.72;
-  padding-right: 0.09em;
-  margin-top: 0.06em;
-  color: var(--brand-ink);
-}
-
-/* Pull quote — a line worth setting larger, marked by a brand rule. */
-.pull-quote {
-  font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
-  font-weight: 500;
-  font-size: clamp(1.2rem, 2.1vw, 1.55rem);
-  line-height: 1.35;
-  color: var(--ink);
-  border-left: 1px solid var(--rule-2);
-  padding-left: 1.25rem;
-  max-inline-size: 34ch;
-  text-wrap: pretty;
-}
-
-/* Marquee pause state, driven by the ticker's own control. */
-.marquee[data-paused='true'] .marquee-track {
-  animation-play-state: paused;
-}
+.skip-link:focus-visible { transform: translateY(0); }
 
 /* ============================================================
    REDUCED MOTION
-   Everything here is decorative. Under `reduce`, render the
-   final readable state and stop — no marquee, no blink, no shake.
+   Less movement, not no feedback: anything that travels (rises,
+   slides, sweeps, press-scale) goes; fades and colour stay.
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-  .marquee-track {
-    animation: none !important;
-    transform: none !important;
-  }
-  .rise-in {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  .shatter-fx:hover {
-    animation: none !important;
-  }
+  html { scroll-behavior: auto; }
+  .rise,
+  .menu-in { animation-name: fade; }
+  .swipe-in { animation: none; }
+  .btn:active:not(:disabled) { transform: none; }
+  .seg-active { transition: none; }
+  .dialog-panel[data-state='open']   { animation: fade var(--dur) var(--ease); }
+  .dialog-panel[data-state='closed'] { animation: fade 150ms var(--ease) reverse both; }
 }
