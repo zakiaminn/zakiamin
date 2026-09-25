@@ -76,7 +76,7 @@ function Media({ project }) {
     // Short loops stand in for the old GIFs: silent, looping, no chrome.
     // Under reduced motion they wait for a press like any other video.
     const loop = project.demoLoop && !reduced;
-    return (
+    const video = (
       <video
         src={project.demoVideo}
         poster={project.poster}
@@ -91,6 +91,13 @@ function Media({ project }) {
         aria-label={`Screen recording: ${project.title} demo`}
         className="block w-full h-auto border border-rule bg-surface-2"
       />
+    );
+    if (!project.demoCaption) return video;
+    return (
+      <figure>
+        {video}
+        <figcaption className="mt-3 text-sm text-ink-3">{project.demoCaption}</figcaption>
+      </figure>
     );
   }
 

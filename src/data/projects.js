@@ -72,17 +72,18 @@ export const projects = [
     title: 'DOMolition',
     tagline: 'A UI you’re allowed to break',
     summary:
-      'A published npm package that turns any React component into a rigid-body physics simulation. This row is wrapped in it.',
+      'A published npm package that turns any React component into a rigid-body physics simulation, with three ways to break it. This row is wrapped in it.',
     description:
-      "A published npm package that turns any React component into a rigid-body physics simulation. It captures the live element to a bitmap (computed styles and all), subdivides that image into shards (a clean grid, or Voronoi tessellation via d3-delaunay), and hands each shard to matter-js as a body with real mass, friction, and restitution. A canvas loop paints the pieces as they fall and tears itself down once everything comes to rest. Because sometimes centering a div deserves consequences.",
-    tech: ['React', 'TypeScript', 'matter-js', 'd3-delaunay', 'Canvas', 'npm'],
+      "A published npm package that turns any React component into a rigid-body physics simulation. It captures the live element to a bitmap with html-to-image (computed styles and all), cuts it into pieces, and hands each piece to matter-js as a body with real mass, friction, and restitution. Three engines decide how it breaks: glass cracks first and holds for 250ms before shattering along a Voronoi tessellation, grid blows apart into clean rectangles, and implode pulls every piece toward the center before it drops. A canvas loop paints the pieces and tears itself down once everything comes to rest, and reduced motion skips the physics entirely. Because sometimes centering a div deserves consequences.",
+    tech: ['React', 'TypeScript', 'matter-js', 'd3-delaunay', 'html-to-image', 'Canvas', 'npm'],
     breakable: true,
     github: 'https://github.com/zakiaminn/DOMolition',
     npm: 'https://www.npmjs.com/package/domolition',
     demoVideo: '/DOMolition-demo.mp4',
     demoLoop: true,
+    demoCaption: 'Glass, grid, then implode, recorded in the package’s demo app.',
     poster: '/posters/domolition.jpg',
-    demoSize: [800, 520],
+    demoSize: [1280, 686],
   },
   {
     title: 'AegisGrid',
