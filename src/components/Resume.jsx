@@ -9,6 +9,7 @@ import {
 import { profile, skillGroups, timeline } from '@/data/profile';
 import { featuredProjects, projects } from '@/data/projects';
 import { YearSpan } from '@/components/Experience';
+import { ExternalArrow } from '@/components/ProjectBits';
 import posthog from '@/lib/posthog';
 
 const education = timeline.filter((t) => t.kind === 'education');
@@ -80,10 +81,10 @@ export default function Resume() {
               {profile.email}
             </a>
             <a href={profile.github} target="_blank" rel="noreferrer" className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
-              GitHub ↗<span className="sr-only"> (opens in a new tab)</span>
+              GitHub <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
             </a>
             <a href={profile.linkedin} target="_blank" rel="noreferrer" className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
-              LinkedIn ↗<span className="sr-only"> (opens in a new tab)</span>
+              LinkedIn <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
             </a>
           </div>
         </DialogHeader>

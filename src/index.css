@@ -85,6 +85,7 @@ body {
 
 .balance { text-wrap: balance; }
 .pretty { text-wrap: pretty; }
+.ext-arrow { font-variant-emoji: text; }
 .sig {
   text-decoration-line: underline;
   text-decoration-color: transparent;

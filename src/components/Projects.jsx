@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { projects, featuredProjects } from '@/data/projects';
 import CaseStudy from '@/components/CaseStudy';
-import { Highlights, SectionHead, TechLine } from '@/components/ProjectBits';
+import { ExternalArrow, Highlights, SectionHead, TechLine } from '@/components/ProjectBits';
 import { usePrefersReducedMotion } from '@/lib/motion';
 import posthog from '@/lib/posthog';
 
@@ -155,7 +155,7 @@ function FeaturedTrx({ project }) {
                 onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
                 className="btn"
               >
-                Visit {project.liveLabel} ↗
+                Visit {project.liveLabel} <ExternalArrow />
                 <span className="sr-only"> (opens in a new tab)</span>
               </a>
             </div>
@@ -359,7 +359,7 @@ function IndexRow({ project, breakIt, busy }) {
             onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'index' })}
             className="link text-sm font-medium inline-flex items-center min-h-[36px]"
           >
-            Source ↗<span className="sr-only"> for {project.title} (opens in a new tab)</span>
+            Source <ExternalArrow /><span className="sr-only"> for {project.title} (opens in a new tab)</span>
           </a>
           {project.live && (
             <a
@@ -369,7 +369,7 @@ function IndexRow({ project, breakIt, busy }) {
               onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'index' })}
               className="link text-sm font-medium inline-flex items-center min-h-[36px]"
             >
-              Site ↗<span className="sr-only"> for {project.title} (opens in a new tab)</span>
+              Site <ExternalArrow /><span className="sr-only"> for {project.title} (opens in a new tab)</span>
             </a>
           )}
           {project.npm && (
@@ -380,7 +380,7 @@ function IndexRow({ project, breakIt, busy }) {
               onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'npm', project_type: 'index' })}
               className="link text-sm font-medium inline-flex items-center min-h-[36px]"
             >
-              npm ↗<span className="sr-only"> (opens in a new tab)</span>
+              npm <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
             </a>
           )}
         </div>
