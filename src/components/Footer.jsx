@@ -81,12 +81,12 @@ export default function Footer() {
             </a>
           </li>
           <li>
-            <a href={profile.github} target="_blank" rel="noreferrer" onClick={external('github')} className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
+            <a href={profile.github} target="_blank" rel="me noreferrer" onClick={external('github')} className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
               GitHub ↗<span className="sr-only"> profile (opens in a new tab)</span>
             </a>
           </li>
           <li>
-            <a href={profile.linkedin} target="_blank" rel="noreferrer" onClick={external('linkedin')} className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
+            <a href={profile.linkedin} target="_blank" rel="me noreferrer" onClick={external('linkedin')} className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
               LinkedIn ↗<span className="sr-only"> profile (opens in a new tab)</span>
             </a>
           </li>

@@ -26,8 +26,9 @@ export default function Hero() {
           </h1>
 
           <p className="text-lg md:text-xl text-ink-2 leading-relaxed max-w-xl mb-10 pretty rise" style={step(2)}>
-            Data Analytics student and full-stack engineer. I build data pipelines
-            and the products around them, from the schema to the shipped interface.
+            I’m Zaki Amin, a Data Analytics student and full-stack engineer. I build
+            data pipelines and the products around them, from the schema to the
+            shipped interface.
           </p>
 
           <div className="flex flex-wrap items-center gap-3 rise" style={step(3)}>

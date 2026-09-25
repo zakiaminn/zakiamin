@@ -2,51 +2,141 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Zaki Amin | Data Analyst &amp; Full-Stack Engineer in Toronto</title>
+    <meta name="description" content="Zaki Amin, data analyst and full-stack engineer in Toronto seeking a Summer 2027 co-op. Case studies on The Repo Exchange, Batin, DOMolition and more." />
+    <meta name="author" content="Zaki Amin" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="canonical" href="https://zaki-nu.vercel.app/" />
     <meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0E0E0A" media="(prefers-color-scheme: dark)" />
-    <meta name="description" content="Zaki Amin, a data analyst and full-stack engineer based in Toronto. Case studies, projects, resume, and experience." />
-    <meta name="author" content="Zaki Amin" />
-    <title>Zaki Amin | Data Analyst &amp; Full-Stack Engineer</title>
-    <link rel="canonical" href="https://zaki-nu.vercel.app/" />
 
-    <!-- Open Graph / social cards -->
-    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- The same person across the web -->
+    <link rel="me" href="https://github.com/zakiaminn" />
+    <link rel="me" href="https://www.linkedin.com/in/zakiamin/" />
+
+    <!-- Link previews -->
+    <meta property="og:type" content="profile" />
     <meta property="og:site_name" content="Zaki Amin" />
-    <meta property="og:title" content="Zaki Amin | Data Analyst &amp; Full-Stack Engineer" />
-    <meta property="og:description" content="Data analyst and full-stack engineer in Toronto. Case studies, projects, and resume." />
+    <meta property="og:locale" content="en_CA" />
     <meta property="og:url" content="https://zaki-nu.vercel.app/" />
-    <meta property="og:image" content="https://zaki-nu.vercel.app/zaki-og.png" />
-    <meta property="og:image:alt" content="Zaki Amin" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:title" content="Zaki Amin | Data Analyst &amp; Full-Stack Engineer" />
+    <meta property="og:description" content="Data analyst and full-stack engineer in Toronto, seeking a Summer 2027 co-op. Case studies, projects and résumé." />
+    <meta property="og:image" content="https://zaki-nu.vercel.app/og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Zaki Amin, data analyst and full-stack engineer, printed as a halftone portrait" />
+    <meta property="profile:first_name" content="Zaki" />
+    <meta property="profile:last_name" content="Amin" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Zaki Amin | Data Analyst &amp; Full-Stack Engineer" />
-    <meta name="twitter:description" content="Data analyst and full-stack engineer in Toronto. Case studies, projects, and resume." />
-    <meta name="twitter:image" content="https://zaki-nu.vercel.app/zaki-og.png" />
+    <meta name="twitter:description" content="Data analyst and full-stack engineer in Toronto, seeking a Summer 2027 co-op. Case studies, projects and résumé." />
+    <meta name="twitter:image" content="https://zaki-nu.vercel.app/og.png" />
+    <meta name="twitter:image:alt" content="Zaki Amin, data analyst and full-stack engineer, printed as a halftone portrait" />
 
-    <!-- Person structured data: helps "Zaki Amin" + "data analyst" resolve to a real entity -->
+    <!-- Structured data: the page is a profile of one person, and the
+         projects on it are his. Lets "Zaki Amin" resolve to a real entity. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Zaki Amin",
-        "jobTitle": "Data Analyst & Full-Stack Engineer",
-        "description": "Data Analytics student and full-stack engineer building data pipelines and the products around them.",
-        "url": "https://zaki-nu.vercel.app/",
-        "image": "https://zaki-nu.vercel.app/zaki-og.png",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Toronto",
-          "addressRegion": "ON",
-          "addressCountry": "CA"
-        },
-        "alumniOf": [
-          { "@type": "CollegeOrUniversity", "name": "Sheridan College" }
-        ],
-        "knowsAbout": ["Data Analytics", "SQL", "PostgreSQL", "TimescaleDB", "Python", "React", "Next.js", "Full-Stack Development"],
-        "sameAs": [
-          "https://github.com/zakiaminn",
-          "https://www.linkedin.com/in/zakiamin/"
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://zaki-nu.vercel.app/#website",
+            "url": "https://zaki-nu.vercel.app/",
+            "name": "Zaki Amin",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "https://zaki-nu.vercel.app/#profile",
+            "url": "https://zaki-nu.vercel.app/",
+            "name": "Zaki Amin | Data Analyst & Full-Stack Engineer in Toronto",
+            "isPartOf": { "@id": "https://zaki-nu.vercel.app/#website" },
+            "mainEntity": { "@id": "https://zaki-nu.vercel.app/#person" },
+            "primaryImageOfPage": "https://zaki-nu.vercel.app/og.png",
+            "dateModified": "2026-09-25"
+          },
+          {
+            "@type": "Person",
+            "@id": "https://zaki-nu.vercel.app/#person",
+            "name": "Zaki Amin",
+            "alternateName": "Zaki Amin Ahmad",
+            "jobTitle": "Data Analyst & Full-Stack Engineer",
+            "description": "Data Analytics student and full-stack engineer building data pipelines and the products around them, seeking a Summer 2027 co-op.",
+            "url": "https://zaki-nu.vercel.app/",
+            "image": "https://zaki-nu.vercel.app/zaki-og.png",
+            "homeLocation": {
+              "@type": "Place",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Toronto",
+                "addressRegion": "ON",
+                "addressCountry": "CA"
+              }
+            },
+            "affiliation": { "@type": "CollegeOrUniversity", "name": "Sheridan College" },
+            "knowsAbout": [
+              "Data analytics", "Data engineering", "SQL", "PostgreSQL", "TimescaleDB", "Redis",
+              "Python", "FastAPI", "pandas", "TypeScript", "React", "Next.js", "Node.js",
+              "Supabase", "Docker", "Options order flow", "Full-stack development"
+            ],
+            "sameAs": [
+              "https://github.com/zakiaminn",
+              "https://www.linkedin.com/in/zakiamin/",
+              "https://www.npmjs.com/~zakiiaminn"
+            ]
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "The Repo Exchange",
+            "description": "A simulated stock market for GitHub repositories, priced from public repo data by one formula tested in three languages, with server-side slippage checks and row-locked fills.",
+            "codeRepository": "https://github.com/zakiaminn/TheRepoExchange",
+            "programmingLanguage": ["TypeScript", "JavaScript", "Python", "SQL"],
+            "author": { "@id": "https://zaki-nu.vercel.app/#person" },
+            "targetProduct": {
+              "@type": "WebApplication",
+              "name": "The Repo Exchange",
+              "url": "https://therepo.exchange",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "Web"
+            }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "DOMolition",
+            "description": "A published npm package that turns any React component into a rigid-body physics simulation, with glass, grid and implode engines.",
+            "codeRepository": "https://github.com/zakiaminn/DOMolition",
+            "sameAs": "https://www.npmjs.com/package/domolition",
+            "programmingLanguage": "TypeScript",
+            "author": { "@id": "https://zaki-nu.vercel.app/#person" }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "AegisGrid",
+            "description": "A tower-defense engine in Java and LibGDX with A* pathfinding that re-plans when walls change.",
+            "codeRepository": "https://github.com/zakiaminn/AegisGrid",
+            "programmingLanguage": "Java",
+            "author": { "@id": "https://zaki-nu.vercel.app/#person" }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "FrankenSorter",
+            "description": "A privacy-first desktop app that sorts files with a local LLM under a strict JSON schema, calling the model only when a regex router can't decide.",
+            "codeRepository": "https://github.com/zakiaminn/FrankenSorter",
+            "programmingLanguage": "Python",
+            "author": { "@id": "https://zaki-nu.vercel.app/#person" },
+            "targetProduct": {
+              "@type": "SoftwareApplication",
+              "name": "FrankenSorter",
+              "url": "https://zakiaminn.github.io/FrankenSorter/"
+            }
+          }
         ]
       }
     </script>
