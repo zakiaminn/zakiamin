@@ -1,140 +1,297 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { projects, featuredProjects } from '@/data/projects';
 import CaseStudy from '@/components/CaseStudy';
+import { SectionHead, StatRow, TechLine } from '@/components/ProjectBits';
+import { usePrefersReducedMotion } from '@/lib/motion';
 import posthog from '@/lib/posthog';
 
-// Ghost control that fills with the accent on hover — the brand showing up
-// on interaction rather than sitting there glowing.
-const OPEN_BUTTON =
-  'font-bricolage text-xs tracking-[0.1em] uppercase text-ink font-semibold border rule ' +
-  'px-4 min-h-[44px] inline-flex items-center transition-colors ' +
-  'hover:bg-brand hover:text-brand-fg hover:border-brand';
+const [trx, batin] = featuredProjects;
 
-function FeaturedProject({ project }) {
+function formatDuration(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = String(Math.round(seconds % 60)).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+/**
+ * The demo, playing where a recruiter is already looking. It starts muted
+ * when it scrolls into view and pauses when it leaves, so it never costs a
+ * byte until someone gets here. Reduced motion or Save-Data leaves it on the
+ * poster until pressed. The pause control satisfies WCAG 2.2.2.
+ */
+function DemoVideo({ project }) {
+  const ref = useRef(null);
+  const reduced = usePrefersReducedMotion();
+  const [playing, setPlaying] = useState(false);
+  const [held, setHeld] = useState(false); // the reader paused it; stop autoplaying
+  const saveData = typeof navigator !== 'undefined' && navigator.connection?.saveData;
+  const autoplay = !reduced && !saveData && !held;
+  const [w, h] = project.demoSize;
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video || !autoplay || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [autoplay]);
+
+  const toggle = () => {
+    const video = ref.current;
+    if (!video) return;
+    if (video.paused) {
+      setHeld(false);
+      video.play().catch(() => {});
+      posthog.capture('demo_video_played', { project_title: project.title });
+    } else {
+      setHeld(true);
+      video.pause();
+    }
+  };
+
   return (
-    <article className="relative border rule mb-16 md:mb-20 bg-surface">
-      <div className="dot-pattern h-2 text-brand-ink" aria-hidden="true" />
-      <div className="p-7 md:p-12">
-        <div className="flex flex-wrap items-baseline justify-between gap-4 mb-6">
-          <div>
-            <h3 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink balance">{project.title}</h3>
-            <p className="font-bricolage text-sm text-ink-2 mt-1">{project.tagline}</p>
-          </div>
-          {project.live ? (
-            <a
-              href={project.live}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
-              className="ink-link font-bricolage text-xs tracking-[0.1em] uppercase text-brand-ink font-semibold inline-flex items-center min-h-[44px]"
-            >
-              Visit ↗
-              <span className="sr-only"> {project.title} (opens in a new tab)</span>
-            </a>
-          ) : project.status ? (
-            // A brand-washed pill in place of the live link, so a pre-launch
-            // build reads as "on the way", not "missing".
-            <span className="font-bricolage text-[11px] tracking-[0.12em] uppercase text-ink font-semibold bg-brand-wash border border-rule px-3 py-1.5">
-              {project.status}
-            </span>
-          ) : null}
-        </div>
-
-        <p className="text-ink-2 leading-relaxed max-w-3xl mb-10">{project.description}</p>
-
-        <dl className="grid grid-cols-2 md:grid-cols-4 gap-6 border-y rule py-8 mb-8">
-          {project.stats.map((stat) => (
-            <div key={stat.label}>
-              <dt className="sr-only">{stat.label}</dt>
-              <dd>
-                <span className="block font-mono font-medium text-2xl md:text-[1.75rem] tracking-[-0.02em] text-brand-ink tnum">{stat.value}</span>
-                <span className="block font-bricolage font-semibold text-[11px] tracking-[0.08em] uppercase text-ink-3 mt-1.5 balance">
-                  {stat.label}
-                </span>
-              </dd>
-            </div>
-          ))}
-        </dl>
-
-        <CaseStudy
-          project={project}
-          trigger={
-            <button type="button" className={OPEN_BUTTON}>
-              Open the case study &rarr;
-              <span className="sr-only"> for {project.title}</span>
-            </button>
-          }
-        />
-
-        <ul className="flex flex-wrap gap-2 mt-10" aria-label={`${project.title} tech stack`}>
-          {project.tech.map((t) => (
-            <li key={t} className="font-bricolage text-xs border rule px-2.5 py-1 text-ink-2">{t}</li>
-          ))}
-        </ul>
-      </div>
-    </article>
+    <figure>
+      <video
+        ref={ref}
+        src={project.demoVideo}
+        poster={project.poster}
+        width={w}
+        height={h}
+        muted
+        loop
+        playsInline
+        preload="none"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        aria-label={`Screen recording of ${project.title}`}
+        className="block w-full h-auto border border-rule bg-surface"
+        style={{ aspectRatio: `${w} / ${h}` }}
+      />
+      <figcaption className="mt-3 flex items-center gap-3 text-sm text-ink-3">
+        <button type="button" onClick={toggle} className="btn btn-sm btn-icon" aria-pressed={!playing}>
+          <span className="sr-only">{playing ? 'Pause the recording' : 'Play the recording'}</span>
+          <svg viewBox="0 0 12 12" className="w-2.5 h-2.5" fill="currentColor" aria-hidden="true">
+            {playing ? (
+              <>
+                <rect x="2.5" y="1.5" width="2.5" height="9" rx="0.6" />
+                <rect x="7" y="1.5" width="2.5" height="9" rx="0.6" />
+              </>
+            ) : (
+              <path d="M3 1.8v8.4a.5.5 0 0 0 .76.43l6.9-4.2a.5.5 0 0 0 0-.86l-6.9-4.2A.5.5 0 0 0 3 1.8z" />
+            )}
+          </svg>
+        </button>
+        <span>
+          Screen recording, muted · <span className="num text-ink-2">{formatDuration(project.demoDuration)}</span>
+        </span>
+      </figcaption>
+    </figure>
   );
 }
 
-function ProjectCard({ project }) {
+/** Batin's six services, drawn from how they actually connect. */
+function Pipeline({ stages }) {
   return (
-    <article className={`border rule h-full flex flex-col bg-surface ${project.shatter ? 'shatter-fx' : ''}`}>
-      <div className="dot-pattern h-1.5 text-brand-ink" aria-hidden="true" />
-      <div className="p-7 flex flex-col flex-grow">
-        <h3 className="font-bricolage font-bold text-2xl tracking-[-0.02em] text-ink mb-1.5 balance">{project.title}</h3>
-        <p className="font-bricolage text-xs text-ink-2 mb-5">{project.tagline}</p>
-        <p className="text-ink-2 text-sm leading-relaxed mb-6 flex-grow">{project.description}</p>
+    <figure className="border border-rule">
+      <ol className="grid sm:grid-cols-4">
+        {stages.map((s, i) => (
+          <li
+            key={s.stage}
+            className={`relative p-5 ${i > 0 ? 'border-t border-rule sm:border-t-0 sm:border-l' : ''}`}
+          >
+            <p className="label">{s.stage}</p>
+            <ul className="mt-4 space-y-2">
+              {s.nodes.map((n) => (
+                <li key={n} className="border border-rule bg-surface px-3 py-2.5 text-sm font-medium text-ink leading-snug">
+                  {n}
+                </li>
+              ))}
+            </ul>
+            {s.note && <p className="mt-3 text-sm text-ink-3 leading-snug">{s.note}</p>}
+            {i < stages.length - 1 && (
+              <svg
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                className="absolute z-10 h-4 w-4 bg-bg text-brand-ink
+                           left-1/2 -bottom-2 -translate-x-1/2 rotate-90
+                           sm:left-auto sm:bottom-auto sm:-right-2 sm:top-1/2 sm:translate-x-0 sm:-translate-y-1/2 sm:rotate-0"
+                fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
+              >
+                <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" />
+              </svg>
+            )}
+          </li>
+        ))}
+      </ol>
+      <figcaption className="border-t border-rule px-5 py-3 text-sm text-ink-3">
+        Six services, one <span className="font-medium text-ink-2">docker-compose up</span>. Live ticks and
+        backfill land in the same hypertables.
+      </figcaption>
+    </figure>
+  );
+}
 
-        <ul className="flex flex-wrap gap-1.5 mb-6" aria-label={`${project.title} tech stack`}>
-          {project.tech.map((t) => (
-            <li key={t} className="font-bricolage text-[11px] border rule px-2 py-1 text-ink-3">{t}</li>
-          ))}
-        </ul>
+function FeaturedTrx({ project }) {
+  return (
+    <div className="night">
+      <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+        <div className="grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-10 lg:gap-14 items-start">
+          <div>
+            <p className="label text-brand-ink">Flagship</p>
+            <h3 className="mt-4 text-4xl md:text-5xl font-bold leading-[1.02] tracking-[-0.035em] text-ink balance">
+              {project.title}
+            </h3>
+            <p className="mt-3 text-lg text-ink-2">{project.tagline}</p>
+            <p className="mt-6 text-ink-2 leading-relaxed pretty">{project.description}</p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <CaseStudy
+                project={project}
+                trigger={<button type="button" className="btn btn-primary">Read the case study</button>}
+              />
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
+                className="btn"
+              >
+                Visit {project.liveLabel} ↗
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </div>
+          </div>
+          <DemoVideo project={project} />
+        </div>
+        <StatRow stats={project.stats} className="mt-14 md:mt-20" />
+        <TechLine tech={project.tech} title={project.title} className="mt-6" />
+      </div>
+    </div>
+  );
+}
 
-        <div className="flex justify-between items-center gap-4 border-t rule pt-4 mt-auto">
+function FeaturedBatin({ project }) {
+  return (
+    <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+      <div className="grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-10 lg:gap-14 items-start">
+        <div>
+          <p className="label">In progress · {project.status}</p>
+          <h3 className="mt-4 text-4xl md:text-5xl font-bold leading-[1.02] tracking-[-0.035em] text-ink balance">
+            {project.title}
+          </h3>
+          <p className="mt-3 text-lg text-ink-2">{project.tagline}</p>
+          <p className="mt-6 text-ink-2 leading-relaxed pretty">{project.description}</p>
+          <div className="mt-8">
+            <CaseStudy
+              project={project}
+              trigger={<button type="button" className="btn">Read the case study</button>}
+            />
+          </div>
+        </div>
+        <Pipeline stages={project.pipeline} />
+      </div>
+      <StatRow stats={project.stats} className="mt-14 md:mt-20" />
+      <TechLine tech={project.tech} title={project.title} className="mt-6" />
+    </div>
+  );
+}
+
+function IndexRow({ project, breakIt, busy }) {
+  return (
+    <div className="group relative grid md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] gap-6 md:gap-12 py-10 md:py-12 border-b border-rule bg-bg">
+      <div className="min-w-0">
+        <h4 className="text-3xl font-bold tracking-[-0.03em] text-ink">
+          <CaseStudy
+            project={project}
+            trigger={
+              // The title is the row's link; its ::after stretches over the
+              // whole row, so the image and copy open the write-up too.
+              <button type="button" className="sig text-left after:absolute after:inset-0 after:content-['']">
+                {project.title}
+                <span className="sr-only">, open the write-up</span>
+              </button>
+            }
+          />
+        </h4>
+        <p className="mt-1.5 text-ink-2">{project.tagline}</p>
+        <p className="mt-5 max-w-xl text-ink-2 leading-relaxed pretty">{project.summary}</p>
+        <TechLine tech={project.tech} title={project.title} className="mt-5" />
+
+        <div className="relative z-10 mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+          {breakIt && (
+            <button type="button" onClick={breakIt} aria-busy={busy} data-break className="btn btn-sm">
+              Break this row
+            </button>
+          )}
           <a
             href={project.github}
             target="_blank"
             rel="noreferrer"
-            onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'card' })}
-            className="ink-link font-bricolage text-xs uppercase tracking-[0.08em] text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
+            onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'index' })}
+            className="link text-sm font-medium inline-flex items-center min-h-[36px]"
           >
-            Source<span className="sr-only"> for {project.title} (opens in a new tab)</span>
+            Source ↗<span className="sr-only"> for {project.title} (opens in a new tab)</span>
           </a>
-          <CaseStudy
-            project={project}
-            trigger={
-              <button
-                type="button"
-                className="font-bricolage text-xs uppercase tracking-[0.08em] text-ink font-semibold border rule px-3 min-h-[44px] transition-colors hover:bg-brand hover:text-brand-fg hover:border-brand"
-              >
-                View<span className="sr-only"> {project.title}</span>
-              </button>
-            }
-          />
+          {project.live && (
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'index' })}
+              className="link text-sm font-medium inline-flex items-center min-h-[36px]"
+            >
+              Site ↗<span className="sr-only"> for {project.title} (opens in a new tab)</span>
+            </a>
+          )}
+          {project.npm && (
+            <a
+              href={project.npm}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'npm', project_type: 'index' })}
+              className="link text-sm font-medium inline-flex items-center min-h-[36px]"
+            >
+              npm ↗<span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          )}
         </div>
       </div>
-    </article>
+
+      <img
+        src={project.poster}
+        alt=""
+        width={project.demoSize[0]}
+        height={project.demoSize[1]}
+        loading="lazy"
+        decoding="async"
+        className="w-full aspect-[16/10] object-cover object-top border border-rule bg-surface-2"
+      />
+    </div>
   );
 }
 
 export default function Projects() {
   return (
-    <section id="projects" className="w-full max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-24">
-      <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink mb-4">Selected Work</h2>
-      <p className="text-ink-2 max-w-xl mb-12 md:mb-16">
-        Two flagship builds and three smaller ones. Open any of them for the full write-up:
-        what it does, how it was built, and what broke along the way.
-      </p>
+    <section id="work" aria-labelledby="work-heading">
+      <div className="max-w-6xl mx-auto px-6 pb-10 md:pb-14">
+        <SectionHead id="work-heading">Selected work</SectionHead>
+      </div>
 
-      {featuredProjects.map((project) => (
-        <FeaturedProject key={project.title} project={project} />
-      ))}
+      <FeaturedTrx project={trx} />
+      <FeaturedBatin project={batin} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <ProjectCard key={project.title} project={project} />
-        ))}
+      <div className="max-w-6xl mx-auto px-6 pb-20 md:pb-28">
+        <SectionHead as="h3" className="mb-2">Smaller builds</SectionHead>
+        <div>
+          {projects.map((project) => (
+            <IndexRow key={project.title} project={project} />
+          ))}
+        </div>
       </div>
     </section>
   );
