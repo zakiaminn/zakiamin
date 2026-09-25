@@ -204,8 +204,8 @@ function FeaturedBatin({ project }) {
 /**
  * Wraps a row in DOMolition, the npm package the row is about. Nothing loads
  * until someone presses the button; then the package (and matter-js) arrive
- * as their own chunk, the row is captured to a bitmap and shattered. The
- * rubble fades when you scroll away or put the row back.
+ * as their own chunk, the row is captured to a bitmap and blown apart with
+ * the grid engine. The rubble fades when you scroll away or put the row back.
  */
 function Breakable({ children }) {
   const [phase, setPhase] = useState('idle'); // idle | loading | broken
@@ -215,7 +215,7 @@ function Breakable({ children }) {
   const [restored, setRestored] = useState(false);
   const hostRef = useRef(null);
   const moduleRef = useRef(null);
-  const shardsRef = useRef(64);
+  const gridRef = useRef({ rows: 6, cols: 16 });
 
   const breakIt = useCallback(async () => {
     if (phase !== 'idle') return;
@@ -223,7 +223,13 @@ function Breakable({ children }) {
     posthog.capture('domolition_triggered');
     try {
       moduleRef.current ??= await import('domolition');
-      shardsRef.current = window.matchMedia('(max-width: 640px)').matches ? 36 : 64;
+      // Aim for roughly 64px square pieces, whatever shape the row is.
+      const rect = hostRef.current?.getBoundingClientRect();
+      const piece = 64;
+      const clamp = (n) => Math.min(24, Math.max(4, Math.round(n)));
+      gridRef.current = rect
+        ? { rows: clamp(rect.height / piece), cols: clamp(rect.width / piece) }
+        : { rows: 6, cols: 16 };
       setDebris('shown');
       setGone(false);
       setPhase('broken');
@@ -294,9 +300,10 @@ function Breakable({ children }) {
       {phase === 'broken' && Wrapper ? (
         <div className="[&>div]:!block [&>div]:!w-full">
           <Wrapper
-            effect="glass"
+            effect="grid"
             isShattered={armed}
-            shardCount={shardsRef.current}
+            rows={gridRef.current.rows}
+            cols={gridRef.current.cols}
             onShatterComplete={onComplete}
           >
             {content}
