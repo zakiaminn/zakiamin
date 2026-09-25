@@ -8,45 +8,40 @@ import {
 } from '@/components/ui/dialog';
 import { profile, skillGroups, timeline } from '@/data/profile';
 import { featuredProjects, projects } from '@/data/projects';
+import { YearSpan } from '@/components/Experience';
 import posthog from '@/lib/posthog';
 
 const education = timeline.filter((t) => t.kind === 'education');
 const experience = timeline.filter((t) => t.kind === 'experience');
 const allProjects = [...featuredProjects, ...projects];
 
-/** A titled block with the site's hairline-over-label idiom. */
+/** A titled block with the site's label-over-hairline idiom. */
 function Section({ title, children }) {
   return (
-    <section className="border-t rule pt-6">
-      <h3 className="font-bricolage text-[11px] font-semibold tracking-[0.1em] uppercase text-ink-3 mb-5">
-        {title}
-      </h3>
+    <section className="border-t border-rule pt-6">
+      <h3 className="label mb-5">{title}</h3>
       <div className="space-y-6">{children}</div>
     </section>
   );
 }
 
-/** A dated row: the year rail on the left, the substance on the right. */
-function Entry({ year, heading, detail }) {
+/** A dated row: the rail on the left, the substance on the right. */
+function Entry({ rail, heading, detail }) {
   return (
     <div className="grid md:grid-cols-[150px_1fr] gap-1 md:gap-8">
-      {year && (
-        <span className="font-mono text-xs text-brand-ink tnum md:pt-1">{year}</span>
-      )}
+      <div className="text-sm md:pt-1">{rail}</div>
       <div>
-        <h4 className="font-bricolage font-semibold text-lg tracking-[-0.01em] text-ink">
-          {heading}
-        </h4>
-        {detail && <p className="text-ink-2 text-[15px] leading-relaxed mt-1">{detail}</p>}
+        <h4 className="font-semibold text-lg tracking-[-0.01em] text-ink">{heading}</h4>
+        {detail && <p className="text-ink-2 leading-relaxed mt-1">{detail}</p>}
       </div>
     </div>
   );
 }
 
 /**
- * The resume, presented in-page rather than handed over as a download. It is a
+ * The résumé, presented in-page rather than handed over as a download. It is a
  * single controlled dialog, mounted once at the app root and opened by the URL
- * hash `#resume`, so recruiters can deep-link and share it and every "Resume"
+ * hash `#resume`, so recruiters can deep-link and share it and every "Résumé"
  * control on the page is just a link to that hash. Content is sourced from the
  * shared profile data and the project list, so it can't drift from the page.
  */
@@ -56,7 +51,7 @@ export default function Resume() {
   );
 
   // The hash is the source of truth: back/forward, a pasted #resume link, and
-  // the on-page "Resume" anchors all flow through here.
+  // the on-page "Résumé" anchors all flow through here.
   useEffect(() => {
     const sync = () => setOpen(window.location.hash === '#resume');
     window.addEventListener('hashchange', sync);
@@ -81,72 +76,51 @@ export default function Resume() {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <span className="font-bricolage text-xs font-semibold tracking-[0.1em] uppercase text-brand-ink">
-            Résumé
-          </span>
-          <DialogTitle className="mt-2 pr-14">{profile.name}</DialogTitle>
+          <p className="label text-brand-ink">Résumé</p>
+          <DialogTitle className="mt-3 pr-14">{profile.name}</DialogTitle>
           <DialogDescription>
-            {profile.role} · {profile.location}. Seeking {profile.seeking}.
+            {profile.role} · {profile.location}. Seeking a {profile.seeking}.
           </DialogDescription>
-        </DialogHeader>
 
-        <div className="px-7 pb-9 md:px-10 space-y-8">
-          {/* Contact rail */}
-          <div className="flex flex-wrap gap-x-6 gap-y-2 -mt-1">
-            <a
-              href={`mailto:${profile.email}`}
-              className="ink-link font-bricolage text-xs tracking-[0.08em] text-ink hover:text-ink inline-flex items-center min-h-[44px]"
-            >
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-1">
+            <a href={`mailto:${profile.email}`} className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
               {profile.email}
             </a>
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noreferrer"
-              className="ink-link font-bricolage text-xs tracking-[0.08em] uppercase text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
-            >
-              GitHub<span className="sr-only"> (opens in a new tab)</span>
+            <a href={profile.github} target="_blank" rel="noreferrer" className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
+              GitHub ↗<span className="sr-only"> (opens in a new tab)</span>
             </a>
-            <a
-              href={profile.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="ink-link font-bricolage text-xs tracking-[0.08em] uppercase text-ink-2 hover:text-ink inline-flex items-center min-h-[44px]"
-            >
-              LinkedIn<span className="sr-only"> (opens in a new tab)</span>
+            <a href={profile.linkedin} target="_blank" rel="noreferrer" className="sig text-ink font-medium inline-flex items-center min-h-[44px]">
+              LinkedIn ↗<span className="sr-only"> (opens in a new tab)</span>
             </a>
           </div>
+        </DialogHeader>
 
+        <div className="px-6 pb-10 md:px-10 space-y-8">
           <Section title="Education">
             {education.map((e) => (
-              <Entry key={e.id} year={e.year} heading={e.role} detail={e.detail} />
+              <Entry key={e.id} rail={<YearSpan start={e.start} end={e.end} />} heading={e.role} detail={e.detail} />
             ))}
           </Section>
 
           <Section title="Experience">
             {experience.map((e) => (
-              <Entry key={e.id} year={e.year} heading={e.role} detail={e.detail} />
+              <Entry key={e.id} rail={<YearSpan start={e.start} end={e.end} />} heading={e.role} detail={e.detail} />
             ))}
           </Section>
 
-          <Section title="Selected Projects">
+          <Section title="Selected projects">
             {allProjects.map((p) => (
-              <div key={p.title} className="grid md:grid-cols-[150px_1fr] gap-1 md:gap-8">
-                <span className="font-bricolage text-xs text-ink-3 uppercase tracking-[0.08em] md:pt-1">
-                  {p.live ? 'Live' : p.status ? p.status : 'Open source'}
-                </span>
-                <div>
-                  <h4 className="font-bricolage font-semibold text-lg tracking-[-0.01em] text-ink">
-                    {p.title}
-                    <span className="font-bricolage font-normal text-xs text-ink-2 ml-2 tracking-normal">
-                      {p.tagline}
-                    </span>
-                  </h4>
-                  <p className="font-bricolage text-[11px] tracking-[0.04em] text-ink-3 mt-1.5">
-                    {p.tech.join(', ')}
-                  </p>
-                </div>
-              </div>
+              <Entry
+                key={p.title}
+                rail={<span className="text-ink-3">{p.live ? 'Live' : p.comingSoon ? 'Pre-launch' : 'Open source'}</span>}
+                heading={p.title}
+                detail={
+                  <>
+                    {p.tagline}.
+                    <span className="block mt-1.5 text-sm text-ink-3">{p.tech.join(', ')}</span>
+                  </>
+                }
+              />
             ))}
           </Section>
 
@@ -154,12 +128,8 @@ export default function Resume() {
             <div className="grid sm:grid-cols-2 gap-x-8 gap-y-5">
               {skillGroups.map((group) => (
                 <div key={group.label}>
-                  <h4 className="font-bricolage text-[11px] font-semibold tracking-[0.1em] uppercase text-ink-3 mb-1.5">
-                    {group.label}
-                  </h4>
-                  <p className="text-ink-2 text-[15px] leading-relaxed">
-                    {group.items.join(', ')}
-                  </p>
+                  <h4 className="label mb-1.5">{group.label}</h4>
+                  <p className="text-ink-2 leading-relaxed">{group.items.join(', ')}</p>
                 </div>
               ))}
             </div>

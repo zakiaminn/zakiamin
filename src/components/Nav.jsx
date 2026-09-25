@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import posthog from '@/lib/posthog';
 
 const LINKS = [
-  { label: 'About', href: '#about' },
+  { label: 'Work', href: '#work' },
   { label: 'Experience', href: '#experience' },
-  { label: 'Work', href: '#projects' },
+  { label: 'Toolkit', href: '#toolkit' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -19,8 +19,8 @@ function Mark() {
         <circle cx="18" cy="18" r="3.1" />
         <circle cx="8" cy="28" r="3.1" />
       </g>
-      {/* The accent seal: a chartreuse mark reads as a thin graphic, so it
-          takes brand-ink to stay legible on the light ground. */}
+      {/* The accent seal: a thin graphic, so it takes brand-ink to stay
+          legible on the light ground. */}
       <circle cx="38" cy="38" r="4.6" fill="var(--brand-ink)" />
       <circle cx="28" cy="18" r="3.8" fill="currentColor" />
       <circle cx="18" cy="28" r="3.8" fill="currentColor" />
@@ -63,8 +63,8 @@ function useActiveSection() {
         }
         setActive(best);
       },
-      // Reading band: below the 64px sticky bar, above the bottom third.
-      { rootMargin: '-72px 0px -55% 0px', threshold: [0.01, 0.25, 0.5, 0.75] }
+      // Reading band: below the 64px sticky bar, above the bottom half.
+      { rootMargin: '-72px 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75] }
     );
 
     sections.forEach((s) => observer.observe(s));
@@ -78,16 +78,24 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const active = useActiveSection();
 
+  // Escape closes the phone menu, like every other popover.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b rule bg-bg/90 backdrop-blur-[2px]">
+    <header className="sticky top-0 z-40 w-full border-b border-rule bg-[color-mix(in_srgb,var(--bg)_90%,transparent)] backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#top" className="flex items-center gap-2.5 text-ink py-2">
           <Mark />
-          <span className="font-bricolage text-base tracking-[0.06em] uppercase font-bold">Zaki Amin</span>
+          <span className="text-base font-semibold tracking-[-0.01em]">Zaki Amin</span>
         </a>
 
-        <div className="flex items-center gap-6 sm:gap-8">
-          <nav aria-label="Sections" className="hidden sm:flex items-center gap-8">
+        <div className="flex items-center gap-5 sm:gap-7">
+          <nav aria-label="Sections" className="hidden sm:flex items-center gap-7">
             {LINKS.map((link) => {
               const isActive = active === link.href.slice(1);
               return (
@@ -95,8 +103,9 @@ export default function Nav() {
                   key={link.href}
                   href={link.href}
                   aria-current={isActive ? 'true' : undefined}
-                  className={`ink-link font-bricolage text-xs font-medium tracking-[0.1em] uppercase py-2 transition-colors ${
-                    isActive ? 'text-brand-ink' : 'text-ink-2 hover:text-ink'
+                  onClick={() => posthog.capture('nav_link_clicked', { section: link.href.slice(1) })}
+                  className={`sig text-sm font-medium py-2 transition-colors duration-200 ${
+                    isActive ? 'text-ink' : 'text-ink-2'
                   }`}
                 >
                   {link.label}
@@ -105,11 +114,12 @@ export default function Nav() {
             })}
           </nav>
 
-          {/* Not a page section, so it lives outside the section nav: a deep
-              link to the resume dialog (#resume), shareable on its own. */}
+          {/* Not a page section, so it sits apart from the section links: a
+              deep link to the résumé dialog (#resume), shareable on its own. */}
           <a
             href="#resume"
-            className="hidden sm:inline-flex items-center ink-link font-bricolage text-xs font-medium tracking-[0.1em] uppercase py-2 text-ink-2 hover:text-ink transition-colors"
+            onClick={() => posthog.capture('resume_link_clicked', { source: 'nav' })}
+            className="btn btn-sm"
           >
             Résumé
           </a>
@@ -119,8 +129,7 @@ export default function Nav() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-nav"
-            className="sm:hidden font-bricolage text-xs font-medium tracking-[0.1em] uppercase text-ink border rule
-                       min-h-[44px] min-w-[44px] px-3.5"
+            className="btn btn-sm sm:hidden"
           >
             {open ? 'Close' : 'Menu'}
           </button>
@@ -128,7 +137,11 @@ export default function Nav() {
       </div>
 
       {open && (
-        <nav id="mobile-nav" aria-label="Sections" className="sm:hidden border-t rule px-6 py-2 flex flex-col bg-bg">
+        <nav
+          id="mobile-nav"
+          aria-label="Sections"
+          className="menu-in sm:hidden border-t border-rule px-6 pt-1 pb-3 flex flex-col bg-bg"
+        >
           {LINKS.map((link) => {
             const isActive = active === link.href.slice(1);
             return (
@@ -137,21 +150,14 @@ export default function Nav() {
                 href={link.href}
                 onClick={() => { setOpen(false); posthog.capture('nav_link_clicked', { section: link.href.slice(1) }); }}
                 aria-current={isActive ? 'true' : undefined}
-                className={`font-bricolage text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] ${
-                  isActive ? 'text-brand-ink' : 'text-ink-2'
+                className={`sig self-start text-lg font-medium flex items-center min-h-[48px] ${
+                  isActive ? 'text-ink' : 'text-ink-2'
                 }`}
               >
                 {link.label}
               </a>
             );
           })}
-          <a
-            href="#resume"
-            onClick={() => { setOpen(false); posthog.capture('resume_link_clicked', { source: 'mobile-nav' }); }}
-            className="font-bricolage text-sm tracking-[0.1em] uppercase flex items-center min-h-[44px] text-ink-2"
-          >
-            Résumé
-          </a>
         </nav>
       )}
     </header>

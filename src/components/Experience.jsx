@@ -1,49 +1,39 @@
 import React from 'react';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { timeline as TIMELINE } from '@/data/profile';
-import posthog from '@/lib/posthog';
+import { timeline } from '@/data/profile';
+import { SectionHead } from '@/components/ProjectBits';
 
+/** Years in the mono, the words around them in Bricolage. */
+export function YearSpan({ start, end }) {
+  return (
+    <span className="text-ink-3">
+      <span className="num text-ink">{start}</span>
+      {' to '}
+      {end ? <span className="num text-ink">{end}</span> : 'present'}
+    </span>
+  );
+}
+
+/**
+ * Two entries don't need an accordion hiding half of them; a recruiter
+ * scanning the page should see every line without a click.
+ */
 export default function Experience() {
   return (
-    <section id="experience" className="w-full max-w-6xl mx-auto px-6 py-20 md:py-28 scroll-mt-24">
-      <h2 className="font-bricolage font-bold text-3xl md:text-4xl tracking-[-0.02em] text-ink mb-12 md:mb-16">Experience &amp; Education</h2>
-
-      {/* Most recent entry opens by default, so the section never reads as empty. */}
-      <Accordion
-        type="single"
-        collapsible
-        defaultValue="sheridan"
-        className="border-t rule"
-        onValueChange={(value) => {
-          if (value) {
-            const item = TIMELINE.find((t) => t.id === value);
-            posthog.capture('experience_item_expanded', {
-              entry_id: value,
-              entry_kind: item?.kind ?? 'unknown',
-            });
-          }
-        }}
-      >
-        {TIMELINE.map((item) => (
-          <AccordionItem key={item.id} value={item.id}>
-            <AccordionTrigger>
-              <div className="grid md:grid-cols-[220px_1fr] gap-2 md:gap-10 flex-1">
-                <span className="font-mono text-sm text-brand-ink md:pt-1 tnum">{item.year}</span>
-                {/* Radix's AccordionHeader already renders the h3 — this is just its text. */}
-                <span className="block font-bricolage font-semibold text-xl md:text-2xl tracking-[-0.01em] text-ink balance">{item.role}</span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <p className="text-ink-2 leading-relaxed max-w-2xl">{item.detail}</p>
-            </AccordionContent>
-          </AccordionItem>
+    <section id="experience" aria-labelledby="experience-heading" className="w-full max-w-6xl mx-auto px-6 py-20 md:py-28">
+      <SectionHead id="experience-heading" className="mb-2">Experience and education</SectionHead>
+      <ol>
+        {timeline.map((item) => (
+          <li key={item.id} className="grid md:grid-cols-[220px_1fr] gap-2 md:gap-10 py-8 md:py-10 border-b border-rule">
+            <div className="text-sm md:pt-2">
+              <YearSpan start={item.start} end={item.end} />
+            </div>
+            <div>
+              <h3 className="text-2xl md:text-3xl font-semibold tracking-[-0.02em] text-ink balance">{item.role}</h3>
+              <p className="mt-3 text-ink-2 leading-relaxed max-w-2xl pretty">{item.detail}</p>
+            </div>
+          </li>
         ))}
-      </Accordion>
+      </ol>
     </section>
   );
 }
