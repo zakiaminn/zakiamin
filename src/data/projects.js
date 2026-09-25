@@ -1,11 +1,3 @@
-// Project copy is functionality-first: the top-line description leads with what
-// each build does and the hardest mechanism inside it. The war stories (dead
-// hosts, IPv6, rate limits) live in `longform` (the Build Log), not the
-// headline. Voice: confident, a little edge, kept honest against the real code.
-// House rules for visible strings: no em dashes, sentence-case taglines.
-// `highlights` are what a hiring manager scans for: a skill they can match to
-// a job description, the claim, and one sentence of proof from the real code.
-
 const trxProject = {
   title: 'The Repo Exchange',
   tagline: 'A simulated stock market for GitHub repos',
@@ -94,7 +86,6 @@ const batinProject = {
       proof: 'Streaming and backfill land in the same TimescaleDB hypertables, partitioned so scans by ticker, strike, expiry and time stay fast across millions of rows.',
     },
   ],
-  // How the six services connect, drawn on the page as the pipeline figure.
   pipeline: [
     { stage: 'Ingest', nodes: ['Streaming listener', 'Historical backfill'] },
     { stage: 'Store', nodes: ['TimescaleDB'], note: 'Options ticks and dark-pool prints' },

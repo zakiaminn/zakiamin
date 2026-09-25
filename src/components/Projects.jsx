@@ -13,12 +13,6 @@ function formatDuration(seconds) {
   return `${m}:${s}`;
 }
 
-/**
- * The demo, playing where a recruiter is already looking. It starts muted
- * when it scrolls into view and pauses when it leaves, so it never costs a
- * byte until someone gets here. Reduced motion or Save-Data leaves it on the
- * poster until pressed. The pause control satisfies WCAG 2.2.2.
- */
 function DemoVideo({ project }) {
   const ref = useRef(null);
   const reduced = usePrefersReducedMotion();

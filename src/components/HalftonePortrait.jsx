@@ -6,19 +6,11 @@ const FLOOR = 0.16; // every opaque pixel keeps a small dot, so the silhouette s
 const CAP = 0.86; // the heaviest ink stops short of solid, so dark cloth keeps its texture
 const INFLUENCE = 95; // px radius of the cursor's pull
 const MIN_WEIGHT = 0.04; // below this a cell prints no dot
-
-// The print-in: the plate inks itself top to bottom, once, like a pass
-// under a print head. Each dot grows from a visible nub rather than from
-// nothing, and eases out so the motion lands softly.
 const INTRO_DELAY = 180;
 const INTRO_SWEEP = 760; // ms from the first row starting to the last
 const INTRO_DOT = 420; // ms for one dot to reach full size
-
-// A click or tap sends a ring of ink outward through the plate.
 const RIPPLE_SPEED = 0.95; // px per ms
 const RIPPLE_WIDTH = 46; // px, the thickness of the ring
-
-// Fallbacks if a CSS variable can't be read: light-theme ink, paper, accent.
 const INK_FALLBACK = [22, 22, 14];
 const PAPER_FALLBACK = [250, 250, 249];
 const ACCENT_FALLBACK = [111, 122, 0];
@@ -35,35 +27,12 @@ function hexToRgb(hex) {
   }
   return null;
 }
-
-// Deterministic per-cell jitter so the print pass has some grain to it.
 function jitter(i) {
   const x = Math.sin(i * 12.9898) * 43758.5453;
   return x - Math.floor(x);
 }
 
 const easeOut = (t) => 1 - Math.pow(1 - t, 3);
-
-/**
- * Renders a photo as a grid of dots printed in the theme's ink, like a
- * newspaper halftone. Dot size is the amount of ink a cell needs to match the
- * photo against the page: dark ink on chalk prints the shadows, cream ink on
- * near-black prints the highlights. (Tying size to brightness alone prints a
- * photographic negative on the light theme.) Dots near the cursor swell and
- * shift toward the accent, like ink lifting; a click or tap sends a ripple
- * through the plate.
- *
- * `crop` frames the source as [x, y, width, height] fractions, so a small
- * face in a big frame still gets enough dots to read.
- *
- * Dot colours come from the live palette (`--ink` for the plate, `--brand-ink`
- * for the pull), so the plate re-inks itself when the theme flips.
- *
- * The render loop is demand-driven: frames are only scheduled while
- * something is moving (the print-in, a ripple, the cursor over the plate)
- * and the plate is on screen. At rest it costs nothing. Under
- * `prefers-reduced-motion` the plate fades in once and stays still.
- */
 export default function HalftonePortrait({
   src,
   crop = [0, 0, 1, 1],
@@ -74,8 +43,6 @@ export default function HalftonePortrait({
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const onDotCountRef = useRef(onDotCount);
-  // The effect keys on the crop's values, so an inline array literal doesn't
-  // re-sample the photo on every render.
   const cropKey = crop.join(',');
   useEffect(() => {
     onDotCountRef.current = onDotCount;
@@ -102,8 +69,6 @@ export default function HalftonePortrait({
     let accent = ACCENT_FALLBACK;
     let inkIsDark = true; // dark ink on light paper prints shadows, not highlights
     let sample = null; // { lum, alpha, min, range } read once from the photo
-
-    // Pull the current plate, paper and accent ink from the cascade.
     const readPalette = () => {
       const styles = getComputedStyle(container);
       ink = hexToRgb(styles.getPropertyValue('--ink')) || INK_FALLBACK;
@@ -112,9 +77,6 @@ export default function HalftonePortrait({
       inkIsDark = luma(ink) < luma(paper);
     };
     readPalette();
-
-    // Ink weight per cell for the current polarity. Re-run when the theme
-    // flips, since the light and dark plates ink opposite ends of the photo.
     const buildTone = () => {
       if (!sample) return;
       const { lum, alpha, min, range } = sample;
@@ -175,8 +137,6 @@ export default function HalftonePortrait({
         const l = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
         lum[i] = l;
         alpha[i] = a / 255;
-        // Only opaque pixels inform the contrast stretch, so transparent
-        // cutout regions don't skew the tone range of the subject.
         if (a > 16) {
           if (l < min) min = l;
           if (l > max) max = l;

@@ -3,11 +3,6 @@ import { profile } from '@/data/profile';
 import { SectionHead } from '@/components/ProjectBits';
 import posthog from '@/lib/posthog';
 
-/**
- * Copies the address, because mailto: so often opens a mail app nobody uses.
- * The label swaps with a short blur crossfade so the two words read as one
- * control changing state, not two overlapping.
- */
 function CopyEmail() {
   const [copied, setCopied] = useState(false);
   const timer = useRef(null);

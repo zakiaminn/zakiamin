@@ -4,7 +4,6 @@ import { profile } from '@/data/profile';
 import posthog from '@/lib/posthog';
 import zakiPhoto from '../assets/zaki-photo.png';
 
-// The hero lands in a short cascade: 60ms apart, a 4px rise each.
 const step = (i) => ({ animationDelay: `${i * 60}ms` });
 
 export default function Hero() {

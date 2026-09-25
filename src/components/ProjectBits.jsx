@@ -14,14 +14,6 @@ export function SectionHead({ as = 'h2', id, children, className = '' }) {
   );
 }
 
-/**
- * What a hiring manager scans for: the skill (so it matches a job
- * description), the claim, and a sentence of proof from the real code. Set as
- * a hairline ledger rather than icon cards, which read as generated.
- *
- * `compact` drops the proof for the index rows, where the claim has to carry
- * the line on its own.
- */
 export function Highlights({ items, compact = false, columns = 3, className = '' }) {
   if (compact) {
     return (

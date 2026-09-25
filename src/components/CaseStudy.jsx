@@ -116,12 +116,6 @@ function Media({ project }) {
   return null;
 }
 
-/**
- * A project opened as a case study. Depth lives in here rather than on the
- * page, so the work section stays scannable and a reader chooses what to go
- * deep on. Builds with a build log get tabs; the smaller ones don't have
- * enough material to earn them, so they render as one column.
- */
 export default function CaseStudy({ project, trigger }) {
   const [tab, setTab] = useState('overview');
   const hasLongform = Array.isArray(project.longform) && project.longform.length > 0;

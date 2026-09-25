@@ -13,10 +13,6 @@ export function YearSpan({ start, end }) {
   );
 }
 
-/**
- * Two entries don't need an accordion hiding half of them; a recruiter
- * scanning the page should see every line without a click.
- */
 export default function Experience() {
   return (
     <section id="experience" aria-labelledby="experience-heading" className="w-full max-w-6xl mx-auto px-6 py-20 md:py-28">

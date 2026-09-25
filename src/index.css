@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ============================================================
-   HOUSE BRAND KIT: "Sulfur on Chalk"
-   Light is the default; dark is the override. Fonts are the
-   permanent trademark (Bricolage reads, Spline counts); the
-   chartreuse "Sulfur" is the current house accent.
-   ============================================================ */
 :root {
   color-scheme: light;
   --bg: #FAFAF9;   --surface: #F1F1EE;   --surface-2: #E9E9E5;
@@ -17,17 +11,12 @@
   --pos: #2E7D4F;  --neg: #B33A3A;       --focus: #8A9600;
   --scrim: rgba(12, 12, 8, 0.42);
 
-  /* Motion. --ease for almost everything, --ease-move for things that
-     travel across the screen, --ease-drawer for sheets. Never ease-in. */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-move: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --dur: 240ms;
   --dur-fast: 140ms;
 }
-
-/* Dark mode follows the device's prefers-color-scheme setting; there is no
-   in-page toggle. */
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
@@ -40,8 +29,6 @@
   }
 }
 
-/* Night: a dark surface inside a light page. Re-points the tokens, so every
-   component inside it works without extra styles. */
 .night {
   --bg: #0B0B08;  --surface: #15150F;  --surface-2: #1F1F17;
   --ink: #EDEDE0; --ink-2: #A3A18D;    --ink-3: #8A8873;
@@ -71,25 +58,16 @@ body {
   margin: 0;
   font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
 }
-
-/* Selection is a brand fill with dark text on it. */
 ::selection {
   background: var(--brand);
   color: var(--brand-fg);
 }
-
-/* Focus: the house ring. :where() keeps specificity at 0. */
 :where(a, button, [tabindex], video, summary):focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
 @layer components {
-/* ============================================================
-   TYPE PRIMITIVES
-   ============================================================ */
-
-/* Labels are the only uppercase text: 11px, semibold, tracked. Never bigger. */
 .label {
   font-size: 0.6875rem;
   line-height: 1.4;
@@ -98,8 +76,6 @@ body {
   text-transform: uppercase;
   color: var(--ink-3);
 }
-
-/* Numbers: Spline, tabular, slightly tight. */
 .num {
   font-family: "Spline Sans Mono", ui-monospace, "SF Mono", Menlo, monospace;
   font-weight: 500;
@@ -109,11 +85,6 @@ body {
 
 .balance { text-wrap: balance; }
 .pretty { text-wrap: pretty; }
-
-/* ============================================================
-   HOVER: one colour, the Sulfur underline. The text keeps its own
-   colour; a thick Sulfur stroke fades in under the words.
-   ============================================================ */
 .sig {
   text-decoration-line: underline;
   text-decoration-color: transparent;
@@ -125,7 +96,6 @@ body {
 .sig:focus-visible,
 .sig[aria-current] { text-decoration-color: var(--brand); }
 
-/* Body links: a quiet hairline at rest that turns Sulfur on hover. */
 .link {
   color: var(--ink);
   text-decoration: underline;
@@ -141,10 +111,6 @@ body {
   .link:hover { text-decoration-color: var(--brand); text-decoration-thickness: 2px; }
 }
 
-/* ============================================================
-   BUTTONS: round means pressable. Fill carries the hierarchy;
-   no outlines; sentence-case labels.
-   ============================================================ */
 .btn {
   --btn-fill: color-mix(in srgb, var(--ink) 7%, transparent);
   --btn-fill-hover: color-mix(in srgb, var(--ink) 12%, transparent);
@@ -195,9 +161,6 @@ body {
 .btn-icon { width: 2.75rem; padding: 0; }
 .btn-sm.btn-icon { width: 2.25rem; }
 
-/* ============================================================
-   THE SWIPE: the one signature flourish, under one hero phrase.
-   ============================================================ */
 .swipe {
   background-image: linear-gradient(var(--brand), var(--brand));
   background-repeat: no-repeat;
@@ -210,9 +173,6 @@ body {
 .swipe-in { animation: swipe-in 640ms var(--ease) 360ms both; }
 }
 
-/* ============================================================
-   ENTRANCES: a 4px rise plus fade.
-   ============================================================ */
 @keyframes rise {
   from { opacity: 0; transform: translateY(4px); }
 }
@@ -227,10 +187,6 @@ body {
 }
 .menu-in { animation: menu-in 150ms var(--ease) both; }
 
-/* ============================================================
-   DIALOG: a centred modal on desktop, a bottom sheet on phones.
-   Exits are faster than entrances.
-   ============================================================ */
 .dialog-scrim { background: var(--scrim); }
 .dialog-scrim[data-state='open']   { animation: fade 200ms var(--ease); }
 .dialog-scrim[data-state='closed'] { animation: fade 150ms var(--ease) reverse both; }
@@ -278,10 +234,6 @@ body {
 @keyframes sheet-in  { from { transform: translateY(100%); } }
 @keyframes sheet-out { to   { transform: translateY(100%); } }
 
-/* ============================================================
-   SEGMENTED CONTROL: the selected state is a Sulfur pill that
-   slides. A clipped copy of the row, in the active colours.
-   ============================================================ */
 .seg-active {
   transition: clip-path 220ms var(--ease-move);
 }
@@ -291,7 +243,6 @@ body {
 .debris-host canvas { transition: opacity var(--dur) var(--ease); }
 .debris-host[data-debris='hidden'] canvas { opacity: 0; }
 
-/* Skip link: parked off-canvas until a keyboard reaches it. */
 .skip-link {
   position: fixed;
   top: 0.75rem;
@@ -301,11 +252,6 @@ body {
 }
 .skip-link:focus-visible { transform: translateY(0); }
 
-/* ============================================================
-   REDUCED MOTION
-   Less movement, not no feedback: anything that travels (rises,
-   slides, sweeps, press-scale) goes; fades and colour stay.
-   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .rise,

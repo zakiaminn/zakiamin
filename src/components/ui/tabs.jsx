@@ -3,33 +3,19 @@ import * as TabsPrimitive from '@radix-ui/react-tabs';
 
 import { cn } from '@/lib/utils';
 
-/**
- * Tabs as the house segmented control: a soft pill track, options as pill
- * text, and the selected state as a Sulfur pill that slides between them.
- *
- * The pill is a second copy of the row in the active colours, clipped with
- * `clip-path: inset(... round 999px)` around the chosen option. Transitioning
- * the clip moves the fill and flips the text colour in one motion, which two
- * separately-timed colour transitions can't do. Keyboard changes (Radix
- * activates on arrow keys) snap with no motion.
- */
 const Tabs = TabsPrimitive.Root;
-
 const TRACK_PAD = 3;
-
 function SegmentedTabsList({ items, value, className, ...props }) {
   const listRef = React.useRef(null);
   const pillRef = React.useRef(null);
   const inputRef = React.useRef('pointer');
   const measuredRef = React.useRef(false);
-
   const place = React.useCallback((animate) => {
     const list = listRef.current;
     const pill = pillRef.current;
     if (!list || !pill) return;
     const trigger = list.querySelector(`[data-value="${CSS.escape(value)}"]`);
     if (!trigger) return;
-
     const left = trigger.offsetLeft;
     const right = list.clientWidth - (trigger.offsetLeft + trigger.offsetWidth);
     if (!animate) pill.setAttribute('data-instant', '');

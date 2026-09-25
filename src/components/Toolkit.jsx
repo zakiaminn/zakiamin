@@ -2,7 +2,6 @@ import React from 'react';
 import { skillGroups } from '@/data/profile';
 import { SectionHead } from '@/components/ProjectBits';
 
-/** The stack as a ledger: one hairline row per group. */
 export default function Toolkit() {
   return (
     <section id="toolkit" aria-labelledby="toolkit-heading" className="w-full max-w-6xl mx-auto px-6 pb-20 md:pb-28">

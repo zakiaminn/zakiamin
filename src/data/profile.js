@@ -1,14 +1,9 @@
-// Single source of truth for the personal facts that show up in more than one
-// place (the toolkit, the experience ledger, the résumé view, the contact
-// section). Keeping them here stops the on-site copy and the résumé from
-// drifting apart.
+// Personal profile information for the résumé page
 
 export const profile = {
   name: 'Zaki Amin',
   role: 'Data & Full-Stack Engineer',
   location: 'Toronto, Canada',
-  // What a recruiter most needs to know, up front.
-  // A non-breaking hyphen (U+2011) so "co-op" never splits across lines.
   seeking: 'Summer 2027 co\u2011op',
   email: 'zakiiaminn@gmail.com',
   github: 'https://github.com/zakiaminn',
@@ -34,10 +29,6 @@ export const skillGroups = [
   },
 ];
 
-// `kind` lets the résumé split this single list into Education vs Experience
-// while the on-page section still renders it as one chronological run.
-// `start`/`end` are kept apart so the years can be set in the mono and the
-// words in Bricolage. A null `end` reads as "present".
 export const timeline = [
   {
     id: 'sheridan',

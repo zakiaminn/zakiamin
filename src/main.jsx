@@ -11,7 +11,5 @@ const app = (
   </StrictMode>
 )
 
-// Production builds ship the page prerendered, so React attaches to that
-// markup instead of replacing it. The dev server serves an empty root.
 if (root.hasChildNodes()) hydrateRoot(root, app)
 else createRoot(root).render(app)

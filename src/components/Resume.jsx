@@ -38,13 +38,6 @@ function Entry({ rail, heading, detail }) {
   );
 }
 
-/**
- * The résumé, presented in-page rather than handed over as a download. It is a
- * single controlled dialog, mounted once at the app root and opened by the URL
- * hash `#resume`, so recruiters can deep-link and share it and every "Résumé"
- * control on the page is just a link to that hash. Content is sourced from the
- * shared profile data and the project list, so it can't drift from the page.
- */
 export default function Resume() {
   const [open, setOpen] = useState(
     () => typeof window !== 'undefined' && window.location.hash === '#resume'

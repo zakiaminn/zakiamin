@@ -16,14 +16,11 @@ export default function App() {
       <Nav />
       <main id="main">
         <Hero />
-        {/* The work leads: it is the proof, and a recruiter's first scroll
-            should land on it rather than on a list of tools. */}
         <Projects />
         <Experience />
         <Toolkit />
       </main>
       <Footer />
-      {/* One résumé dialog for the whole page, opened by the #resume hash. */}
       <Resume />
     </div>
   );

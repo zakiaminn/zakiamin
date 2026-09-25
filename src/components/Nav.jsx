@@ -29,11 +29,6 @@ function Mark() {
   );
 }
 
-/**
- * Tracks which section is currently in the reading position (just under
- * the sticky bar) so the nav can mark it. Falls back silently to no
- * active section if IntersectionObserver isn't available.
- */
 function useActiveSection() {
   const [active, setActive] = useState('');
 

@@ -3,17 +3,10 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 import { cn } from '@/lib/utils';
 
-/**
- * Dialog, dressed as a printed insert: square corners, one hairline, the
- * house scrim behind it. A centred modal on desktop, a bottom sheet on phones
- * (motion lives in index.css under .dialog-panel). Radix supplies the parts
- * that are tedious to get right: focus trap, scroll lock, Escape, ARIA.
- */
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogPortal = DialogPrimitive.Portal;
 const DialogClose = DialogPrimitive.Close;
-
 const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
@@ -27,12 +20,6 @@ const DialogContent = React.forwardRef(({ className, children, ...props }, ref) 
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content ref={ref} className={cn('dialog-panel', className)} {...props}>
-      {/*
-        The close control stays pinned: the body scrolls, and a reader three
-        screens into a build log still needs the way out in reach. It is a
-        zero-height sticky row so it floats over the header instead of
-        pushing it down.
-      */}
       <div className="sticky top-0 z-20 h-0">
         <DialogPrimitive.Close className="btn btn-solid btn-icon absolute right-4 top-4 md:right-5 md:top-5">
           <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" aria-hidden="true"
