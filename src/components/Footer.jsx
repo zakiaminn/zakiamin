@@ -95,7 +95,7 @@ export default function Footer() {
 
       <div className="border-t border-rule">
         <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between gap-2 text-sm text-ink-3">
-          <span>© <span className="num">{new Date().getFullYear()}</span> Zaki Amin, Toronto</span>
+          <span>© <span className="num" suppressHydrationWarning>{new Date().getFullYear()}</span> Zaki Amin, Toronto</span>
           <span>Set in Bricolage Grotesque and Spline Sans Mono</span>
         </div>
       </div>
