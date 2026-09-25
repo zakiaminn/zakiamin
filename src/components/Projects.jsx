@@ -195,12 +195,6 @@ function FeaturedBatin({ project }) {
   );
 }
 
-/**
- * Wraps a row in DOMolition, the npm package the row is about. Nothing loads
- * until someone presses the button; then the package (and matter-js) arrive
- * as their own chunk, the row is captured to a bitmap and blown apart with
- * the grid engine. The rubble fades when you scroll away or put the row back.
- */
 function Breakable({ children }) {
   const [phase, setPhase] = useState('idle'); // idle | loading | broken
   const [armed, setArmed] = useState(false); // the package's isShattered
@@ -263,8 +257,6 @@ function Breakable({ children }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, [phase]);
 
-  // Keep keyboard focus on a live control: onto "Put it back" when the row
-  // goes, and back onto "Break this row" when it returns.
   useEffect(() => {
     const host = hostRef.current;
     if (!host || (!gone && !restored)) return;

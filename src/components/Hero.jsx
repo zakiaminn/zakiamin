@@ -55,8 +55,6 @@ export default function Hero() {
         <figure className="relative max-w-md mx-auto w-full md:max-w-none">
           <HalftonePortrait
             src={zakiPhoto}
-            // Head and shoulders: the photo is a full-length cutout in a
-            // mostly empty frame, and the face needs the dots to read.
             crop={[1 / 6, 0.2, 0.5, 0.5]}
             onDotCount={setDots}
             label="Halftone portrait of Zaki Amin, printed as a grid of dots"

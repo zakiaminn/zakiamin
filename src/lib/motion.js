@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 const QUERY = '(prefers-reduced-motion: reduce)';
 
-/** Live `prefers-reduced-motion`, so a mid-visit OS change is honoured. */
 export function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(
     () => typeof window !== 'undefined' && window.matchMedia(QUERY).matches

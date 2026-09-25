@@ -16,7 +16,6 @@ const education = timeline.filter((t) => t.kind === 'education');
 const experience = timeline.filter((t) => t.kind === 'experience');
 const allProjects = [...featuredProjects, ...projects];
 
-/** A titled block with the site's label-over-hairline idiom. */
 function Section({ title, children }) {
   return (
     <section className="border-t border-rule pt-6">
@@ -26,7 +25,6 @@ function Section({ title, children }) {
   );
 }
 
-/** A dated row: the rail on the left, the substance on the right. */
 function Entry({ rail, heading, detail }) {
   return (
     <div className="grid md:grid-cols-[150px_1fr] gap-1 md:gap-8">

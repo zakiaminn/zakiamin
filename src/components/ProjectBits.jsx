@@ -1,9 +1,6 @@
 import React from 'react';
 
-/**
- * Section head: a label followed by a hairline that runs to the edge of the
- * column. Sections are never numbered.
- */
+
 export function SectionHead({ as = 'h2', id, children, className = '' }) {
   const Tag = as;
   return (
@@ -47,10 +44,6 @@ export function Highlights({ items, compact = false, columns = 3, className = ''
   );
 }
 
-/** The stack as one quiet line, not a wall of chips. */
-// The arrow on external links. U+FE0E asks for the text glyph; without it,
-// iOS swaps in the emoji arrow. Hidden from screen readers, which already hear
-// "opens in a new tab".
 export function ExternalArrow() {
   return <span aria-hidden="true" className="ext-arrow">{'\u2197\uFE0E'}</span>;
 }

@@ -19,8 +19,6 @@ function Mark() {
         <circle cx="18" cy="18" r="3.1" />
         <circle cx="8" cy="28" r="3.1" />
       </g>
-      {/* The accent seal: a thin graphic, so it takes brand-ink to stay
-          legible on the light ground. */}
       <circle cx="38" cy="38" r="4.6" fill="var(--brand-ink)" />
       <circle cx="28" cy="18" r="3.8" fill="currentColor" />
       <circle cx="18" cy="28" r="3.8" fill="currentColor" />
@@ -47,7 +45,6 @@ function useActiveSection() {
           if (entry.isIntersecting) visible.set(entry.target.id, entry.intersectionRatio);
           else visible.delete(entry.target.id);
         }
-        // The section occupying the most of the reading band wins.
         let best = '';
         let bestRatio = 0;
         for (const [id, ratio] of visible) {
@@ -58,7 +55,6 @@ function useActiveSection() {
         }
         setActive(best);
       },
-      // Reading band: below the 64px sticky bar, above the bottom half.
       { rootMargin: '-72px 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75] }
     );
 
@@ -73,7 +69,6 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const active = useActiveSection();
 
-  // Escape closes the phone menu, like every other popover.
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
@@ -108,9 +103,6 @@ export default function Nav() {
               );
             })}
           </nav>
-
-          {/* Not a page section, so it sits apart from the section links: a
-              deep link to the résumé dialog (#resume), shareable on its own. */}
           <a
             href="#resume"
             onClick={() => posthog.capture('resume_link_clicked', { source: 'nav' })}

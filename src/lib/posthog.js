@@ -1,7 +1,3 @@
-// Analytics load after the page is idle, so they never compete with the first
-// paint. Components call `posthog.capture()` as usual; events fired before the
-// library arrives are queued and replayed once it initialises.
-
 const key = import.meta.env.VITE_POSTHOG_KEY;
 const host = import.meta.env.VITE_POSTHOG_HOST;
 

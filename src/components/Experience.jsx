@@ -2,7 +2,6 @@ import React from 'react';
 import { timeline } from '@/data/profile';
 import { SectionHead } from '@/components/ProjectBits';
 
-/** Years in the mono, the words around them in Bricolage. */
 export function YearSpan({ start, end }) {
   return (
     <span className="text-ink-3">

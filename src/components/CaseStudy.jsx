@@ -57,8 +57,6 @@ function ExternalLinks({ project }) {
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
       )}
-      {/* Pre-launch builds have no public repo or site yet. Say so plainly
-          rather than leaving a dead link a recruiter would click into a 404. */}
       {project.comingSoon && !project.live && !project.github && (
         <span className="text-ink-3 inline-flex items-center min-h-[44px]">
           Source and live demo open at launch.
@@ -102,7 +100,6 @@ function Media({ project }) {
   }
 
   if (project.demoComingSoon) {
-    // Reads as intentional, not missing; swapped for the recording at launch.
     return (
       <div className="border border-rule bg-surface w-full aspect-video flex flex-col items-center justify-center gap-2 px-6 text-center">
         <span className="label">Demo at launch</span>
