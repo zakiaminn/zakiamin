@@ -28,8 +28,8 @@ const trxProject = {
   liveLabel: 'therepo.exchange',
   demoVideo: '/TRX-demo.mp4',
   poster: '/posters/trx.jpg',
-  demoSize: [2030, 1190],
-  demoDuration: 98,
+  demoSize: [1600, 898],
+  demoDuration: 46.5,
   pullQuote:
     "The API worked locally and died in prod with two different errors: Supabase's direct DB hostname is IPv6-only, and Render couldn't route IPv6 at all.",
 };
