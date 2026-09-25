@@ -72,10 +72,11 @@ export const projects = [
     title: 'DOMolition',
     tagline: 'A UI you’re allowed to break',
     summary:
-      'A published npm package that turns any React component into a rigid-body physics simulation.',
+      'A published npm package that turns any React component into a rigid-body physics simulation. This row is wrapped in it.',
     description:
       "A published npm package that turns any React component into a rigid-body physics simulation. It captures the live element to a bitmap (computed styles and all), subdivides that image into shards (a clean grid, or Voronoi tessellation via d3-delaunay), and hands each shard to matter-js as a body with real mass, friction, and restitution. A canvas loop paints the pieces as they fall and tears itself down once everything comes to rest. Because sometimes centering a div deserves consequences.",
     tech: ['React', 'TypeScript', 'matter-js', 'd3-delaunay', 'Canvas', 'npm'],
+    breakable: true,
     github: 'https://github.com/zakiaminn/DOMolition',
     npm: 'https://www.npmjs.com/package/domolition',
     demoVideo: '/DOMolition-demo.mp4',

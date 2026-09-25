@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { projects, featuredProjects } from '@/data/projects';
 import CaseStudy from '@/components/CaseStudy';
 import { SectionHead, StatRow, TechLine } from '@/components/ProjectBits';
@@ -201,6 +201,128 @@ function FeaturedBatin({ project }) {
   );
 }
 
+/**
+ * Wraps a row in DOMolition, the npm package the row is about. Nothing loads
+ * until someone presses the button; then the package (and matter-js) arrive
+ * as their own chunk, the row is captured to a bitmap and shattered. The
+ * rubble fades when you scroll away or put the row back.
+ */
+function Breakable({ children }) {
+  const [phase, setPhase] = useState('idle'); // idle | loading | broken
+  const [armed, setArmed] = useState(false); // the package's isShattered
+  const [gone, setGone] = useState(false); // the row has been captured and hidden
+  const [debris, setDebris] = useState('shown');
+  const [restored, setRestored] = useState(false);
+  const hostRef = useRef(null);
+  const moduleRef = useRef(null);
+  const shardsRef = useRef(64);
+
+  const breakIt = useCallback(async () => {
+    if (phase !== 'idle') return;
+    setPhase('loading');
+    posthog.capture('domolition_triggered');
+    try {
+      moduleRef.current ??= await import('domolition');
+      shardsRef.current = window.matchMedia('(max-width: 640px)').matches ? 36 : 64;
+      setDebris('shown');
+      setGone(false);
+      setPhase('broken');
+    } catch {
+      setPhase('idle');
+    }
+  }, [phase]);
+
+  // Mount the wrapper first, then flip its declarative isShattered prop, so
+  // the package's own mount effects can't reset the trigger.
+  useEffect(() => {
+    if (phase === 'broken') setArmed(true);
+  }, [phase]);
+
+  // The package hides the row (opacity 0) once its bitmap is captured. Only
+  // then does "Put it back" appear, so it never sits over an intact row.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (phase !== 'broken' || !host) return;
+    const check = () => {
+      const hidden = [...host.querySelectorAll('div')].some((d) => d.style.opacity === '0');
+      if (hidden) setGone(true);
+    };
+    const observer = new MutationObserver(check);
+    observer.observe(host, { subtree: true, attributes: true, attributeFilter: ['style'] });
+    return () => observer.disconnect();
+  }, [phase]);
+
+  // The rubble clears itself once you scroll on.
+  useEffect(() => {
+    if (phase !== 'broken') return;
+    const startY = window.scrollY;
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - startY) > 160) setDebris('hidden');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [phase]);
+
+  // Keep keyboard focus on a live control: onto "Put it back" when the row
+  // goes, and back onto "Break this row" when it returns.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host || (!gone && !restored)) return;
+    const active = document.activeElement;
+    if (active !== document.body && !host.contains(active)) return;
+    host.querySelector(gone ? '[data-restore]' : '[data-break]')?.focus({ preventScroll: true });
+  }, [gone, restored]);
+
+  const putBack = () => {
+    setDebris('hidden');
+    window.setTimeout(() => {
+      setArmed(false);
+      setGone(false);
+      setPhase('idle');
+      setRestored(true);
+    }, 240);
+  };
+
+  // Stable, so the package never restarts its simulation on a re-render.
+  const onComplete = useCallback(() => {}, []);
+
+  const content = children({ breakIt, busy: phase !== 'idle' });
+  const Wrapper = moduleRef.current?.RageQuitWrapper;
+
+  return (
+    <div ref={hostRef} className="debris-host relative" data-debris={debris}>
+      {phase === 'broken' && Wrapper ? (
+        <div className="[&>div]:!block [&>div]:!w-full">
+          <Wrapper
+            effect="glass"
+            isShattered={armed}
+            shardCount={shardsRef.current}
+            onShatterComplete={onComplete}
+          >
+            {content}
+          </Wrapper>
+        </div>
+      ) : (
+        <div className={restored ? 'rise' : undefined}>{content}</div>
+      )}
+
+      {gone && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <button
+            type="button"
+            onClick={putBack}
+            data-restore
+            className="btn btn-primary pointer-events-auto rise"
+            style={{ animationDelay: '400ms' }}
+          >
+            Put it back
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function IndexRow({ project, breakIt, busy }) {
   return (
     <div className="group relative grid md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] gap-6 md:gap-12 py-10 md:py-12 border-b border-rule bg-bg">
@@ -288,9 +410,15 @@ export default function Projects() {
       <div className="max-w-6xl mx-auto px-6 pb-20 md:pb-28">
         <SectionHead as="h3" className="mb-2">Smaller builds</SectionHead>
         <div>
-          {projects.map((project) => (
-            <IndexRow key={project.title} project={project} />
-          ))}
+          {projects.map((project) =>
+            project.breakable ? (
+              <Breakable key={project.title}>
+                {({ breakIt, busy }) => <IndexRow project={project} breakIt={breakIt} busy={busy} />}
+              </Breakable>
+            ) : (
+              <IndexRow key={project.title} project={project} />
+            )
+          )}
         </div>
       </div>
     </section>
