@@ -2,8 +2,9 @@
 // each build does and the hardest mechanism inside it. The war stories (dead
 // hosts, IPv6, rate limits) live in `longform` (the Build Log), not the
 // headline. Voice: confident, a little edge, kept honest against the real code.
-// House rules for visible strings: no em dashes, sentence-case taglines, and
-// stat values are numbers (the mono is for figures only).
+// House rules for visible strings: no em dashes, sentence-case taglines.
+// `highlights` are what a hiring manager scans for: a skill they can match to
+// a job description, the claim, and one sentence of proof from the real code.
 
 const trxProject = {
   title: 'The Repo Exchange',
@@ -18,11 +19,37 @@ const trxProject = {
     "Signed in, the listings page polls every five seconds and pauses when the tab is hidden. The ledger caches that response for five seconds and makes requests that land mid-refresh wait on the same query, so Postgres sees at most one listings query every five seconds however many tabs are open. I'd rather not get a denial-of-wallet invoice from my own frontend.",
     "Then Railway's free trial ran out mid-production and the API went dark. Rebuilding it on Render surfaced a bug where the API worked locally and 500'd in prod with two different errors: Supabase's direct database hostname is IPv6-only, and Render couldn't route IPv6 at all. Supabase's connection pooler fixed it, and while the hood was open I audited the git history for leaked keys and cleared every flagged Dependabot alert, 27 of them across three ecosystems.",
   ],
-  stats: [
-    { value: '6', label: 'Public GitHub numbers behind every price' },
-    { value: '3', label: 'Copies of the formula, one shared test fixture' },
-    { value: '1%', label: 'Price move that rejects an order' },
-    { value: '1', label: 'Listings query per 5 seconds, however many tabs' },
+  highlights: [
+    {
+      skill: 'Transactions',
+      title: 'Orders that can’t double-spend',
+      proof: 'The server re-prices every order, rejects it if the price moved more than 1%, and fills it in one transaction that locks the account row first. Deadlocks retry on their own.',
+    },
+    {
+      skill: 'Concurrency',
+      title: 'Settlement that can’t pay out twice',
+      proof: 'Expired calls are claimed with SKIP LOCKED, so overlapping jobs split the work, and each one settles inside its own savepoint so a bad row can’t stall the rest.',
+    },
+    {
+      skill: 'Testing',
+      title: 'One pricing formula in three languages, kept in sync',
+      proof: 'The Node, Python and TypeScript copies run one shared fixture suite, which caught two real mismatches: recency in whole vs fractional days, and half-cent rounding.',
+    },
+    {
+      skill: 'Security',
+      title: 'The browser never touches the database',
+      proof: 'Every read and write goes through the ledger, which verifies the Supabase token. Row-level security backs it up, and Turnstile guards sign-up, sign-in and reset.',
+    },
+    {
+      skill: 'Performance',
+      title: 'Flat database load, however many clients poll',
+      proof: 'A five-second cache with request coalescing holds Postgres to one listings query per tick, no matter how many tabs are open.',
+    },
+    {
+      skill: 'Data pipeline',
+      title: 'A GitHub ingester that survives rate limits',
+      proof: 'Hourly on GitHub Actions, with backoff that honors Retry-After, one request per repo even at 5,000 open PRs, and per-listing commits so a cut-off run keeps its work.',
+    },
   ],
   tech: ['Next.js', 'Node / Express', 'Python', 'PostgreSQL', 'Supabase Auth', 'Google OAuth', 'Resend', 'GitHub Actions', 'Vercel', 'Render'],
   github: 'https://github.com/zakiaminn/TheRepoExchange',
@@ -50,11 +77,22 @@ const batinProject = {
     "It runs as six coordinated services under a single `docker-compose up`: TimescaleDB, Redis for hot-query caching, a FastAPI engine exposing the index and order-ticket endpoints, the streaming listener, the backfill job, and a Next.js terminal with auth, a dashboard, per-ticker pages, and a paper-trading order ticket that writes to its own table.",
     "It's headed for a public deployment now, with a live demo landing shortly. Up to this point it's run in dev on purpose, so the effort went into getting the order-flow math right rather than the packaging. If TRX is the finished storefront, Batin is the engine room.",
   ],
-  stats: [
-    { value: '2', label: 'TimescaleDB hypertables' },
-    { value: '$500k', label: 'Premium that counts as institutional flow' },
-    { value: '≤10', label: 'Contracts that count as retail flow' },
-    { value: '6', label: 'Services behind one docker-compose up' },
+  highlights: [
+    {
+      skill: 'Market microstructure',
+      title: 'Trades classified by where they print',
+      proof: 'Each trade is called buy- or sell-side from where it hit the bid/ask spread, instead of assuming a call buy is bullish. A call/put heuristic only steps in when there’s no usable quote.',
+    },
+    {
+      skill: 'Quant modeling',
+      title: 'A delta-weighted conviction score per ticker',
+      proof: 'Flow is weighted by delta exposure and split into institutional (premium of $500k or more) and retail (10 contracts or fewer) before it becomes the Batin Index.',
+    },
+    {
+      skill: 'Time-series data',
+      title: 'Live and historical ticks in one store',
+      proof: 'Streaming and backfill land in the same TimescaleDB hypertables, partitioned so scans by ticker, strike, expiry and time stay fast across millions of rows.',
+    },
   ],
   // How the six services connect, drawn on the page as the pipeline figure.
   pipeline: [
@@ -77,6 +115,23 @@ export const projects = [
       'A published npm package that turns any React component into a rigid-body physics simulation, with three ways to break it. This row is wrapped in it.',
     description:
       "A published npm package that turns any React component into a rigid-body physics simulation. It captures the live element to a bitmap with html-to-image (computed styles and all), cuts it into pieces, and hands each piece to matter-js as a body with real mass, friction, and restitution. Three engines decide how it breaks: glass cracks first and holds for 250ms before shattering along a Voronoi tessellation, grid blows apart into clean rectangles, and implode pulls every piece toward the center before it drops. A canvas loop paints the pieces and tears itself down once everything comes to rest, and reduced motion skips the physics entirely. Because sometimes centering a div deserves consequences.",
+    highlights: [
+      {
+        skill: 'Open source',
+        title: 'Published on npm, with a typed React API',
+        proof: 'One wrapper component, three engines, an imperative ref to trigger and reset, and reduced-motion support built in.',
+      },
+      {
+        skill: 'Computational geometry',
+        title: 'Glass that fractures along a Voronoi diagram',
+        proof: 'Shards come from a jittered Voronoi tessellation (d3-delaunay), and the UI cracks and holds for 250ms before it breaks.',
+      },
+      {
+        skill: 'Rendering',
+        title: 'Physics painted from a live DOM capture',
+        proof: 'The component is rasterized with its computed styles, then every matter-js body is drawn through a canvas clipping mask until the simulation sleeps.',
+      },
+    ],
     tech: ['React', 'TypeScript', 'matter-js', 'd3-delaunay', 'html-to-image', 'Canvas', 'npm'],
     breakable: true,
     github: 'https://github.com/zakiaminn/DOMolition',
@@ -94,6 +149,23 @@ export const projects = [
       'A tower-defense engine in Java and LibGDX. Enemies re-route with A* the moment you build a wall, and tear through it if you box them in.',
     description:
       "A wave-based tower-defense engine written from scratch in Java and LibGDX. Enemies pathfind with a custom A* that recomputes the instant you place or sell a wall. And if you try to cheese it by boxing in the core, they switch to a breach route and destroy your barricades to carve a new one. Towers acquire the nearest target by Euclidean distance, lead it with vector-homing projectiles, and rotate to face it with atan2. LibGDX only draws the frames: the pathfinding, the targeting, and the PREP/DEFEND state machine are all hand-written.",
+    highlights: [
+      {
+        skill: 'Algorithms',
+        title: 'A* that re-plans the moment you build a wall',
+        proof: 'Paths recompute on every wall placed or sold, and if you box in the core, enemies switch to a breach route and tear through your barricades.',
+      },
+      {
+        skill: 'Vector math',
+        title: 'Towers that lead their target',
+        proof: 'Nearest-target acquisition by Euclidean distance, vector-homing projectiles, and atan2 to turn toward the shot.',
+      },
+      {
+        skill: 'Architecture',
+        title: 'Game logic written from scratch',
+        proof: 'LibGDX only draws the frames. The pathfinding, targeting and PREP/DEFEND state machine are hand-written Java.',
+      },
+    ],
     tech: ['Java', 'LibGDX', 'A* Pathfinding', '2D Vector Math', 'OOP'],
     github: 'https://github.com/zakiaminn/AegisGrid',
     demoVideo: '/AegisGrid-demo.mp4',
@@ -108,6 +180,23 @@ export const projects = [
       'A desktop app that files your documents with an on-device LLM. A regex router handles the obvious cases, so the model only runs on the ambiguous ones.',
     description:
       "A privacy-first desktop app that reads your files and sorts them for you, running entirely on-device with no cloud and no API key. The core is a two-tier router: deterministic Regex catches known patterns like course codes and routes them instantly, so a local Qwen2.5 7B model is only ever called for the genuinely ambiguous files, which keeps it fast and free. A multi-format ETL layer pulls text from PDF, Word, PowerPoint, and Excel with defensive parsing for malformed documents, and the model runs under a JSON schema with its category constrained to an enum at temperature zero, so routing is deterministic and it physically cannot invent a folder that doesn't exist. Inference and heavy I/O run off the main thread, so the interface stays responsive while it works.",
+    highlights: [
+      {
+        skill: 'Applied LLMs',
+        title: 'A model that can’t invent a folder',
+        proof: 'It answers under a JSON schema with the category constrained to an enum at temperature zero, so routing is deterministic.',
+      },
+      {
+        skill: 'Systems design',
+        title: 'The model only runs when a regex can’t decide',
+        proof: 'A deterministic tier routes known patterns like course codes instantly, keeping the local Qwen2.5 7B model for the genuinely ambiguous files.',
+      },
+      {
+        skill: 'Data engineering',
+        title: 'Text out of PDF, Word, PowerPoint and Excel',
+        proof: 'A multi-format ETL layer with defensive parsing for malformed documents, running off the main thread so the interface stays responsive.',
+      },
+    ],
     tech: ['Python', 'Ollama / Qwen2.5 7B', 'CustomTkinter', 'Regex + ETL', 'JSON Schema'],
     github: 'https://github.com/zakiaminn/FrankenSorter',
     live: 'https://zakiaminn.github.io/FrankenSorter/',

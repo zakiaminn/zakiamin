@@ -14,24 +14,44 @@ export function SectionHead({ as = 'h2', id, children, className = '' }) {
   );
 }
 
-/** Figures in the mono, captions as labels, columns on hairlines. */
-export function StatRow({ stats, className = '' }) {
+/**
+ * What a hiring manager scans for: the skill (so it matches a job
+ * description), the claim, and a sentence of proof from the real code. Set as
+ * a hairline ledger rather than icon cards, which read as generated.
+ *
+ * `compact` drops the proof for the index rows, where the claim has to carry
+ * the line on its own.
+ */
+export function Highlights({ items, compact = false, columns = 3, className = '' }) {
+  if (compact) {
+    return (
+      <ul className={`border-t border-rule ${className}`}>
+        {items.map((h) => (
+          <li
+            key={h.title}
+            className="grid sm:grid-cols-[208px_1fr] gap-x-6 gap-y-0.5 py-2.5 border-b border-rule"
+          >
+            <span className="label sm:pt-[3px]">{h.skill}</span>
+            <span className="text-[15px] font-medium text-ink leading-snug">{h.title}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  const grid = columns === 3 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2';
   return (
-    <dl className={`grid grid-cols-2 md:grid-cols-4 border-t border-rule ${className}`}>
-      {stats.map((stat, i) => (
-        <div
-          key={stat.label}
-          className={`flex flex-col-reverse gap-2 py-6 pr-4 ${
-            i % 2 === 1 ? 'pl-4 md:pl-6 border-l border-rule' : ''
-          } ${i === 2 ? 'md:pl-6 md:border-l md:border-rule' : ''} ${
-            i >= 2 ? 'border-t border-rule md:border-t-0' : ''
-          }`}
-        >
-          <dt className="label balance">{stat.label}</dt>
-          <dd className="num text-[1.75rem] leading-none text-ink">{stat.value}</dd>
-        </div>
+    <ul className={`grid ${grid} gap-x-10 ${className}`}>
+      {items.map((h) => (
+        <li key={h.title} className="border-t border-rule pt-5 pb-8">
+          <p className="label">{h.skill}</p>
+          <p className="mt-2.5 text-lg font-semibold leading-snug tracking-[-0.01em] text-ink balance">
+            {h.title}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-2 pretty">{h.proof}</p>
+        </li>
       ))}
-    </dl>
+    </ul>
   );
 }
 

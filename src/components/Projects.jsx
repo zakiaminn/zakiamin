@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { projects, featuredProjects } from '@/data/projects';
 import CaseStudy from '@/components/CaseStudy';
-import { SectionHead, StatRow, TechLine } from '@/components/ProjectBits';
+import { Highlights, SectionHead, TechLine } from '@/components/ProjectBits';
 import { usePrefersReducedMotion } from '@/lib/motion';
 import posthog from '@/lib/posthog';
 
@@ -168,7 +168,7 @@ function FeaturedTrx({ project }) {
           </div>
           <DemoVideo project={project} />
         </div>
-        <StatRow stats={project.stats} className="mt-14 md:mt-20" />
+        <Highlights items={project.highlights} className="mt-14 md:mt-20" />
         <TechLine tech={project.tech} title={project.title} className="mt-6" />
       </div>
     </div>
@@ -195,7 +195,7 @@ function FeaturedBatin({ project }) {
         </div>
         <Pipeline stages={project.pipeline} />
       </div>
-      <StatRow stats={project.stats} className="mt-14 md:mt-20" />
+      <Highlights items={project.highlights} className="mt-14 md:mt-20" />
       <TechLine tech={project.tech} title={project.title} className="mt-6" />
     </div>
   );
@@ -349,6 +349,7 @@ function IndexRow({ project, breakIt, busy }) {
         </h4>
         <p className="mt-1.5 text-ink-2">{project.tagline}</p>
         <p className="mt-5 max-w-xl text-ink-2 leading-relaxed pretty">{project.summary}</p>
+        <Highlights items={project.highlights} compact className="mt-6 max-w-2xl" />
         <TechLine tech={project.tech} title={project.title} className="mt-5" />
 
         <div className="relative z-10 mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">

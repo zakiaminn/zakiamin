@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, SegmentedTabsList, TabsContent } from '@/components/ui/tabs';
-import { StatRow, TechLine } from '@/components/ProjectBits';
+import { Highlights, TechLine } from '@/components/ProjectBits';
 import { usePrefersReducedMotion } from '@/lib/motion';
 import posthog from '@/lib/posthog';
 
@@ -157,7 +157,7 @@ export default function CaseStudy({ project, trigger }) {
 
               <TabsContent value="overview" className="space-y-8">
                 <p className="text-ink-2 leading-relaxed">{project.description}</p>
-                {project.stats && <StatRow stats={project.stats} />}
+                {project.highlights && <Highlights items={project.highlights} columns={2} />}
                 <Media project={project} />
                 <ExternalLinks project={project} />
               </TabsContent>
@@ -190,6 +190,7 @@ export default function CaseStudy({ project, trigger }) {
             <div className="space-y-8">
               <Media project={project} />
               <p className="text-ink-2 leading-relaxed">{project.description}</p>
+              {project.highlights && <Highlights items={project.highlights} columns={2} />}
               <TechLine tech={project.tech} title={project.title} />
               <ExternalLinks project={project} />
             </div>
