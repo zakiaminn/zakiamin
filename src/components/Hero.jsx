@@ -12,7 +12,7 @@ export default function Hero() {
   return (
     <header id="top" className="w-full max-w-6xl mx-auto px-6 pt-12 pb-20 md:pt-20 md:pb-28">
       <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-12 md:gap-12 items-start">
-        <div className="md:pt-6">
+        <div className="md:pt-6 flex flex-col self-stretch">
           <p className="label text-brand-ink mb-6 rise" style={step(0)}>
             Seeking a {profile.seeking} · {profile.location.split(',')[0]}
           </p>
@@ -50,6 +50,11 @@ export default function Hero() {
               Open the résumé
             </a>
           </div>
+
+          {/* Sits on the same baseline as the portrait caption. */}
+          <blockquote className="mt-auto pt-10 rise" style={step(4)}>
+            <p className="text-sm text-ink-3 pretty">“To live without risk is to risk without living.”</p>
+          </blockquote>
         </div>
 
         <figure className="relative max-w-md mx-auto w-full md:max-w-none">
