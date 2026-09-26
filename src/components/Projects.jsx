@@ -89,7 +89,7 @@ function DemoVideo({ project }) {
   );
 }
 
-/** Batin's six services, drawn from how they actually connect. */
+/** Batin's pipeline, drawn from how the stages actually connect. */
 function Pipeline({ stages }) {
   return (
     <figure className="border border-rule">
@@ -124,8 +124,8 @@ function Pipeline({ stages }) {
         ))}
       </ol>
       <figcaption className="border-t border-rule px-5 py-3 text-sm text-ink-3">
-        Six services, one <span className="font-medium text-ink-2">docker-compose up</span>. Live ticks and
-        backfill land in the same hypertables.
+        One <span className="font-medium text-ink-2">1 GB</span> cloud server, loaded nightly after the close.
+        Only derived signals ever leave the engine.
       </figcaption>
     </figure>
   );
@@ -187,6 +187,9 @@ function FeaturedBatin({ project }) {
             />
           </div>
         </div>
+        <DemoVideo project={project} />
+      </div>
+      <div className="mt-14 md:mt-20">
         <Pipeline stages={project.pipeline} />
       </div>
       <Highlights items={project.highlights} className="mt-14 md:mt-20" />
