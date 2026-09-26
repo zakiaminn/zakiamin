@@ -57,43 +57,64 @@ const trxProject = {
 
 const batinProject = {
   title: 'Batin',
-  tagline: 'An options order-flow analytics engine',
+  tagline: 'Options flow, split by who is behind it',
   status: 'Pre-launch, private repo',
   comingSoon: true,
-  demoComingSoon: true,
   description:
-    "Batin reads options order flow and distills it into one conviction signal: the Batin Index. Every trade is classified buy- or sell-side by where it printed against the bid/ask spread (instead of assuming a call buy is bullish), then weighted by delta exposure and split into institutional versus retail flow. Live ticks and historical backfill land in the same TimescaleDB hypertables, so a query never cares whether a row arrived a second ago or a year ago.",
+    "Batin reads options order flow and scores who is on the other side of it. Every print is signed by where it traded against the bid/ask spread, weighted by a delta the pipeline back-solves itself, and sorted into an institutional or a retail cohort. The Trap Score, 0 to 100, measures how sharply the two pull against each other. It runs nightly on a 1 GB cloud server across 501 listings and over 20 million option trades, and five point-in-time backtests say the signal isn't predictive yet. The product says so out loud.",
   longform: [
-    "Batin is the analytically serious one, and the math is the point. `computeTradeDirection` looks at whether a trade printed at the bid, at the ask, or inside the spread to decide direction, and only falls back to a call/put heuristic when there's no usable quote. That direction weights `computeDex`, a delta-exposure figure (contract size × 100 × |delta| × underlying), which is then split into institutional flow (premium ≥ $500k) and retail (size ≤ 10 contracts) to produce a net conviction score per ticker: the Index itself.",
-    "The storage model is deliberate. A streaming listener and a historical backfill job feed the same TimescaleDB hypertables (options ticks and dark-pool block prints), so the pipeline is agnostic to how a row arrived. TimescaleDB over vanilla Postgres specifically for the hypertable partitioning: scans across millions of ticks by ticker, strike, expiration, and time stay fast.",
-    "It runs as six coordinated services under a single `docker-compose up`: TimescaleDB, Redis for hot-query caching, a FastAPI engine exposing the index and order-ticket endpoints, the streaming listener, the backfill job, and a Next.js terminal with auth, a dashboard, per-ticker pages, and a paper-trading order ticket that writes to its own table.",
-    "It's headed for a public deployment now, with a live demo landing shortly. Up to this point it's run in dev on purpose, so the effort went into getting the order-flow math right rather than the packaging. If TRX is the finished storefront, Batin is the engine room.",
+    "Batin asks one question of the options tape: who is on the other side? Every print lands in an institutional cohort (premium of $500k or more) or a retail one (10 contracts or fewer), and each trade is signed by where it printed against the bid/ask spread instead of assuming a call buy is bullish. A trade at the ask counts as buying, at the bid as selling, and anything inside the spread is scaled by how close it printed to the ask. The opposition between the two cohorts becomes two numbers: the Batin Index, a divergence score bounded at ±100, and the Trap Score, 0 to 100 for how sharply they oppose. On most days most of the board is quiet, which is the point.",
+    "The data arrives the unglamorous way. A nightly ETL runs on weekday evenings after the close, pulls the session's OPRA prints through ThetaData and the day's stock prices through yfinance, and writes roughly 130,000 option trades a day into TimescaleDB hypertables. ThetaData's tier gives option prices but no greeks, so the ETL back-solves implied volatility with a vectorized Newton-Raphson over the whole DataFrame, then plugs it into Black-Scholes for a delta on every trade. Delta is what separates a deep in-the-money call, which is basically stock, from a lottery ticket.",
+    "All of the scoring math lives in one module that the API, the board and the backtests import, pinned by 87 unit tests. An audit of that math turned up four real problems: three copies of the formulas that could drift apart, cohorts that could overlap, a denominator that counted flow from neither cohort, and an opposition switch that flipped on and off instead of scaling. Each fix went in with tests. So did a later one: rows without a delta were summed in raw premium dollars next to delta-notional dollars about ten times larger, so the pipeline now bridges them onto one scale with the median elasticity it can measure.",
+    "Then the part most signal projects skip: checking whether it works. I rebuilt the score point-in-time, day by day with no look-ahead, and checked where each stock went next after stripping out the market's own move. Five runs over about eight months of history agree. The five-day hit rate is 53.6%, with a confidence interval that still straddles a coin flip, and higher Trap Scores did worse, not better. Two fixes to the math were re-tested the same way and neither moved it. So the product says it on its own landing page, and a paper-trading harness keeps testing it.",
+    "It runs on an Oracle Cloud free-tier VM with 1 GB of RAM: TimescaleDB and the FastAPI engine under Docker Compose, with nothing open to the internet except SSH, and a cron job for the nightly load. Moving it off my laptop meant verifying the database row for row and porting the data SDK to a build that runs on x86. The board used to take about 26 seconds to score on every request. It's now built once after each nightly load and served from a cache in well under a second.",
+    "The landing page doubles as a working demo on the real board, which raised a licensing problem: raw OPRA prints can't be redistributed. So the browser only talks to a small proxy that passes derived signals and nothing else, caches each read for ten minutes, shares requests that are already in flight, and lets at most two reads reach the engine at once. SPY takes the 1 GB server over 30 seconds to score on demand, and a visitor shouldn't be able to take it down by clicking it twice.",
   ],
   highlights: [
     {
       skill: 'Market microstructure',
       title: 'Trades classified by where they print',
-      proof: 'Each trade is called buy- or sell-side from where it hit the bid/ask spread, instead of assuming a call buy is bullish. A call/put heuristic only steps in when there’s no usable quote.',
+      proof: 'At the ask counts as buying, at the bid as selling, and inside the spread scales by how close it printed to the ask. A call/put guess only steps in when there’s no usable quote.',
     },
     {
       skill: 'Quant modeling',
-      title: 'A delta-weighted conviction score per ticker',
-      proof: 'Flow is weighted by delta exposure and split into institutional (premium of $500k or more) and retail (10 contracts or fewer) before it becomes the Batin Index.',
+      title: 'A delta for every trade, without paying for greeks',
+      proof: 'The ETL back-solves implied volatility with a vectorized Newton-Raphson over the whole DataFrame, then runs Black-Scholes, so every print gets a delta from its price alone.',
     },
     {
-      skill: 'Time-series data',
-      title: 'Live and historical ticks in one store',
-      proof: 'Streaming and backfill land in the same TimescaleDB hypertables, partitioned so scans by ticker, strike, expiry and time stay fast across millions of rows.',
+      skill: 'Signal design',
+      title: 'Divergence, not volume',
+      proof: 'Disjoint institutional and retail cohorts feed two scores: a Batin Index bounded at ±100 and a Trap Score for how sharply the cohorts oppose. One math module, 87 unit tests.',
+    },
+    {
+      skill: 'Validation',
+      title: 'A backtest that told me no',
+      proof: 'Five point-in-time runs agree: a 53.6% five-day hit rate once the market’s move is stripped out, a coin flip, and higher Trap Scores did worse. The landing page says so.',
+    },
+    {
+      skill: 'Infrastructure',
+      title: 'Twenty million trades on a 1 GB box',
+      proof: 'TimescaleDB and FastAPI under Docker Compose on a free-tier VM, only SSH exposed, a nightly cron load, and a board that went from 26 seconds a request to a cache hit.',
+    },
+    {
+      skill: 'Data licensing',
+      title: 'Raw vendor data never leaves the engine',
+      proof: 'The public demo reads through a proxy that whitelists derived signals, caches for ten minutes, coalesces requests and caps engine load, so visitors can’t tip over the server.',
     },
   ],
   pipeline: [
-    { stage: 'Ingest', nodes: ['Streaming listener', 'Historical backfill'] },
-    { stage: 'Store', nodes: ['TimescaleDB'], note: 'Options ticks and dark-pool prints' },
-    { stage: 'Serve', nodes: ['FastAPI engine', 'Redis cache'] },
-    { stage: 'Trade', nodes: ['Next.js terminal'], note: 'Dashboard, ticker pages, paper trading' },
+    { stage: 'Ingest', nodes: ['ThetaData (OPRA)', 'yfinance'], note: 'Nightly ETL after the close' },
+    { stage: 'Store', nodes: ['TimescaleDB'], note: 'Over 20 million option trades' },
+    { stage: 'Score', nodes: ['FastAPI engine'], note: 'One shared math module, 87 tests' },
+    { stage: 'Show', nodes: ['Next.js terminal', 'Landing demo'], note: 'Derived signals only' },
   ],
-  tech: ['Python', 'FastAPI', 'TimescaleDB', 'PostgreSQL', 'Redis', 'pandas / NumPy / SciPy', 'Next.js', 'Docker'],
-  pullQuote: 'TRX is the finished storefront; Batin is the engine room.',
+  tech: ['Python', 'FastAPI', 'TimescaleDB', 'PostgreSQL', 'pandas / NumPy / SciPy', 'Next.js', 'Docker', 'Oracle Cloud'],
+  demoVideo: '/Batin-demo.mp4',
+  poster: '/posters/batin.jpg',
+  demoSize: [1600, 900],
+  demoDuration: 41.3,
+  demoCaption: 'Recorded on the real engine, with the board as of the Sep 25, 2026 close. No sample data.',
+  pullQuote: 'Five backtests agree the Trap Score is a coin flip, so the landing page says so.',
 };
 
 export const featuredProjects = [trxProject, batinProject];
