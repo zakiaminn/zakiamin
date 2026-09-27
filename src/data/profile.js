@@ -1,7 +1,7 @@
 // Personal profile information for the résumé page
 
 export const profile = {
-  name: 'Zaki Amin',
+  name: 'Zaki Amin Ahmad',
   role: 'Data & Full-Stack Engineer',
   location: 'Toronto, Canada',
   seeking: 'Summer 2027 co\u2011op',

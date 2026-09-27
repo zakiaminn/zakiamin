@@ -10,7 +10,7 @@ const LINKS = [
 
 function Mark() {
   return (
-    <svg viewBox="0 0 48 48" className="w-8 h-8" aria-hidden="true">
+    <svg viewBox="0 0 48 48" className="w-8 h-8 shrink-0" aria-hidden="true">
       <path fill="var(--brand-ink)" d="M3 3H45V6H3ZM3 42H45V45H3Z" />
       <path
         fill="currentColor"
@@ -74,11 +74,11 @@ export default function Nav() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#top" className="flex items-center gap-2.5 text-ink py-2">
           <Mark />
-          <span className="text-base font-semibold tracking-[-0.01em]">Zaki Amin</span>
+          <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Zaki Amin Ahmad</span>
         </a>
 
         <div className="flex items-center gap-5 sm:gap-7">
-          <nav aria-label="Sections" className="hidden sm:flex items-center gap-7">
+          <nav aria-label="Sections" className="hidden md:flex items-center gap-7">
             {LINKS.map((link) => {
               const isActive = active === link.href.slice(1);
               return (
@@ -99,7 +99,7 @@ export default function Nav() {
           <a
             href="#resume"
             onClick={() => posthog.capture('resume_link_clicked', { source: 'nav' })}
-            className="btn btn-sm"
+            className="btn btn-sm hidden sm:inline-flex"
           >
             Résumé
           </a>
@@ -109,7 +109,7 @@ export default function Nav() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-nav"
-            className="btn btn-sm sm:hidden"
+            className="btn btn-sm md:hidden"
           >
             {open ? 'Close' : 'Menu'}
           </button>
@@ -120,7 +120,7 @@ export default function Nav() {
         <nav
           id="mobile-nav"
           aria-label="Sections"
-          className="menu-in sm:hidden border-t border-rule px-6 pt-1 pb-3 flex flex-col bg-bg"
+          className="menu-in md:hidden border-t border-rule px-6 pt-1 pb-3 flex flex-col bg-bg"
         >
           {LINKS.map((link) => {
             const isActive = active === link.href.slice(1);
@@ -138,6 +138,13 @@ export default function Nav() {
               </a>
             );
           })}
+          <a
+            href="#resume"
+            onClick={() => { setOpen(false); posthog.capture('resume_link_clicked', { source: 'nav' }); }}
+            className="sig self-start text-lg font-medium flex items-center min-h-[48px] text-ink-2 sm:hidden"
+          >
+            Résumé
+          </a>
         </nav>
       )}
     </header>

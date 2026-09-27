@@ -25,7 +25,7 @@ export default function Hero() {
           </h1>
 
           <p className="text-lg md:text-xl text-ink-2 leading-relaxed max-w-xl mb-10 pretty rise" style={step(2)}>
-            I’m Zaki Amin, a Data Analytics student and full-stack engineer. I build
+            I’m Zaki Amin Ahmad, a Data Analytics student and full-stack engineer. I build
             data pipelines and the products around them, from the schema to the
             shipped interface.
           </p>
@@ -62,7 +62,7 @@ export default function Hero() {
             src={zakiPhoto}
             crop={[1 / 6, 0.2, 0.5, 0.5]}
             onDotCount={setDots}
-            label="Halftone portrait of Zaki Amin, printed as a grid of dots"
+            label="Halftone portrait of Zaki Amin Ahmad, printed as a grid of dots"
           />
           <figcaption
             className="mt-4 text-sm text-ink-3 text-center md:text-right min-h-[1.25rem] transition-opacity duration-300"
