@@ -89,48 +89,6 @@ function DemoVideo({ project }) {
   );
 }
 
-/** Batin's pipeline, drawn from how the stages actually connect. */
-function Pipeline({ stages }) {
-  return (
-    <figure className="border border-rule">
-      <ol className="grid sm:grid-cols-4">
-        {stages.map((s, i) => (
-          <li
-            key={s.stage}
-            className={`relative p-5 ${i > 0 ? 'border-t border-rule sm:border-t-0 sm:border-l' : ''}`}
-          >
-            <p className="label">{s.stage}</p>
-            <ul className="mt-4 space-y-2">
-              {s.nodes.map((n) => (
-                <li key={n} className="border border-rule bg-surface px-3 py-2.5 text-sm font-medium text-ink leading-snug">
-                  {n}
-                </li>
-              ))}
-            </ul>
-            {s.note && <p className="mt-3 text-sm text-ink-3 leading-snug">{s.note}</p>}
-            {i < stages.length - 1 && (
-              <svg
-                viewBox="0 0 16 16"
-                aria-hidden="true"
-                className="absolute z-10 h-4 w-4 bg-bg text-brand-ink
-                           left-1/2 -bottom-2 -translate-x-1/2 rotate-90
-                           sm:left-auto sm:bottom-auto sm:-right-2 sm:top-1/2 sm:translate-x-0 sm:-translate-y-1/2 sm:rotate-0"
-                fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
-              >
-                <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" />
-              </svg>
-            )}
-          </li>
-        ))}
-      </ol>
-      <figcaption className="border-t border-rule px-5 py-3 text-sm text-ink-3">
-        One <span className="font-medium text-ink-2">1 GB</span> cloud server, loaded nightly after the close.
-        Only derived signals ever leave the engine.
-      </figcaption>
-    </figure>
-  );
-}
-
 function FeaturedTrx({ project }) {
   return (
     <div className="night">
@@ -188,9 +146,6 @@ function FeaturedBatin({ project }) {
           </div>
         </div>
         <DemoVideo project={project} />
-      </div>
-      <div className="mt-14 md:mt-20">
-        <Pipeline stages={project.pipeline} />
       </div>
       <Highlights items={project.highlights} className="mt-14 md:mt-20" />
       <TechLine tech={project.tech} title={project.title} className="mt-6" />

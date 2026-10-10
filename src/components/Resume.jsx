@@ -104,7 +104,7 @@ export default function Resume() {
             {allProjects.map((p) => (
               <Entry
                 key={p.title}
-                rail={<span className="text-ink-3">{p.live ? 'Live' : p.comingSoon ? 'Pre-launch' : 'Open source'}</span>}
+                rail={<span className="text-ink-3">{p.live ? 'Live' : p.comingSoon ? 'Pre-launch' : p.github ? 'Open source' : 'Private repo'}</span>}
                 heading={p.title}
                 detail={
                   <>
