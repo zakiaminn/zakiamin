@@ -62,6 +62,11 @@ function ExternalLinks({ project }) {
           Source and live demo open at launch.
         </span>
       )}
+      {!project.comingSoon && !project.live && !project.github && !project.npm && (
+        <span className="text-ink-3 inline-flex items-center min-h-[44px]">
+          Private repo.
+        </span>
+      )}
     </div>
   );
 }
@@ -111,6 +116,27 @@ function Media({ project }) {
   }
 
   return null;
+}
+
+/** How the stack connects, stage by stage, as hairline rows like the list below it. */
+function Pipeline({ project }) {
+  return (
+    <div>
+      <p className="label">How it fits together</p>
+      <ol className="mt-4 border-t border-rule" aria-label={`${project.title} pipeline, in order`}>
+        {project.pipeline.map((s) => (
+          <li key={s.stage} className="grid grid-cols-[5.5rem_minmax(0,1fr)] gap-x-4 border-b border-rule py-3">
+            <span className="label pt-1">{s.stage}</span>
+            <span>
+              <span className="block text-ink">{s.nodes.join(', ')}</span>
+              {s.note && <span className="block mt-0.5 text-sm text-ink-3">{s.note}</span>}
+            </span>
+          </li>
+        ))}
+      </ol>
+      {project.pipelineNote && <p className="mt-3 text-sm text-ink-3">{project.pipelineNote}</p>}
+    </div>
+  );
 }
 
 export default function CaseStudy({ project, trigger }) {
@@ -168,6 +194,7 @@ export default function CaseStudy({ project, trigger }) {
               </TabsContent>
 
               <TabsContent value="stack" className="space-y-8">
+                {project.pipeline && <Pipeline project={project} />}
                 <p className="label">Everything this build runs on</p>
                 <ul className="border-t border-rule" aria-label={`${project.title} tech stack`}>
                   {project.tech.map((t) => (
