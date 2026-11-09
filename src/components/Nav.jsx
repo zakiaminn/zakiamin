@@ -8,7 +8,7 @@ const LINKS = [
   { label: 'Contact', href: '#contact' },
 ];
 
-function Mark() {
+export function Mark() {
   return (
     <svg viewBox="0 0 48 48" className="w-8 h-8 shrink-0" aria-hidden="true">
       <path fill="var(--brand-ink)" d="M3 3H45V6H3ZM3 42H45V45H3Z" />

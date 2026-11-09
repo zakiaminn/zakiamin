@@ -29,6 +29,15 @@
   }
 }
 
+/* Figure colours for the Batin write-up: quiet lines and one accent, in both themes. */
+:root {
+  --fig-edge: #A9A79B; --fig-grid: #E5E5E1; --fig-tint: #F1F1EE; --fig-accent: #6F7A00;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --fig-edge: #5F5D4C; --fig-grid: #29291C; --fig-tint: #17170F; --fig-accent: #DCEC3A; }
+}
+.writeup-figure svg { display: block; width: 100%; height: auto; }
+
 .night {
   --bg: #0B0B08;  --surface: #15150F;  --surface-2: #1F1F17;
   --ink: #EDEDE0; --ink-2: #A3A18D;    --ink-3: #8A8873;
