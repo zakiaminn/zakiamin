@@ -21,6 +21,15 @@ const TABS = [
 function ExternalLinks({ project }) {
   return (
     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+      {project.writeup && (
+        <a
+          href={project.writeup}
+          onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'writeup' })}
+          className="sig text-ink font-medium inline-flex items-center min-h-[44px]"
+        >
+          Read the full write-up
+        </a>
+      )}
       {project.live && (
         <a
           href={project.live}

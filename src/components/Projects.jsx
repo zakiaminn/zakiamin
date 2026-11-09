@@ -132,17 +132,26 @@ function FeaturedBatin({ project }) {
     <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
       <div className="grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-10 lg:gap-14 items-start">
         <div>
-          <p className="label">In progress · {project.status}</p>
+          <p className="label">{project.phase ?? 'In progress'} · {project.status}</p>
           <h3 className="mt-4 text-4xl md:text-5xl font-bold leading-[1.02] tracking-[-0.035em] text-ink balance">
             {project.title}
           </h3>
           <p className="mt-3 text-lg text-ink-2">{project.tagline}</p>
           <p className="mt-6 text-ink-2 leading-relaxed pretty">{project.description}</p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap gap-3">
             <CaseStudy
               project={project}
               trigger={<button type="button" className="btn">Read the case study</button>}
             />
+            {project.writeup && (
+              <a
+                href={project.writeup}
+                onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'writeup' })}
+                className="btn"
+              >
+                Read the write-up
+              </a>
+            )}
           </div>
         </div>
         <DemoVideo project={project} />

@@ -10,4 +10,13 @@ export default defineConfig({
       '@': path.resolve(import.meta.dirname, './src'),
     },
   },
+  build: {
+    // Two pages: the portfolio at / and the Batin write-up at /batin/.
+    rollupOptions: {
+      input: {
+        main: path.resolve(import.meta.dirname, 'index.html'),
+        batin: path.resolve(import.meta.dirname, 'batin/index.html'),
+      },
+    },
+  },
 })
