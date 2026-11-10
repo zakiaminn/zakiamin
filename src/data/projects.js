@@ -125,6 +125,36 @@ export const featuredProjects = [trxProject, batinProject];
 
 export const projects = [
   {
+    title: 'ZoneDocket',
+    tagline: 'Every planning hearing near your work, in one Monday email',
+    summary:
+      'A weekly digest for GTA builders and planners. It reads council, planning committee and Committee of Adjustment agendas across five towns and sends each reader the items near their work.',
+    description:
+      "A weekly digest and alert feed that tells GTA builders, designers and planning consultants what is coming up for planning approval. It reads council, planning committee and Committee of Adjustment agendas and minutes for Toronto, Oakville, Burlington, Mississauga and Milton, plus Toronto's open data on development applications, and turns each land-use item into a structured record: address, file numbers, ward, hearing time, height in storeys, applicant and decision. Each Monday a reader gets one ordered list by town, section and application type, matched to the towns, addresses and project types they care about, and every fact links back to the town's own page. If the town's text doesn't say it, the field stays empty instead of being guessed.",
+    highlights: [
+      {
+        skill: 'Data pipeline',
+        title: 'Agendas from five towns, read into one schema',
+        proof: 'Python workers on an arq queue sync each town’s agendas and minutes on a schedule, split them into items and pull out addresses, file numbers, hearing times and decisions.',
+      },
+      {
+        skill: 'Data integrity',
+        title: 'Imports you can run twice',
+        proof: 'Toronto’s open data files load into applications and their events, and running the same files again changes nothing. Each event keeps the time it was first seen.',
+      },
+      {
+        skill: 'Infrastructure',
+        title: 'A public site with no open ports',
+        proof: 'Postgres with PostGIS, Redis, the FastAPI service and the Next.js site run under Docker Compose, and a Cloudflare Tunnel carries zonedocket.com in without exposing the server.',
+      },
+    ],
+    tech: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Python', 'FastAPI', 'arq / Redis', 'PostgreSQL / PostGIS', 'SQLAlchemy', 'Docker Compose', 'Cloudflare Tunnel', 'GitHub Actions'],
+    live: 'https://www.zonedocket.com',
+    liveLabel: 'zonedocket.com',
+    poster: '/posters/zonedocket.jpg',
+    demoSize: [720, 450],
+  },
+  {
     title: 'DOMolition',
     tagline: 'A UI you’re allowed to break',
     summary:

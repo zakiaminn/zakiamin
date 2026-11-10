@@ -311,15 +311,17 @@ function IndexRow({ project, breakIt, busy }) {
               Break this row
             </button>
           )}
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'index' })}
-            className="link text-sm font-medium inline-flex items-center min-h-[36px]"
-          >
-            Source <ExternalArrow /><span className="sr-only"> for {project.title} (opens in a new tab)</span>
-          </a>
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'index' })}
+              className="link text-sm font-medium inline-flex items-center min-h-[36px]"
+            >
+              Source <ExternalArrow /><span className="sr-only"> for {project.title} (opens in a new tab)</span>
+            </a>
+          )}
           {project.live && (
             <a
               href={project.live}
