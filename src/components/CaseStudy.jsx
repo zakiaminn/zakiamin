@@ -127,6 +127,41 @@ function Media({ project }) {
   return null;
 }
 
+/** Extra screenshots, shown side by side under the recording. */
+function Gallery({ gallery }) {
+  return (
+    <figure>
+      <div className="grid grid-cols-2 gap-4 max-w-[34rem]">
+        {gallery.images.map((img) => (
+          <img
+            key={img.src}
+            src={img.src}
+            alt={img.alt}
+            width={img.size[0]}
+            height={img.size[1]}
+            loading="lazy"
+            decoding="async"
+            className="block w-full h-auto border border-rule bg-surface-2"
+          />
+        ))}
+      </div>
+      {gallery.caption && <figcaption className="mt-3 text-sm text-ink-3">{gallery.caption}</figcaption>}
+    </figure>
+  );
+}
+
+/** A real excerpt of a tool's output, kept as text rather than a picture of it. */
+function Report({ report }) {
+  return (
+    <figure>
+      <pre className="num overflow-x-auto border border-rule bg-surface px-5 py-4 text-[0.8125rem] leading-relaxed font-normal tracking-normal text-ink-2">
+        <code>{report.text}</code>
+      </pre>
+      {report.caption && <figcaption className="mt-3 text-sm text-ink-3">{report.caption}</figcaption>}
+    </figure>
+  );
+}
+
 /** How the stack connects, stage by stage, as hairline rows like the list below it. */
 function Pipeline({ project }) {
   return (
@@ -185,6 +220,8 @@ export default function CaseStudy({ project, trigger }) {
                 <p className="text-ink-2 leading-relaxed">{project.description}</p>
                 {project.highlights && <Highlights items={project.highlights} columns={2} />}
                 <Media project={project} />
+                {project.gallery && <Gallery gallery={project.gallery} />}
+                {project.report && <Report report={project.report} />}
                 <ExternalLinks project={project} />
               </TabsContent>
 

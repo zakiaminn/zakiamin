@@ -126,6 +126,26 @@ const zoneDocketProject = {
   tagline: 'Every planning hearing near your work, in one Monday email',
   description:
     "A weekly digest and alert feed that tells GTA builders, designers and planning consultants what is coming up for planning approval. It reads council, planning committee and Committee of Adjustment agendas and minutes for Toronto, Oakville, Burlington, Mississauga and Milton, plus Toronto's open data on development applications, and turns each land-use item into a structured record: address, file numbers, ward, hearing time, height in storeys, applicant and decision. Each Monday a reader gets one ordered list by town, section and application type, matched to the towns, addresses and project types they care about, and every fact links back to the town's own page.",
+  longform: [
+    "ZoneDocket answers one question for people who build in the GTA: what is coming up for planning approval near my work this week? Five towns publish the answer in council, planning committee and Committee of Adjustment agendas and minutes, spread across different portals, bodies and formats. ZoneDocket reads all of them, plus Toronto's open data on development and Committee of Adjustment applications, turns every land-use item into a record with its address, file numbers, ward, hearing time, height and decision, and sends each reader one ordered list every Monday. Every fact links back to the town's own page, and anything the town's text doesn't state is left empty instead of guessed.",
+    "Oakville, Burlington, Mississauga and Milton all publish on the same meeting platform, eSCRIBE, so one connector covers all four. It calls the same meeting list endpoint the portal's own page uses, fetches each HTML agenda and minutes page, and splits it into items. The crawler names itself in its user agent with a contact address, reads robots.txt first, makes at most one request per second per host, and stores every raw page once, keyed by its sha256, so nothing is fetched twice. The first six-month Oakville sync came back with 51 meetings, 74 pages and 1,530 items.",
+    "Then the limits. Every file on those portals (agenda PDFs, staff reports, public notices) sits behind a Cloudflare browser check, and Toronto's council site answers every automated request, robots.txt included, with a 403 from Akamai. Both are bot checks, and ZoneDocket doesn't work around bot checks: no faked browser, no headless browser. So it's built on the HTML agendas and minutes it is allowed to read, and links out to the PDFs, which open fine in a reader's own browser. Toronto comes in through the City's open data portal instead, which publishes both application datasets daily.",
+    "Reading the pages is mostly learning each town's habits. Oakville's Committee of Adjustment agendas title a hearing with nothing but its file number and address, and the decision lives in the minutes as a motion. Council by-laws are listed by number only, and one motion under the last of them passes the whole list, sometimes \"with the exception of\" one, while a by-law that failed says so in its own title. Burlington's Committee of the Whole only recommends and council decides two weeks later, so its votes show as \"Recommended for approval\", never as a decision. File numbers come in shapes like A/026/2026, B 26/05, OPA.1315.13 and 24T-26002/1312, and the rules know each town's.",
+    "None of that counts until it's measured. A labelling page shows each stored item's text beside a form, and the land-use answer and the type always start empty, so a label is never just the rules' own answer copied back. 201 labelled items across the four eSCRIBE towns live in the repo, and a scorer grades the rules on them before and after every change: whether each item was split out whole, its type, and its address, file number and decision, where an empty field counts as right when the text doesn't state it. The targets are 95% for splitting and 90% for the rest. Every rule change gets a version number and its scores are recorded against it. On Oakville, decisions went from 9 of 17 right on the second version of the rules to 17 of 17.",
+    "The scores carry a caveat I keep right next to them: the rules were written from the same six months of meetings the test sets come from, and 51 of the 201 labelled items share an item, an address or a file number with the rule tests. Leaving those out, the rules alone still score between 90% and 100% on address, file number and decision in Burlington, Mississauga and Milton. To keep that honest over time, a monthly check picks a fresh set only from meetings held after the rules were written, scores it beside the test set, and no rule is ever written from a fresh label.",
+    "Toronto taught me to date things by when they appear. The City posts a Committee of Adjustment decision about a week after its hearing, and a new development file reaches the open data about two weeks after it was submitted. Both are dated by the day they happened, so a digest that looked seven days back missed most of them. Now each event keeps the time a sync first saw it, and the digest picks decisions and filings by that, so each one shows once, in the week it appeared, still carrying its hearing's day. A decision that changes, deferred and then approved, counts as new again, because that's news. Running the same files twice changes nothing.",
+    "The digest is an email, which means writing HTML like it's 2005: table layout and inline styles only, since mail apps strip most CSS and web fonts, with a fixed 600-pixel page and Georgia for Outlook on Windows, and a plain text version beside it carrying the same content. Each issue is grouped by town, then Coming up, Recently heard and New applications, then application type with counts, and every entry links to the town's own page or PDF rather than a copy.",
+    "It all runs on one server under Docker Compose: Postgres 16 with PostGIS, Redis, the FastAPI service, the arq workers and the Next.js site, every port bound to localhost. zonedocket.com comes in through a Cloudflare Tunnel that dials out from the server, so no port is open at all. One proxy decides who gets what on every request. The SSH tunnel and staff signed in through Cloudflare Access, whose token is checked against the team's keys, issuer, audience and expiry, get the whole app. Everyone else gets the public pages and a single POST, the sign-up form, which refuses posts from other sites, catches bots with a hidden field and allows five tries per address in ten minutes. Any other path is a 404 and any other method a 405. A deploy ships only the last commit, and a source that keeps failing or brings nothing new for 14 days raises an alert on the admin page.",
+  ],
+  pullQuote:
+    'The day after 30 Committee of Adjustment hearings, Toronto’s open data held one decision. A digest that looked a week back would have missed nearly all of them.',
+  pipeline: [
+    { stage: 'Fetch', nodes: ['eSCRIBE (4 towns)', 'Toronto open data'], note: 'HTML agendas and minutes, daily open data files' },
+    { stage: 'Store', nodes: ['PostgreSQL / PostGIS'], note: 'Every raw page kept once, by sha256' },
+    { stage: 'Read', nodes: ['Splitter', 'Extraction rules'], note: 'Graded against 201 labelled items' },
+    { stage: 'Send', nodes: ['Monday digest', 'zonedocket.com'], note: 'HTML and plain text, every fact linked to the town' },
+  ],
+  pipelineNote: 'One server under Docker Compose, reached through a Cloudflare Tunnel with no open ports.',
   highlights: [
     {
       skill: 'Data pipeline',
@@ -144,8 +164,8 @@ const zoneDocketProject = {
     },
     {
       skill: 'Testing',
-      title: 'Extraction scored against hand-labelled agendas',
-      proof: 'A labelled set of real agenda items for each town, built through its own labelling page, scores the extraction rules every time they change. CI runs lint, type checks and tests on every push.',
+      title: 'Extraction scored against labelled agendas',
+      proof: '201 labelled items across four towns grade the rules before and after every change, against targets of 95% for splitting and 90% for type, address, file number and decision. CI runs over 500 pipeline tests on every push.',
     },
     {
       skill: 'Email',
@@ -161,8 +181,35 @@ const zoneDocketProject = {
   tech: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Python', 'FastAPI', 'arq / Redis', 'PostgreSQL / PostGIS', 'SQLAlchemy', 'Docker Compose', 'Cloudflare Tunnel', 'GitHub Actions'],
   live: 'https://www.zonedocket.com',
   liveLabel: 'zonedocket.com',
-  shot: '/posters/zonedocket-featured.jpg',
-  shotSize: [1200, 1200],
+  demoVideo: '/ZoneDocket-demo.mp4',
+  poster: '/posters/zonedocket.jpg',
+  demoSize: [1600, 900],
+  demoDuration: 27.8,
+  demoCaption: 'Recorded on zonedocket.com: a past issue, then one of its items opened on Burlington’s own agenda.',
+  gallery: {
+    images: [
+      { src: '/media/zonedocket-phone-light.jpg', size: [780, 1688], alt: 'The sample issue on a phone in light mode' },
+      { src: '/media/zonedocket-phone-dark.jpg', size: [780, 1688], alt: 'The sample issue on a phone in dark mode' },
+    ],
+    caption: 'The same issue on a phone, in light and dark mode.',
+  },
+  report: {
+    text: `fields, on the 37 land-use items
+                        stated   right   wrong  missed  made up
+  address                   29      27       2       0        0
+  file number               12      12       0       0        0
+  decision                  19      17       0       2        0
+  recommendation             0       0       0       0        0
+  storeys                    7       5       0       2        0
+  units                      1       0       0       1        0
+  floor area                 0       0       0       0        0
+  applicant                  1       0       0       1        0
+  agent                      5       0       0       5        0
+
+evidence
+  0 of 103 quotes are not in their item's text`,
+    caption: 'From the scorer’s report on Burlington’s 64 labelled items, rules-v29. “Made up” counts a value the town’s text never stated.',
+  },
 };
 
 export const featuredProjects = [zoneDocketProject, trxProject, batinProject];
