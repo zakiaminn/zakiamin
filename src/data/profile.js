@@ -21,11 +21,11 @@ export const skillGroups = [
   },
   {
     label: 'Data',
-    items: ['PostgreSQL', 'TimescaleDB', 'Redis', 'Supabase', 'pandas / NumPy'],
+    items: ['PostgreSQL', 'TimescaleDB', 'Redis', 'Supabase', 'pandas / NumPy', 'Hadoop / HDFS'],
   },
   {
     label: 'Tools',
-    items: ['Git', 'Docker', 'Vercel', 'Railway', 'Xcode', 'Android Studio'],
+    items: ['Git', 'Docker', 'Xcode', 'Android Studio'],
   },
 ];
 
