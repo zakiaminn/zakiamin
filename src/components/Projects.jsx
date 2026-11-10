@@ -5,7 +5,7 @@ import { ExternalArrow, Highlights, SectionHead, TechLine } from '@/components/P
 import { usePrefersReducedMotion } from '@/lib/motion';
 import posthog from '@/lib/posthog';
 
-const [trx, batin] = featuredProjects;
+const [zoneDocket, trx, batin] = featuredProjects;
 
 function formatDuration(seconds) {
   const m = Math.floor(seconds / 60);
@@ -86,6 +86,56 @@ function DemoVideo({ project }) {
         </span>
       </figcaption>
     </figure>
+  );
+}
+
+function FeaturedZoneDocket({ project }) {
+  const [w, h] = project.shotSize;
+  return (
+    <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-24">
+      <div className="grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-10 lg:gap-14 items-start">
+        <div>
+          <p className="label">Live at {project.liveLabel}</p>
+          <h3 className="mt-4 text-4xl md:text-5xl font-bold leading-[1.02] tracking-[-0.035em] text-ink balance">
+            {project.title}
+          </h3>
+          <p className="mt-3 text-lg text-ink-2">{project.tagline}</p>
+          <p className="mt-6 text-ink-2 leading-relaxed pretty">{project.description}</p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
+              className="btn btn-primary"
+            >
+              Visit {project.liveLabel} <ExternalArrow />
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          </div>
+        </div>
+        <a
+          href={project.live}
+          target="_blank"
+          rel="noreferrer"
+          tabIndex={-1}
+          aria-hidden="true"
+          onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
+        >
+          <img
+            src={project.shot}
+            alt=""
+            width={w}
+            height={h}
+            loading="lazy"
+            decoding="async"
+            className="block w-full h-auto border border-rule bg-surface"
+          />
+        </a>
+      </div>
+      <Highlights items={project.highlights} className="mt-14 md:mt-20" />
+      <TechLine tech={project.tech} title={project.title} className="mt-6" />
+    </div>
   );
 }
 
@@ -367,6 +417,7 @@ export default function Projects() {
         <SectionHead id="work-heading">Selected work</SectionHead>
       </div>
 
+      <FeaturedZoneDocket project={zoneDocket} />
       <FeaturedTrx project={trx} />
       <FeaturedBatin project={batin} />
 
