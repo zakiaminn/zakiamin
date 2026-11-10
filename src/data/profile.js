@@ -17,15 +17,15 @@ export const skillGroups = [
   },
   {
     label: 'Frameworks',
-    items: ['React', 'Next.js', 'Node / Express', 'FastAPI', '.NET'],
+    items: ['React', 'Next.js', 'Node / Express', 'FastAPI', '.NET', 'Tailwind CSS'],
   },
   {
     label: 'Data',
-    items: ['PostgreSQL', 'TimescaleDB', 'Redis', 'Supabase', 'pandas / NumPy', 'Hadoop / HDFS'],
+    items: ['PostgreSQL', 'PostGIS', 'TimescaleDB', 'Redis', 'Supabase', 'SQLAlchemy', 'pandas / NumPy', 'BeautifulSoup', 'Hadoop / HDFS'],
   },
   {
     label: 'Tools',
-    items: ['Git', 'Docker', 'Xcode', 'Android Studio'],
+    items: ['Git', 'Docker', 'GitHub Actions', 'Cloudflare', 'pytest', 'Xcode', 'Android Studio'],
   },
 ];
 

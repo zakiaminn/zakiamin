@@ -178,7 +178,7 @@ const zoneDocketProject = {
       proof: 'Postgres with PostGIS, Redis, the FastAPI service and the Next.js site run under Docker Compose, and a Cloudflare Tunnel carries zonedocket.com in without exposing the server.',
     },
   ],
-  tech: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Python', 'FastAPI', 'arq / Redis', 'PostgreSQL / PostGIS', 'SQLAlchemy', 'Docker Compose', 'Cloudflare Tunnel', 'GitHub Actions'],
+  tech: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Python', 'FastAPI', 'arq / Redis', 'PostgreSQL / PostGIS', 'SQLAlchemy / Alembic', 'BeautifulSoup', 'Docker Compose', 'Cloudflare Tunnel', 'GitHub Actions'],
   live: 'https://www.zonedocket.com',
   liveLabel: 'zonedocket.com',
   demoVideo: '/ZoneDocket-demo.mp4',
