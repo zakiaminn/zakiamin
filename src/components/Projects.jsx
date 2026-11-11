@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { projects, featuredProjects } from '@/data/projects';
 import CaseStudy from '@/components/CaseStudy';
-import { ExternalArrow, Highlights, SectionHead, TechLine } from '@/components/ProjectBits';
+import { Highlights, SectionHead, TechLine } from '@/components/ProjectBits';
 import { usePrefersReducedMotion } from '@/lib/motion';
 import posthog from '@/lib/posthog';
 
@@ -112,7 +112,7 @@ function FeaturedZoneDocket({ project }) {
               onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
               className="btn"
             >
-              Visit {project.liveLabel} <ExternalArrow />
+              Visit {project.liveLabel}
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </div>
@@ -149,7 +149,7 @@ function FeaturedTrx({ project }) {
                 onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
                 className="btn"
               >
-                Visit {project.liveLabel} <ExternalArrow />
+                Visit {project.liveLabel}
                 <span className="sr-only"> (opens in a new tab)</span>
               </a>
             </div>
@@ -355,7 +355,7 @@ function IndexRow({ project, breakIt, busy }) {
               onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'index' })}
               className="link text-sm font-medium inline-flex items-center min-h-[36px]"
             >
-              Source <ExternalArrow /><span className="sr-only"> for {project.title} (opens in a new tab)</span>
+              Source<span className="sr-only"> for {project.title} (opens in a new tab)</span>
             </a>
           )}
           {project.live && (
@@ -366,7 +366,7 @@ function IndexRow({ project, breakIt, busy }) {
               onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'index' })}
               className="link text-sm font-medium inline-flex items-center min-h-[36px]"
             >
-              Site <ExternalArrow /><span className="sr-only"> for {project.title} (opens in a new tab)</span>
+              Site<span className="sr-only"> for {project.title} (opens in a new tab)</span>
             </a>
           )}
           {project.npm && (
@@ -377,7 +377,7 @@ function IndexRow({ project, breakIt, busy }) {
               onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'npm', project_type: 'index' })}
               className="link text-sm font-medium inline-flex items-center min-h-[36px]"
             >
-              npm <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
+              npm<span className="sr-only"> (opens in a new tab)</span>
             </a>
           )}
         </div>

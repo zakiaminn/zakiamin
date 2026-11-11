@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, SegmentedTabsList, TabsContent } from '@/components/ui/tabs';
-import { ExternalArrow, Highlights, TechLine } from '@/components/ProjectBits';
+import { Highlights, TechLine } from '@/components/ProjectBits';
 import { usePrefersReducedMotion } from '@/lib/motion';
 import posthog from '@/lib/posthog';
 
@@ -38,7 +38,7 @@ function ExternalLinks({ project }) {
           onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'live' })}
           className="sig text-ink font-medium inline-flex items-center min-h-[44px]"
         >
-          Visit the live site <ExternalArrow />
+          Visit the live site
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
       )}
@@ -50,7 +50,7 @@ function ExternalLinks({ project }) {
           onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'github' })}
           className="sig text-ink font-medium inline-flex items-center min-h-[44px]"
         >
-          Read the source <ExternalArrow />
+          Read the source
           <span className="sr-only"> for {project.title} (opens in a new tab)</span>
         </a>
       )}
@@ -62,7 +62,7 @@ function ExternalLinks({ project }) {
           onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'npm' })}
           className="sig text-ink font-medium inline-flex items-center min-h-[44px]"
         >
-          View on npm <ExternalArrow />
+          View on npm
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
       )}

@@ -44,10 +44,6 @@ export function Highlights({ items, compact = false, columns = 3, className = ''
   );
 }
 
-export function ExternalArrow() {
-  return <span aria-hidden="true" className="ext-arrow">{'\u2197\uFE0E'}</span>;
-}
-
 export function TechLine({ tech, title, className = '' }) {
   return (
     <ul
