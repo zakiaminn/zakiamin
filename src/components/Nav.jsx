@@ -77,7 +77,7 @@ function Dateline() {
 const track = (section) => () => posthog.capture('nav_link_clicked', { section });
 const trackResume = () => posthog.capture('resume_link_clicked', { source: 'nav' });
 
-/** The nameplate: the name runs the full width of the column, hung between the rules of the ZA mark. */
+/** The nameplate: the name runs the full width of the column, hung between the thin-gap-thick rules. */
 export function Masthead({ mastRef }) {
   const nameRef = useRef(null);
   useFitWidth(nameRef);

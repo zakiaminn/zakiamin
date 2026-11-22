@@ -1,0 +1,31 @@
+{
+  "brand": "Zaki",
+  "tagline": "Data analyst and full-stack engineer",
+  "brief": "A personal mark for Zaki Amin Ahmad, a builder who ships real data and trading systems, aimed at recruiters for a Summer 2027 data or full-stack co-op. It replaces Masthead ZA.",
+  "adjectives": ["precise", "sharp", "confident", "builder", "dry-witted"],
+  "criteria": "Success: recognisable at 16 px, explainable in one sentence, distinct from Zendesk, Zorin, ZenHub, npm and Vercel, works in one colour.",
+  "mockups": ["favicon-tab", "website", "social", "readme", "business-card", "terminal"],
+  "nav": ["Work", "Experience", "Toolkit", "Contact"],
+  "brand_color": "#DCEC3A",
+  "tile_color": "#0B0B08",
+  "greyscale": false,
+  "final": true,
+  "designer": "Zaki Amin Ahmad",
+  "concepts": [
+    {
+      "name": "One line",
+      "symbol": "../master/zaki-symbol.svg",
+      "lockup": "../master/zaki-wordmark.svg",
+      "symbol_on_tile": "../variants/zaki-symbol-sulfur.svg",
+      "lockup_on_dark": "../variants/zaki-wordmark-sulfur.svg",
+      "idea": "Z and A drawn as one unbroken stroke; the wordmark carries it straight into KI.",
+      "rationale": [
+        "Every diagonal at 60°, so the Z's diagonal and the A's left leg run parallel",
+        "A separate 16 px cut keeps the favicon on whole pixels",
+        "Sulfur on Night tile, Ink or Chalk everywhere else"
+      ]
+    }
+  ],
+  "recommendation": "One line, now live as the favicon, home-screen icon and nav mark on zakiamin.com.",
+  "next_steps": ["Update the GitHub and LinkedIn avatars if they should carry the mark", "Run a trademark search before any commercial use"]
+}
