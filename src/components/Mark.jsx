@@ -1,13 +1,12 @@
 import React from 'react';
 
-/** Masthead ZA: the initials hung between a thick-and-thin rule. */
+/** One line: Z and A drawn as one unbroken stroke, every diagonal at 60°. Master art lives in brand/logo/. */
 export default function Mark() {
   return (
-    <svg viewBox="0 0 48 48" className="w-8 h-8 shrink-0" aria-hidden="true">
-      <path fill="var(--brand-ink)" d="M3 3H45V6H3ZM3 42H45V45H3Z" />
+    <svg viewBox="0 0 303.69 187.96" className="h-[18px] w-[29px] shrink-0" aria-hidden="true">
       <path
         fill="currentColor"
-        d="M3 9H45V13.5H3ZM3 34.5H45V39H3ZM15 12H21V13.5L9 34.5V36H3V34.5L15 13.5ZM25 36V34.5L32 13.5V12H38V13.5L45 34.5V36H40V34.5L38 28.5H32L30 34.5V36ZM35 19.5L33 25.5H37Z"
+        d="M0 3H110.3V37.96L43.88 153H86.6L174.94 0H195.17L303.69 187.96H259.81L185.05 58.48L110.3 187.96H0V153L66.42 37.96H0Z"
       />
     </svg>
   );

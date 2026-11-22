@@ -70,7 +70,7 @@ export function Rule({ axis = 'x', origin, delay = 0, inView = true, tone = 'bg-
   );
 }
 
-/** The masthead's thin-gap-thick rules, the vocabulary of the ZA mark. `flip` puts the thick rule first. */
+/** The masthead's thin-gap-thick rules, set like a newspaper nameplate. `flip` puts the thick rule first. */
 export function MastRules({ flip = false, inView = true, delay = 0 }) {
   const thin = <Rule inView={inView} origin="center" tone="bg-brand-ink" className="h-[3px]" delay={delay} />;
   const thick = <Rule inView={inView} origin="center" tone="bg-ink" className="h-[7px]" delay={delay + 0.07} />;
