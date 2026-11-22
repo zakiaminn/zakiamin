@@ -1,36 +1,36 @@
 import React, { useState } from 'react';
 import HalftonePortrait from './HalftonePortrait';
-import { profile } from '@/data/profile';
+import { MaskLines, Reveal } from '@/components/ui/motion';
+import { PAGE } from '@/components/Nav';
 import posthog from '@/lib/posthog';
 import zakiPhoto from '../assets/zaki-photo.png';
 
-const step = (i) => ({ animationDelay: `${i * 60}ms` });
-
+/** The lead story: the headline, and the halftone portrait as the front-page photo. */
 export default function Hero() {
   const [dots, setDots] = useState(null);
 
   return (
-    <header id="top" className="w-full max-w-6xl mx-auto px-6 pt-12 pb-20 md:pt-20 md:pb-28">
-      <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-12 md:gap-12 items-start">
-        <div className="md:pt-6 flex flex-col self-stretch">
-          <p className="label text-brand-ink mb-6 rise" style={step(0)}>
-            Seeking a {profile.seeking} · {profile.location.split(',')[0]}
-          </p>
-
-          <h1
-            className="font-bold text-5xl sm:text-6xl leading-[1.02] tracking-[-0.035em] text-ink mb-7 balance rise"
-            style={step(1)}
-          >
-            I make data <span className="swipe swipe-in">legible</span> and software real.
+    <section aria-labelledby="hero-heading" className={PAGE}>
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] border-b-2 border-ink">
+        <div className="flex flex-col pt-8 pb-10 lg:pt-10 lg:pr-12 lg:border-r lg:border-rule">
+          <h1 id="hero-heading" className="font-bold text-[clamp(2.6rem,5.4vw,4.75rem)] leading-[0.98] tracking-[-0.035em] text-ink">
+            <MaskLines
+              delay={0.55}
+              lines={[
+                <>I make data <span className="swipe swipe-in" style={{ animationDelay: '1150ms' }}>legible</span></>,
+                'and software real.',
+              ]}
+            />
           </h1>
 
-          <p className="text-lg md:text-xl text-ink-2 leading-relaxed max-w-xl mb-10 pretty rise" style={step(2)}>
-            I’m Zaki Amin Ahmad, a Data Analytics student and full-stack engineer. I build
-            data pipelines and the products around them, from the schema to the
-            shipped interface.
-          </p>
+          <Reveal inView={false} delay={0.85} className="mt-7 max-w-[34rem]">
+            <p className="text-lg md:text-xl leading-relaxed text-ink-2 pretty">
+              I’m Zaki Amin Ahmad, a Data Analytics student and full-stack engineer. I build data
+              pipelines and the products around them, from the schema to the shipped interface.
+            </p>
+          </Reveal>
 
-          <div className="flex flex-wrap items-center gap-3 rise" style={step(3)}>
+          <Reveal inView={false} delay={0.95} className="mt-9 flex flex-wrap items-center gap-3">
             <a
               href="#work"
               onClick={() => posthog.capture('hero_cta_clicked', { cta: 'work' })}
@@ -49,15 +49,14 @@ export default function Hero() {
             >
               Open the résumé
             </a>
-          </div>
+          </Reveal>
 
-          {/* Sits on the same baseline as the portrait caption. */}
-          <blockquote className="mt-auto pt-10 rise" style={step(4)}>
+          <blockquote className="mt-auto pt-10">
             <p className="text-sm text-ink-3 pretty">“To live without risk is to risk without living.”</p>
           </blockquote>
         </div>
 
-        <figure className="relative max-w-md mx-auto w-full md:max-w-none">
+        <figure className="pt-2 pb-8 lg:pt-10 lg:pl-10 max-w-sm mx-auto w-full lg:max-w-none">
           <HalftonePortrait
             src={zakiPhoto}
             crop={[1 / 6, 0.2, 0.5, 0.5]}
@@ -65,7 +64,7 @@ export default function Hero() {
             label="Halftone portrait of Zaki Amin Ahmad, printed as a grid of dots"
           />
           <figcaption
-            className="mt-4 text-sm text-ink-3 text-center md:text-right min-h-[1.25rem] transition-opacity duration-300"
+            className="mt-3 text-sm text-ink-3 min-h-[1.25rem] transition-opacity duration-300"
             style={{ opacity: dots ? 1 : 0 }}
             aria-hidden={dots ? undefined : true}
           >
@@ -73,6 +72,6 @@ export default function Hero() {
           </figcaption>
         </figure>
       </div>
-    </header>
+    </section>
   );
 }
