@@ -1,7 +1,7 @@
 import React from 'react';
 import { batinWriteup } from '@/data/batinWriteup';
 import * as batinFigures from '@/components/writeup/BatinFigures';
-import { Mark } from '@/components/Nav';
+import { Mark } from '@/components/Mark';
 
 const HASHES_URL = 'https://github.com/zakiaminn/batin-ledger-hashes';
 

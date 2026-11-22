@@ -1,28 +1,24 @@
 import React from 'react';
 import { skillGroups } from '@/data/profile';
-import { SectionHead } from '@/components/ProjectBits';
+import { PAGE } from '@/components/Nav';
 
+/** The toolkit as a listings page: dense, columned and ruled, built to be scanned. */
 export default function Toolkit() {
   return (
-    <section id="toolkit" aria-labelledby="toolkit-heading" className="w-full max-w-6xl mx-auto px-6 pb-20 md:pb-28">
-      <SectionHead id="toolkit-heading" className="mb-2">Toolkit</SectionHead>
-      <dl>
-        {skillGroups.map((group) => (
-          <div key={group.label} className="grid md:grid-cols-[220px_1fr] gap-2 md:gap-10 py-5 md:py-6 border-b border-rule">
-            <dt className="label md:pt-1.5">{group.label}</dt>
-            <dd className="text-lg text-ink">
-              <ul className="flex flex-wrap gap-x-2 gap-y-1">
-                {group.items.map((item, i) => (
-                  <li key={item} className="whitespace-nowrap">
-                    {item}
-                    {i < group.items.length - 1 && <span aria-hidden="true" className="ml-2 text-rule-2">/</span>}
-                  </li>
-                ))}
-              </ul>
-            </dd>
+    <section id="toolkit" aria-labelledby="toolkit-heading" className={`${PAGE} pt-16 md:pt-20 pb-20 md:pb-28`}>
+      <div className="pb-4 border-b-2 border-ink">
+        <h2 id="toolkit-heading" className="label text-ink">Toolkit</h2>
+      </div>
+      <div className="pt-6 columns-2 md:columns-3 lg:columns-4 gap-8 [column-rule:1px_solid_var(--rule)]">
+        {skillGroups.map((g) => (
+          <div key={g.label} className="break-inside-avoid pb-7">
+            <h3 className="label text-ink pb-1.5 mb-2 border-b border-rule">{g.label}</h3>
+            <ul className="text-[15px] leading-[1.75] text-ink">
+              {g.items.map((it) => <li key={it}>{it}</li>)}
+            </ul>
           </div>
         ))}
-      </dl>
+      </div>
     </section>
   );
 }

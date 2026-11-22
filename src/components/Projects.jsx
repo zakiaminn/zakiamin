@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { projects, featuredProjects } from '@/data/projects';
+import { m as Motion, useMotionTemplate, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import CaseStudy from '@/components/CaseStudy';
-import { Highlights, SectionHead, TechLine } from '@/components/ProjectBits';
-import { usePrefersReducedMotion } from '@/lib/motion';
+import { Highlights } from '@/components/ProjectBits';
+import { PAGE } from '@/components/Nav';
+import { CursorPreview, MaskLines, Rule } from '@/components/ui/motion';
+import { builds, featured } from '@/data/skim';
+import { useFinePointer, usePrefersReducedMotion } from '@/lib/motion';
 import posthog from '@/lib/posthog';
-
-const [zoneDocket, trx, batin] = featuredProjects;
 
 function formatDuration(seconds) {
   const m = Math.floor(seconds / 60);
@@ -13,7 +14,8 @@ function formatDuration(seconds) {
   return `${m}:${s}`;
 }
 
-function DemoVideo({ project }) {
+// `frame` wraps the video alone, so a reveal can mask the picture and leave its controls readable.
+function DemoVideo({ project, frame = (video) => video }) {
   const ref = useRef(null);
   const reduced = usePrefersReducedMotion();
   const [playing, setPlaying] = useState(false);
@@ -51,22 +53,24 @@ function DemoVideo({ project }) {
 
   return (
     <figure>
-      <video
-        ref={ref}
-        src={project.demoVideo}
-        poster={project.poster}
-        width={w}
-        height={h}
-        muted
-        loop
-        playsInline
-        preload="none"
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        aria-label={`Screen recording of ${project.title}`}
-        className="block w-full h-auto border border-rule bg-surface"
-        style={{ aspectRatio: `${w} / ${h}` }}
-      />
+      {frame(
+        <video
+          ref={ref}
+          src={project.demoVideo}
+          poster={project.poster}
+          width={w}
+          height={h}
+          muted
+          loop
+          playsInline
+          preload="none"
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          aria-label={`Screen recording of ${project.title}`}
+          className="block w-full h-auto border border-rule bg-surface"
+          style={{ aspectRatio: `${w} / ${h}` }}
+        />
+      )}
       <figcaption className="mt-3 flex items-center gap-3 text-sm text-ink-3">
         <button type="button" onClick={toggle} className="btn btn-sm btn-icon" aria-pressed={!playing}>
           <span className="sr-only">{playing ? 'Pause the recording' : 'Play the recording'}</span>
@@ -89,114 +93,6 @@ function DemoVideo({ project }) {
   );
 }
 
-function FeaturedZoneDocket({ project }) {
-  return (
-    <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-24">
-      <div className="grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-10 lg:gap-14 items-start">
-        <div>
-          <p className="label">Live at {project.liveLabel}</p>
-          <h3 className="mt-4 text-4xl md:text-5xl font-bold leading-[1.02] tracking-[-0.035em] text-ink balance">
-            {project.title}
-          </h3>
-          <p className="mt-3 text-lg text-ink-2">{project.tagline}</p>
-          <p className="mt-6 text-ink-2 leading-relaxed pretty">{project.description}</p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <CaseStudy
-              project={project}
-              trigger={<button type="button" className="btn btn-primary">Read the case study</button>}
-            />
-            <a
-              href={project.live}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
-              className="btn"
-            >
-              Visit {project.liveLabel}
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
-          </div>
-        </div>
-        <DemoVideo project={project} />
-      </div>
-      <Highlights items={project.highlights} className="mt-14 md:mt-20" />
-      <TechLine tech={project.tech} title={project.title} className="mt-6" />
-    </div>
-  );
-}
-
-function FeaturedTrx({ project }) {
-  return (
-    <div className="night">
-      <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-        <div className="grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-10 lg:gap-14 items-start">
-          <div>
-            <p className="label text-brand-ink">Flagship</p>
-            <h3 className="mt-4 text-4xl md:text-5xl font-bold leading-[1.02] tracking-[-0.035em] text-ink balance">
-              {project.title}
-            </h3>
-            <p className="mt-3 text-lg text-ink-2">{project.tagline}</p>
-            <p className="mt-6 text-ink-2 leading-relaxed pretty">{project.description}</p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <CaseStudy
-                project={project}
-                trigger={<button type="button" className="btn btn-primary">Read the case study</button>}
-              />
-              <a
-                href={project.live}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })}
-                className="btn"
-              >
-                Visit {project.liveLabel}
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            </div>
-          </div>
-          <DemoVideo project={project} />
-        </div>
-        <Highlights items={project.highlights} className="mt-14 md:mt-20" />
-        <TechLine tech={project.tech} title={project.title} className="mt-6" />
-      </div>
-    </div>
-  );
-}
-
-function FeaturedBatin({ project }) {
-  return (
-    <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-      <div className="grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] gap-10 lg:gap-14 items-start">
-        <div>
-          <p className="label">{project.phase ?? 'In progress'} · {project.status}</p>
-          <h3 className="mt-4 text-4xl md:text-5xl font-bold leading-[1.02] tracking-[-0.035em] text-ink balance">
-            {project.title}
-          </h3>
-          <p className="mt-3 text-lg text-ink-2">{project.tagline}</p>
-          <p className="mt-6 text-ink-2 leading-relaxed pretty">{project.description}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <CaseStudy
-              project={project}
-              trigger={<button type="button" className="btn">Read the case study</button>}
-            />
-            {project.writeup && (
-              <a
-                href={project.writeup}
-                onClick={() => posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'writeup' })}
-                className="btn"
-              >
-                Read the write-up
-              </a>
-            )}
-          </div>
-        </div>
-        <DemoVideo project={project} />
-      </div>
-      <Highlights items={project.highlights} className="mt-14 md:mt-20" />
-      <TechLine tech={project.tech} title={project.title} className="mt-6" />
-    </div>
-  );
-}
 
 function Breakable({ children }) {
   const [phase, setPhase] = useState('idle'); // idle | loading | broken
@@ -319,108 +215,251 @@ function Breakable({ children }) {
   );
 }
 
-function IndexRow({ project, breakIt, busy }) {
+
+function liveLink(project) {
+  if (project.live) return { href: project.live, label: `Visit ${project.liveLabel}`, external: true, kind: 'live' };
+  if (project.writeup) return { href: project.writeup, label: 'Read the write-up', external: false, kind: 'writeup' };
+  return null;
+}
+
+/** The front page's three columns: each project's teaser, with a jump to its spread below. */
+function FrontColumns() {
   return (
-    <div className="group relative grid md:grid-cols-[minmax(0,1fr)_minmax(0,300px)] gap-6 md:gap-12 py-10 md:py-12 border-b border-rule bg-bg">
-      <div className="min-w-0">
-        <h4 className="text-3xl font-bold tracking-[-0.03em] text-ink">
-          <CaseStudy
-            project={project}
-            trigger={
-              // The title is the row's link; its ::after stretches over the
-              // whole row, so the image and copy open the write-up too.
-              <button type="button" className="sig text-left after:absolute after:inset-0 after:content-['']">
-                {project.title}
-                <span className="sr-only">, open the write-up</span>
-              </button>
-            }
-          />
-        </h4>
-        <p className="mt-1.5 text-ink-2">{project.tagline}</p>
-        <p className="mt-5 max-w-xl text-ink-2 leading-relaxed pretty">{project.summary}</p>
-        <Highlights items={project.highlights} compact className="mt-6 max-w-2xl" />
-        <TechLine tech={project.tech} title={project.title} className="mt-5" />
-
-        <div className="relative z-10 mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          {breakIt && (
-            <button type="button" onClick={breakIt} aria-busy={busy} data-break className="btn btn-sm">
-              Break this row
-            </button>
-          )}
-          {project.github && (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'github', project_type: 'index' })}
-              className="link text-sm font-medium inline-flex items-center min-h-[36px]"
-            >
-              Source<span className="sr-only"> for {project.title} (opens in a new tab)</span>
-            </a>
-          )}
-          {project.live && (
-            <a
-              href={project.live}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'index' })}
-              className="link text-sm font-medium inline-flex items-center min-h-[36px]"
-            >
-              Site<span className="sr-only"> for {project.title} (opens in a new tab)</span>
-            </a>
-          )}
-          {project.npm && (
-            <a
-              href={project.npm}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'npm', project_type: 'index' })}
-              className="link text-sm font-medium inline-flex items-center min-h-[36px]"
-            >
-              npm<span className="sr-only"> (opens in a new tab)</span>
-            </a>
-          )}
-        </div>
+    <div className={PAGE}>
+      <div className="flex items-baseline justify-between gap-4 pt-5 pb-4 border-b border-rule">
+        <h2 id="work-heading" className="label">Selected work</h2>
+        <p className="text-sm text-ink-3 hidden sm:block">Each story continues below</p>
       </div>
-
-      <img
-        src={project.poster}
-        alt=""
-        width={project.demoSize[0]}
-        height={project.demoSize[1]}
-        loading="lazy"
-        decoding="async"
-        className="w-full aspect-[16/10] object-cover object-top border border-rule bg-surface-2"
-      />
+      <div className="grid md:grid-cols-3">
+        {featured.map((p, i) => (
+          <article
+            key={p.slug}
+            className={`relative py-8 ${i > 0 ? 'md:pl-8 border-t md:border-t-0 border-rule' : ''} ${i < 2 ? 'md:pr-8' : ''}`}
+          >
+            {i > 0 && <Rule axis="y" className="hidden md:block absolute left-0 top-8 bottom-8 w-px" delay={0.15 * i} />}
+            <a
+              href={`#${p.slug}`}
+              onClick={() => posthog.capture('project_teaser_clicked', { project_title: p.title })}
+              className="group block"
+            >
+              <img
+                src={p.poster}
+                alt=""
+                width={p.demoSize[0]}
+                height={p.demoSize[1]}
+                loading="lazy"
+                decoding="async"
+                className="w-full aspect-[16/10] object-cover object-top border border-rule bg-surface"
+              />
+              <h3 className="mt-5 text-[1.75rem] leading-[1.05] font-bold tracking-[-0.03em] text-ink">
+                <span className="sig">{p.title}</span>
+              </h3>
+              <p className="mt-1.5 text-ink-2">{p.tagline}</p>
+              <p className="mt-4 text-[15px] leading-relaxed text-ink-2 pretty">{p.summary}</p>
+              <p className="mt-5 text-sm text-ink-3">
+                {p.statusLine} <span aria-hidden="true">·</span> <span className="font-medium text-ink">Continued below</span>
+              </p>
+            </a>
+          </article>
+        ))}
+      </div>
     </div>
+  );
+}
+
+/**
+ * A front-page column opens into its spread: the recording starts clipped to
+ * a column's share of the page and unfolds to full width as the spread
+ * scrolls in, with a crease riding the edge. Wide screens only; a phone shows
+ * it whole.
+ */
+function Spread({ project, night = false }) {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const sync = () => setWide(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+  const unfold = wide && !reduce;
+
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.95', 'start 0.15'] });
+  const open = useTransform(scrollYProgress, [0, 1], unfold ? [0, 1] : [1, 1], { clamp: true });
+  const inset = useTransform(open, (v) => `${(1 - v) * 52}%`);
+  const clipPath = useMotionTemplate`inset(0 ${inset} 0 0)`;
+  const crease = useTransform(open, (v) => `${100 - (1 - v) * 52}%`);
+  const creaseOpacity = useTransform(open, [0.9, 1], [1, 0]);
+  const cta = liveLink(project);
+
+  return (
+    <section id={project.slug} ref={ref} aria-labelledby={`${project.slug}-title`} className={night ? 'night' : ''}>
+      <div className={`${PAGE} py-16 md:py-24`}>
+        <header className="grid lg:grid-cols-12 gap-x-10 gap-y-3 items-end pb-6 border-b border-rule">
+          <h3 id={`${project.slug}-title`} className="lg:col-span-7 font-bold text-[clamp(2.5rem,5.2vw,4.5rem)] leading-[0.98] tracking-[-0.035em] text-ink">
+            <MaskLines inView lines={[project.title]} />
+          </h3>
+          <p className="lg:col-span-5 text-xl text-ink-2 pretty lg:pb-2">{project.tagline}</p>
+        </header>
+
+        <div className="mt-10 grid lg:grid-cols-12 gap-10">
+          <div className="lg:col-span-4 flex flex-col">
+            <p className="text-lg leading-relaxed text-ink pretty">{project.summary}</p>
+            <p className="mt-4 text-sm text-ink-3">{project.statusLine}</p>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <CaseStudy
+                project={project}
+                trigger={<button type="button" className="btn btn-primary">Read the case study</button>}
+              />
+              {cta && (
+                <a
+                  href={cta.href}
+                  target={cta.external ? '_blank' : undefined}
+                  rel={cta.external ? 'noreferrer' : undefined}
+                  onClick={() =>
+                    cta.kind === 'writeup'
+                      ? posthog.capture('case_study_link_clicked', { project_title: project.title, link_type: 'writeup' })
+                      : posthog.capture('project_link_clicked', { project_title: project.title, link_type: 'live', project_type: 'featured' })
+                  }
+                  className="btn"
+                >
+                  {cta.label}
+                  {cta.external && <span className="sr-only"> (opens in a new tab)</span>}
+                </a>
+              )}
+            </div>
+          </div>
+
+          <div className="lg:col-span-8">
+            <DemoVideo
+              project={project}
+              frame={(video) => (
+                <div className="relative">
+                  <Motion.div style={{ clipPath }}>{video}</Motion.div>
+                  {unfold && (
+                    <Motion.span
+                      aria-hidden="true"
+                      className="absolute top-0 bottom-0 w-px bg-rule-2"
+                      style={{ left: crease, opacity: creaseOpacity }}
+                    />
+                  )}
+                </div>
+              )}
+            />
+          </div>
+        </div>
+
+        <Highlights items={project.top} className="mt-14" />
+      </div>
+    </section>
+  );
+}
+
+function BuildLinks({ project }) {
+  const link = 'link text-sm font-medium inline-flex items-center min-h-[36px]';
+  const track = (type) => () =>
+    posthog.capture('project_link_clicked', { project_title: project.title, link_type: type, project_type: 'index' });
+  return (
+    <>
+      {project.github && (
+        <a href={project.github} target="_blank" rel="noreferrer" onClick={track('github')} className={link}>
+          Source<span className="sr-only"> for {project.title} (opens in a new tab)</span>
+        </a>
+      )}
+      {project.live && (
+        <a href={project.live} target="_blank" rel="noreferrer" onClick={track('live')} className={link}>
+          Site<span className="sr-only"> for {project.title} (opens in a new tab)</span>
+        </a>
+      )}
+      {project.npm && (
+        <a href={project.npm} target="_blank" rel="noreferrer" onClick={track('npm')} className={link}>
+          npm<span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      )}
+    </>
+  );
+}
+
+function Brief({ project, fine, breakIt, busy }) {
+  return (
+    <div className="bg-bg">
+      {!fine && (
+        <img
+          src={project.poster}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="mb-5 w-full aspect-[16/10] object-cover object-top border border-rule bg-surface"
+        />
+      )}
+      <h3 className="text-2xl font-bold tracking-[-0.03em] text-ink">
+        <CaseStudy
+          project={project}
+          trigger={
+            <button type="button" className="sig text-left">
+              {project.title}<span className="sr-only">, open the write-up</span>
+            </button>
+          }
+        />
+      </h3>
+      <p className="mt-1.5 text-ink-2">{project.tagline}</p>
+      <p className="mt-4 text-[15px] leading-relaxed text-ink-2 pretty">{project.summary}</p>
+      <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2">
+        {breakIt && (
+          <button type="button" onClick={breakIt} aria-busy={busy} data-break className="btn btn-sm">
+            Break this column
+          </button>
+        )}
+        <BuildLinks project={project} />
+      </div>
+    </div>
+  );
+}
+
+/** Smaller builds as the paper's "In brief" column. Hovering one shows its picture beside the cursor. */
+function Briefs() {
+  const [active, setActive] = useState(null);
+  const fine = useFinePointer();
+  return (
+    <section aria-labelledby="briefs-heading" className={`${PAGE} pt-16 md:pt-24 pb-8`}>
+      <div className="flex items-baseline justify-between gap-4 pb-4 border-b-2 border-ink">
+        <h2 id="briefs-heading" className="label text-ink">In brief</h2>
+        <p className="text-sm text-ink-3 hidden sm:block">Smaller builds, each with its source</p>
+      </div>
+      <div className="grid md:grid-cols-3">
+        {builds.map((b, i) => (
+          <article
+            key={b.slug}
+            className={`relative py-8 ${i > 0 ? 'md:pl-8 border-t md:border-t-0 border-rule' : ''} ${i < 2 ? 'md:pr-8' : ''}`}
+            onPointerEnter={() => setActive(b.slug)}
+            onPointerLeave={() => setActive(null)}
+          >
+            {i > 0 && <Rule axis="y" className="hidden md:block absolute left-0 top-8 bottom-8 w-px" delay={0.12 * i} />}
+            {b.breakable ? (
+              <Breakable>{({ breakIt, busy }) => <Brief project={b} fine={fine} breakIt={breakIt} busy={busy} />}</Breakable>
+            ) : (
+              <Brief project={b} fine={fine} />
+            )}
+          </article>
+        ))}
+      </div>
+      <CursorPreview items={builds.map((b) => ({ id: b.slug, src: b.poster }))} activeId={active} />
+    </section>
   );
 }
 
 export default function Projects() {
   return (
     <section id="work" aria-labelledby="work-heading">
-      <div className="max-w-6xl mx-auto px-6 pb-10 md:pb-14">
-        <SectionHead id="work-heading">Selected work</SectionHead>
+      <FrontColumns />
+      <div className="mt-8">
+        <Spread project={featured[0]} />
+        <Spread project={featured[1]} night />
+        <Spread project={featured[2]} />
       </div>
-
-      <FeaturedZoneDocket project={zoneDocket} />
-      <FeaturedTrx project={trx} />
-      <FeaturedBatin project={batin} />
-
-      <div className="max-w-6xl mx-auto px-6 pb-20 md:pb-28">
-        <SectionHead as="h3" className="mb-2">Smaller builds</SectionHead>
-        <div>
-          {projects.map((project) =>
-            project.breakable ? (
-              <Breakable key={project.title}>
-                {({ breakIt, busy }) => <IndexRow project={project} breakIt={breakIt} busy={busy} />}
-              </Breakable>
-            ) : (
-              <IndexRow key={project.title} project={project} />
-            )
-          )}
-        </div>
-      </div>
+      <Briefs />
     </section>
   );
 }
