@@ -27,7 +27,7 @@
     // PostHog's private API host (us.posthog.com or eu.posthog.com, not the
     // .i. ingestion host) and the project the site reports to.
     "POSTHOG_API_HOST": "https://us.posthog.com",
-    "POSTHOG_PROJECT_ID": "",
+    "POSTHOG_PROJECT_ID": "579518",
     // The Cloudflare Access team domain and the Application Audience (AUD) tag
     // of the "zakiamin.com admin" application (www.zakiamin.com/admin and
     // /admin/*). Until both are set, the admin API refuses every request.
