@@ -11,11 +11,13 @@ export default defineConfig({
     },
   },
   build: {
-    // Two pages: the portfolio at / and the Batin write-up at /batin/.
+    // The portfolio at /, the Batin write-up at /batin/, and the 404 page
+    // Cloudflare serves for any path that matches no file.
     rollupOptions: {
       input: {
         main: path.resolve(import.meta.dirname, 'index.html'),
         batin: path.resolve(import.meta.dirname, 'batin/index.html'),
+        notFound: path.resolve(import.meta.dirname, '404.html'),
       },
     },
   },
