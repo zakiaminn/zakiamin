@@ -27,10 +27,10 @@
     "POSTHOG_API_HOST": "https://us.posthog.com",
     "POSTHOG_PROJECT_ID": "",
     // The Cloudflare Access team domain and the Application Audience (AUD) tag
-    // of the www.zakiamin.com/admin application. Until both are set, the
-    // admin API refuses every request.
-    "ACCESS_TEAM_DOMAIN": "",
-    "ACCESS_AUD": ""
+    // of the "zakiamin.com admin" application (www.zakiamin.com/admin and
+    // /admin/*). Until both are set, the admin API refuses every request.
+    "ACCESS_TEAM_DOMAIN": "https://crimson-glitter-737c.cloudflareaccess.com",
+    "ACCESS_AUD": "2c81c8ca03804aa3d2fd075c7bdd3bf17196c6d0f73ba10ce48f4412c0ca5aff"
   },
   // Pull requests and other branches get a preview URL from `npx wrangler preview`,
   // which needs this block even when it's empty.
