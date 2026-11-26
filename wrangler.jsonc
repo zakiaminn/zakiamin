@@ -4,8 +4,13 @@
   "$schema": "https://unpkg.com/wrangler/config-schema.json",
   "name": "zakiamin",
   "compatibility_date": "2026-11-25",
+  // Adds byte-range support for the demo videos, which Safari needs to play them.
+  "main": "worker/index.js",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
+    // Every other file is served without running the Worker.
+    "run_worker_first": ["/*.mp4"],
     // /batin serves dist/batin/index.html and redirects to /batin/, the same as on Vercel.
     "html_handling": "auto-trailing-slash",
     // There is no 404 page yet, so unknown paths get a plain 404.
