@@ -1,0 +1,14 @@
+// Cloudflare Workers config: serves the built site in dist/ as static files.
+// Cloudflare runs `npm run build`, then `npx wrangler deploy` on every push to main.
+{
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "zakiamin",
+  "compatibility_date": "2026-11-25",
+  "assets": {
+    "directory": "./dist",
+    // /batin serves dist/batin/index.html and redirects to /batin/, the same as on Vercel.
+    "html_handling": "auto-trailing-slash",
+    // There is no 404 page yet, so unknown paths get a plain 404.
+    "not_found_handling": "none"
+  }
+}
