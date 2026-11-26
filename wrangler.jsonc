@@ -10,12 +10,27 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    // Every other file is served without running the Worker.
-    "run_worker_first": ["/*.mp4"],
+    // Every other file is served without running the Worker. /admin/api/* is
+    // the analytics data behind the private page at /admin/.
+    "run_worker_first": ["/*.mp4", "/admin/api/*"],
     // /batin serves dist/batin/index.html and redirects to /batin/.
     "html_handling": "auto-trailing-slash",
     // A path that matches no file gets dist/404.html with a 404 status.
     "not_found_handling": "404-page"
+  },
+  // Settings for /admin/api/*. None of these is secret. The PostHog personal
+  // API key is the POSTHOG_PERSONAL_API_KEY secret, set in the Cloudflare
+  // dashboard (Workers > zakiamin > Settings > Variables and Secrets).
+  "vars": {
+    // PostHog's private API host (us.posthog.com or eu.posthog.com, not the
+    // .i. ingestion host) and the project the site reports to.
+    "POSTHOG_API_HOST": "https://us.posthog.com",
+    "POSTHOG_PROJECT_ID": "",
+    // The Cloudflare Access team domain and the Application Audience (AUD) tag
+    // of the www.zakiamin.com/admin application. Until both are set, the
+    // admin API refuses every request.
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
   },
   // Pull requests and other branches get a preview URL from `npx wrangler preview`,
   // which needs this block even when it's empty.
