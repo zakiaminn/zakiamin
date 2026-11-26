@@ -12,6 +12,7 @@ const server = await import(pathToFileURL(`${serverDir}/entry-server.js`).href);
 const pages = [
   { file: 'dist/index.html', render: server.render },
   { file: 'dist/batin/index.html', render: server.renderWriteup },
+  { file: 'dist/404.html', render: server.renderNotFound },
 ];
 
 const marker = '<div id="root"></div>';

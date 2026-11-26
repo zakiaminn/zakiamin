@@ -2,8 +2,10 @@
 // Cloudflare's static asset server ignores Range headers and always answers
 // 200 with the whole file, but Safari won't play a <video> unless the server
 // answers its Range probe with 206 Partial Content.
-// wrangler.jsonc runs this Worker only for .mp4 files and for paths that match
-// no file; everything else is served straight from dist/.
+// wrangler.jsonc runs this Worker only for .mp4 files; everything else,
+// including the 404 page for paths that match no file, is served straight
+// from dist/. A missing .mp4 gets that 404 page through env.ASSETS and is
+// passed on unchanged.
 
 export default {
   async fetch(request, env) {

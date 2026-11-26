@@ -6,10 +6,9 @@ import { EASE, useFitWidth } from '@/lib/motion';
 import { MastRules } from '@/components/ui/motion';
 import posthog from '@/lib/posthog';
 import Mark from '@/components/Mark';
+import { PAGE } from '@/lib/layout';
 
-export { Mark };
-
-export const PAGE = 'mx-auto w-full max-w-[1240px] px-5 sm:px-6';
+export { Mark, PAGE };
 
 const LINKS = [
   { label: 'Work', href: '#work' },
