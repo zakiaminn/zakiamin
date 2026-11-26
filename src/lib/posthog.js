@@ -1,5 +1,9 @@
-const key = import.meta.env.VITE_POSTHOG_KEY;
+import { isOptedOut } from './analyticsOptOut.js';
+
 const host = import.meta.env.VITE_POSTHOG_HOST;
+// A browser switched off on the admin page sends nothing and never loads PostHog.
+const optedOut = typeof window !== 'undefined' && isOptedOut();
+const key = optedOut ? '' : import.meta.env.VITE_POSTHOG_KEY;
 
 let client = null;
 const queue = [];
@@ -17,7 +21,7 @@ function load() {
 
 if (typeof window !== 'undefined') {
   if (!key) {
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV && !optedOut) {
       console.warn('VITE_POSTHOG_KEY is not set, so analytics events are dropped.');
     }
   } else if ('requestIdleCallback' in window) {

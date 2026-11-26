@@ -34,3 +34,6 @@ dist-server
 
 # Cloudflare Wrangler
 .wrangler
+
+# Local Worker secrets for `wrangler dev`
+.dev.vars*
