@@ -31,3 +31,6 @@ dist-server
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Cloudflare Wrangler
+.wrangler
