@@ -57,7 +57,7 @@ async function loadStats(days, signal) {
   }
   if (!body) {
     throw new StatsError(response.status, 'no-api',
-      'Nothing answered at /admin/api/stats. The API runs in the Worker, so use `npx wrangler dev` locally (or add ?sample to the address under `npm run dev`).');
+      'Nothing answered at /admin/api/stats. The API runs in the Worker, so run npx wrangler dev locally, or add ?sample to the address under npm run dev for made-up numbers.');
   }
   if (!response.ok) throw new StatsError(response.status, body.error, body.message);
   return body;

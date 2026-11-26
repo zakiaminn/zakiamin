@@ -69,8 +69,10 @@ export async function verifyAccess(request, env) {
   const teamDomain = (env.ACCESS_TEAM_DOMAIN || '').trim().replace(/\/+$/, '');
   const audience = (env.ACCESS_AUD || '').trim();
   if (!teamDomain.startsWith('https://') || !audience) {
+    // Branch previews land here too: they don't inherit `vars` from
+    // wrangler.jsonc, so the admin data only ever loads in production.
     return denied(503, 'access-not-configured',
-      'Cloudflare Access isn\'t configured for this Worker yet: ACCESS_TEAM_DOMAIN and ACCESS_AUD in wrangler.jsonc are empty.');
+      'Cloudflare Access isn\'t configured for this deployment (ACCESS_TEAM_DOMAIN and ACCESS_AUD aren\'t set). Branch previews never have them, so the numbers only load at www.zakiamin.com/admin/.');
   }
 
   const token = request.headers.get('Cf-Access-Jwt-Assertion');

@@ -21,6 +21,8 @@
   // Settings for /admin/api/*. None of these is secret. The PostHog personal
   // API key is the POSTHOG_PERSONAL_API_KEY secret, set in the Cloudflare
   // dashboard (Workers > zakiamin > Settings > Variables and Secrets).
+  // Previews don't inherit these, which is deliberate: there the admin API
+  // refuses every request.
   "vars": {
     // PostHog's private API host (us.posthog.com or eu.posthog.com, not the
     // .i. ingestion host) and the project the site reports to.
