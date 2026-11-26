@@ -1,5 +1,6 @@
 // Cloudflare Workers config: serves the built site in dist/ as static files.
-// Cloudflare runs `npm run build`, then `npx wrangler deploy` on every push to main.
+// Cloudflare runs `npm run build`, then `npx wrangler deploy` on every push to main
+// and `npx wrangler preview` on every other branch.
 {
   "$schema": "https://unpkg.com/wrangler/config-schema.json",
   "name": "zakiamin",
@@ -11,9 +12,12 @@
     "binding": "ASSETS",
     // Every other file is served without running the Worker.
     "run_worker_first": ["/*.mp4"],
-    // /batin serves dist/batin/index.html and redirects to /batin/, the same as on Vercel.
+    // /batin serves dist/batin/index.html and redirects to /batin/.
     "html_handling": "auto-trailing-slash",
     // There is no 404 page yet, so unknown paths get a plain 404.
     "not_found_handling": "none"
-  }
+  },
+  // Pull requests and other branches get a preview URL from `npx wrangler preview`,
+  // which needs this block even when it's empty.
+  "previews": {}
 }
